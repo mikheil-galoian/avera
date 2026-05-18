@@ -19,10 +19,8 @@ dockerfilePath = "Dockerfile.demo"
 [deploy]
 # Internal port that Streamlit listens on
 startCommand = "python -m streamlit run demo/app.py --server.port=$PORT --server.address=0.0.0.0 --server.headless=true"
-healthcheckPath     = "/_stcore/health"
-healthcheckTimeout  = 30
-restartPolicyType   = "on-failure"
-restartPolicyMaxRetries = 3
+healthcheckPath = "/_stcore/health"
+healthcheckTimeout = 30
 
 [environments.production.variables]
 AVERA_DEFAULT_SCENARIO = "bms-fast-charge"
