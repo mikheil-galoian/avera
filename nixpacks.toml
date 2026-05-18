@@ -1,0 +1,8 @@
+[phases.install]
+cmds = [
+  "pip install --no-cache-dir streamlit>=1.44 pydantic>=2.0",
+  "pip install --no-cache-dir -e . --no-build-isolation"
+]
+
+[start]
+cmd = "python -m streamlit run demo/app.py --server.port=$PORT --server.address=0.0.0.0 --server.headless=true"
