@@ -1,0 +1,191 @@
+{
+  "affected_components": [
+    "Flight Control Computer"
+  ],
+  "affected_files": [
+    "src/fcc/control_laws.c",
+    "src/fcc/envelope_protection.c"
+  ],
+  "affected_requirements": [
+    {
+      "component": "Flight Control Computer",
+      "id": "FCC-REQ-001",
+      "metadata": {},
+      "metric": "actuation_latency_ms",
+      "next_checks": [
+        "FCC-CTRL-HIL-01,FCC-CTRL-HIL-02"
+      ],
+      "operator": "<=",
+      "requirement": "Control surface actuation latency from pilot input to surface movement shall not exceed 80 ms.",
+      "safety_level": "dal-a",
+      "threshold": 80.0
+    },
+    {
+      "component": "Flight Control Computer",
+      "id": "FCC-REQ-002",
+      "metadata": {},
+      "metric": "envelope_engage_ms",
+      "next_checks": [
+        "FCC-ENV-HIL-01"
+      ],
+      "operator": "<=",
+      "requirement": "Envelope protection system must engage within 200 ms upon detection of an overspeed exceedance.",
+      "safety_level": "dal-a",
+      "threshold": 200.0
+    },
+    {
+      "component": "Flight Control Computer",
+      "id": "FCC-REQ-003",
+      "metadata": {},
+      "metric": "compute_jitter_ms",
+      "next_checks": [
+        "FCC-CTRL-HIL-01"
+      ],
+      "operator": "<=",
+      "requirement": "Control law computation jitter shall not exceed 2 ms between consecutive cycles.",
+      "safety_level": "dal-b",
+      "threshold": 2.0
+    }
+  ],
+  "comparison_summary": {
+    "introduced_failures": 1,
+    "metric_deltas": 5,
+    "missing_baseline": 0,
+    "missing_current": 0,
+    "preexisting_failures": 0,
+    "resolved_failures": 0,
+    "total_tests": 3,
+    "unchanged_passes": 2
+  },
+  "confidence": "high",
+  "confidence_factors": [
+    "+ baseline_current_pair_present",
+    "+ introduced_failure_detected",
+    "+ threshold_crossing_detected",
+    "+ requirement_mapped",
+    "+ affected_file_mapped"
+  ],
+  "confidence_score": 0.95,
+  "evidence_summary": [
+    "Verdict is confirmed regression.",
+    "FCC-ENV-HIL-01 failed only in the current run.",
+    "envelope_engage_ms for FCC-REQ-002 was 247, outside <= 200.",
+    "Mapped affected files: src/fcc/control_laws.c, src/fcc/envelope_protection.c.",
+    "envelope_engage_ms materially worsened from 148.0 to 247.0."
+  ],
+  "introduced_failures": [
+    {
+      "baseline_metrics": {
+        "envelope_engage_ms": 148.0
+      },
+      "baseline_status": "passed",
+      "classification": "introduced_failure",
+      "component": "Flight Control Computer",
+      "current_metrics": {
+        "envelope_engage_ms": 247.0
+      },
+      "current_status": "failed",
+      "evidence": [
+        "FCC-ENV-HIL-01: introduced failure.",
+        "HIL bench: envelope protection engaged at 148 ms. Within 200 ms DAL-A limit.",
+        "HIL bench: envelope protection engaged at 247 ms. EXCEEDS 200 ms DAL-A limit. Regression in envelope_protection.c priority scheduling.",
+        "envelope_engage_ms increased from 148 to 247."
+      ],
+      "metric_deltas": [
+        {
+          "baseline": 148.0,
+          "current": 247.0,
+          "delta": 99.0,
+          "metric": "envelope_engage_ms",
+          "percent_delta": 66.8918918918919,
+          "test_id": "FCC-ENV-HIL-01"
+        }
+      ],
+      "test_id": "FCC-ENV-HIL-01"
+    }
+  ],
+  "preexisting_failures": [],
+  "recommended_next_checks": [
+    "FCC-CTRL-HIL-01",
+    "FCC-CTRL-HIL-01,FCC-CTRL-HIL-02",
+    "FCC-ENV-HIL-01"
+  ],
+  "risk": "release_blocking",
+  "risk_drivers": [
+    "verdict:confirmed_regression",
+    "risk:release_blocking",
+    "safety_level:dal-a",
+    "safety_level:dal-b",
+    "threshold_passed:FCC-REQ-001:actuation_latency_ms",
+    "threshold_passed:FCC-REQ-003:compute_jitter_ms",
+    "threshold_passed:FCC-REQ-001:actuation_latency_ms",
+    "threshold_passed:FCC-REQ-003:compute_jitter_ms",
+    "threshold_failed:FCC-REQ-002:envelope_engage_ms"
+  ],
+  "rules_triggered": [
+    "R1_confirmed_threshold_regression",
+    "R2_introduced_test_failure",
+    "signal_baseline_pass_current_threshold_fail",
+    "signal_introduced_failure_present",
+    "signal_material_metric_worsening"
+  ],
+  "schema_version": "avera.assessment.v0.2",
+  "threshold_evidence": [
+    {
+      "baseline_passed": true,
+      "baseline_value": 62.0,
+      "current_passed": true,
+      "current_value": 63.0,
+      "metric": "actuation_latency_ms",
+      "operator": "<=",
+      "requirement_id": "FCC-REQ-001",
+      "test_id": "FCC-CTRL-HIL-01",
+      "threshold": 80.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 1.4,
+      "current_passed": true,
+      "current_value": 1.5,
+      "metric": "compute_jitter_ms",
+      "operator": "<=",
+      "requirement_id": "FCC-REQ-003",
+      "test_id": "FCC-CTRL-HIL-01",
+      "threshold": 2.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 64.5,
+      "current_passed": true,
+      "current_value": 65.0,
+      "metric": "actuation_latency_ms",
+      "operator": "<=",
+      "requirement_id": "FCC-REQ-001",
+      "test_id": "FCC-CTRL-HIL-02",
+      "threshold": 80.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 1.6,
+      "current_passed": true,
+      "current_value": 1.7,
+      "metric": "compute_jitter_ms",
+      "operator": "<=",
+      "requirement_id": "FCC-REQ-003",
+      "test_id": "FCC-CTRL-HIL-02",
+      "threshold": 2.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 148.0,
+      "current_passed": false,
+      "current_value": 247.0,
+      "metric": "envelope_engage_ms",
+      "operator": "<=",
+      "requirement_id": "FCC-REQ-002",
+      "test_id": "FCC-ENV-HIL-01",
+      "threshold": 200.0
+    }
+  ],
+  "verdict": "confirmed_regression"
+}

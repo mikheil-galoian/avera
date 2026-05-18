@@ -1,0 +1,1 @@
+TCU clutch fill pressure was recalibrated in src/tcu/shift_controller.c to reduce clutch wear on 3→4 upshifts.  The longer clutch fill time inadvertently extended the torque-hole window from 87 ms (baseline) to 143 ms (current), violating PT-REQ-010.

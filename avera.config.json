@@ -1,0 +1,49 @@
+{
+  "project": "AVERA",
+  "first_product": "AVERA Change Impact",
+  "default_fixture": "fixtures/bms-fast-charge",
+  "report_output": "reports",
+  "domain": "automotive",
+  "standard": "ISO-26262",
+  "safety_levels": ["QM", "A", "B", "C", "D"],
+  "critical_level": "D",
+  "coverage_required": ["statement", "branch"],
+  "domains": {
+    "automotive": {
+      "standard": "ISO-26262",
+      "safety_levels": ["QM", "A", "B", "C", "D"],
+      "critical_level": "D",
+      "coverage_required": ["statement", "branch"],
+      "regulatory_reference": "ISO 26262:2018 Road vehicles — Functional safety"
+    },
+    "aviation": {
+      "standard": "DO-178C",
+      "safety_levels": ["E", "D", "C", "B", "A"],
+      "critical_level": "A",
+      "coverage_required": ["statement", "branch", "MCDC"],
+      "regulatory_reference": "DO-178C Software Considerations in Airborne Systems and Equipment Certification"
+    },
+    "railway": {
+      "standard": "EN-50128",
+      "safety_levels": ["SIL0", "SIL1", "SIL2", "SIL3", "SIL4"],
+      "critical_level": "SIL4",
+      "coverage_required": ["statement", "branch"],
+      "regulatory_reference": "EN 50128:2011 Railway applications — Software for railway control and protection systems"
+    },
+    "medical": {
+      "standard": "IEC-62304",
+      "safety_levels": ["A", "B", "C"],
+      "critical_level": "C",
+      "coverage_required": ["statement", "branch"],
+      "regulatory_reference": "IEC 62304:2006 Medical device software — Software life cycle processes"
+    }
+  },
+  "risk_policy": {
+    "release_blocking_risks": ["safety_critical", "release_blocking"],
+    "high_confidence_requires": [
+      "new_failure",
+      "requirement_violation",
+      "component_mapping"
+    ]
+  }
+}

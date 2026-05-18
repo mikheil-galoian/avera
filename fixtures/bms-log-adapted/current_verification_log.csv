@@ -1,0 +1,3 @@
+timestamp_utc,test_id,component,status,metric,value,unit,message,environment
+2026-05-01T11:00:00Z,BMS-HIL-FASTCHARGE-07,BMS Thermal Control,failed,max_cell_temp_c,52.8,C,current HIL run exceeded the maximum allowed cell temperature,HIL-rig-3
+2026-05-01T11:00:05Z,BMS-HIL-FASTCHARGE-07,BMS Thermal Control,failed,cooling_response_ms,638.0,ms,current HIL run showed cooling response slower than allowed,HIL-rig-3

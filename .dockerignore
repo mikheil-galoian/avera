@@ -1,0 +1,41 @@
+# Git
+.git/
+.gitignore
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Development tools
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+.tox/
+htmlcov/
+.coverage
+
+# IDE / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Runtime reports (not needed in image)
+reports/
+
+# Demo shell (Streamlit — optional, not needed for API image)
+demo/
+
+# Docs (not needed at runtime)
+docs/

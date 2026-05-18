@@ -1,0 +1,603 @@
+{
+  "edges": [
+    {
+      "relation": "classified_as",
+      "source": "change",
+      "target": "risk"
+    },
+    {
+      "relation": "recommends",
+      "source": "risk",
+      "target": "recommendation:pt-tcu-sq-01,pt-tcu-sq-02"
+    },
+    {
+      "relation": "recommends",
+      "source": "risk",
+      "target": "recommendation:pt-tcu-sq-02"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:r1_confirmed_threshold_regression",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:r2_introduced_test_failure",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_baseline_pass_current_threshold_fail",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_introduced_failure_present",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_material_metric_worsening",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_affected_file_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_baseline_current_pair_present",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_introduced_failure_detected",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_requirement_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_threshold_crossing_detected",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:risk_medium",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:safety_level_medium",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_failed_pt-req-010_torque_hole_ms",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_passed_pt-req-010_torque_hole_ms",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_passed_pt-req-011_shift_completion_ms",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_passed_pt-req-012_gear_slip_ratio",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:verdict_confirmed_regression",
+      "target": "risk"
+    },
+    {
+      "relation": "affects_component",
+      "source": "change",
+      "target": "component:transmission_control_unit"
+    },
+    {
+      "relation": "contributes_to",
+      "source": "component:transmission_control_unit",
+      "target": "risk"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:pt-req-010",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:transmission_control_unit",
+      "target": "requirement:pt-req-010"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:pt-req-011",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:transmission_control_unit",
+      "target": "requirement:pt-req-011"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:pt-req-012",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:transmission_control_unit",
+      "target": "requirement:pt-req-012"
+    },
+    {
+      "relation": "touches_file",
+      "source": "change",
+      "target": "file:src_tcu_shift_controller.c"
+    },
+    {
+      "relation": "maps_to_component",
+      "source": "file:src_tcu_shift_controller.c",
+      "target": "component:transmission_control_unit"
+    },
+    {
+      "relation": "observed_in",
+      "source": "change",
+      "target": "test_failure:pt-tcu-sq-01"
+    },
+    {
+      "relation": "supports",
+      "source": "test_failure:pt-tcu-sq-01",
+      "target": "risk"
+    },
+    {
+      "relation": "occurs_in",
+      "source": "test_failure:pt-tcu-sq-01",
+      "target": "component:transmission_control_unit"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:pt-req-010_torque_hole_ms_pt-tcu-sq-01",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:pt-req-010_torque_hole_ms_pt-tcu-sq-01",
+      "target": "requirement:pt-req-010"
+    },
+    {
+      "relation": "contains_metric",
+      "source": "test_failure:pt-tcu-sq-01",
+      "target": "threshold_evidence:pt-req-010_torque_hole_ms_pt-tcu-sq-01"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:pt-req-011_shift_completion_ms_pt-tcu-sq-01",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:pt-req-011_shift_completion_ms_pt-tcu-sq-01",
+      "target": "requirement:pt-req-011"
+    },
+    {
+      "relation": "contains_metric",
+      "source": "test_failure:pt-tcu-sq-01",
+      "target": "threshold_evidence:pt-req-011_shift_completion_ms_pt-tcu-sq-01"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:pt-req-012_gear_slip_ratio_pt-tcu-sq-01",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:pt-req-012_gear_slip_ratio_pt-tcu-sq-01",
+      "target": "requirement:pt-req-012"
+    },
+    {
+      "relation": "contains_metric",
+      "source": "test_failure:pt-tcu-sq-01",
+      "target": "threshold_evidence:pt-req-012_gear_slip_ratio_pt-tcu-sq-01"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:pt-req-010_torque_hole_ms_pt-tcu-sq-02",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:pt-req-010_torque_hole_ms_pt-tcu-sq-02",
+      "target": "requirement:pt-req-010"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:pt-req-011_shift_completion_ms_pt-tcu-sq-02",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:pt-req-011_shift_completion_ms_pt-tcu-sq-02",
+      "target": "requirement:pt-req-011"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:pt-req-012_gear_slip_ratio_pt-tcu-sq-02",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:pt-req-012_gear_slip_ratio_pt-tcu-sq-02",
+      "target": "requirement:pt-req-012"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "change",
+      "label": "Change under assessment",
+      "properties": {
+        "description": "TCU clutch fill pressure was recalibrated in src/tcu/shift_controller.c to reduce clutch wear on 3\u21924 upshifts.  The longer clutch fill time inadvertently extended the torque-hole window from 87 ms (baseline) to 143 ms (current), violating PT-REQ-010."
+      },
+      "type": "change"
+    },
+    {
+      "id": "risk",
+      "label": "medium",
+      "properties": {
+        "confidence": "high",
+        "verdict": "confirmed_regression"
+      },
+      "type": "risk"
+    },
+    {
+      "id": "recommendation:pt-tcu-sq-01,pt-tcu-sq-02",
+      "label": "PT-TCU-SQ-01,PT-TCU-SQ-02",
+      "properties": {
+        "check": "PT-TCU-SQ-01,PT-TCU-SQ-02"
+      },
+      "type": "recommendation"
+    },
+    {
+      "id": "recommendation:pt-tcu-sq-02",
+      "label": "PT-TCU-SQ-02",
+      "properties": {
+        "check": "PT-TCU-SQ-02"
+      },
+      "type": "recommendation"
+    },
+    {
+      "id": "rule:r1_confirmed_threshold_regression",
+      "label": "R1_confirmed_threshold_regression",
+      "properties": {
+        "value": "R1_confirmed_threshold_regression"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:r2_introduced_test_failure",
+      "label": "R2_introduced_test_failure",
+      "properties": {
+        "value": "R2_introduced_test_failure"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_baseline_pass_current_threshold_fail",
+      "label": "signal_baseline_pass_current_threshold_fail",
+      "properties": {
+        "value": "signal_baseline_pass_current_threshold_fail"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_introduced_failure_present",
+      "label": "signal_introduced_failure_present",
+      "properties": {
+        "value": "signal_introduced_failure_present"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_material_metric_worsening",
+      "label": "signal_material_metric_worsening",
+      "properties": {
+        "value": "signal_material_metric_worsening"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "confidence_factor:+_affected_file_mapped",
+      "label": "+ affected_file_mapped",
+      "properties": {
+        "value": "+ affected_file_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_baseline_current_pair_present",
+      "label": "+ baseline_current_pair_present",
+      "properties": {
+        "value": "+ baseline_current_pair_present"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_introduced_failure_detected",
+      "label": "+ introduced_failure_detected",
+      "properties": {
+        "value": "+ introduced_failure_detected"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_requirement_mapped",
+      "label": "+ requirement_mapped",
+      "properties": {
+        "value": "+ requirement_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_threshold_crossing_detected",
+      "label": "+ threshold_crossing_detected",
+      "properties": {
+        "value": "+ threshold_crossing_detected"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "risk_driver:risk_medium",
+      "label": "risk:medium",
+      "properties": {
+        "value": "risk:medium"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:safety_level_medium",
+      "label": "safety_level:medium",
+      "properties": {
+        "value": "safety_level:medium"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_failed_pt-req-010_torque_hole_ms",
+      "label": "threshold_failed:PT-REQ-010:torque_hole_ms",
+      "properties": {
+        "value": "threshold_failed:PT-REQ-010:torque_hole_ms"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_passed_pt-req-010_torque_hole_ms",
+      "label": "threshold_passed:PT-REQ-010:torque_hole_ms",
+      "properties": {
+        "value": "threshold_passed:PT-REQ-010:torque_hole_ms"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_passed_pt-req-011_shift_completion_ms",
+      "label": "threshold_passed:PT-REQ-011:shift_completion_ms",
+      "properties": {
+        "value": "threshold_passed:PT-REQ-011:shift_completion_ms"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_passed_pt-req-012_gear_slip_ratio",
+      "label": "threshold_passed:PT-REQ-012:gear_slip_ratio",
+      "properties": {
+        "value": "threshold_passed:PT-REQ-012:gear_slip_ratio"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:verdict_confirmed_regression",
+      "label": "verdict:confirmed_regression",
+      "properties": {
+        "value": "verdict:confirmed_regression"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "component:transmission_control_unit",
+      "label": "Transmission Control Unit",
+      "type": "component"
+    },
+    {
+      "id": "requirement:pt-req-010",
+      "label": "PT-REQ-010",
+      "properties": {
+        "component": "Transmission Control Unit",
+        "metric": "torque_hole_ms",
+        "operator": "<=",
+        "requirement": "Torque hole duration during any gear change must not exceed 100 ms to prevent driveline shock.",
+        "safety_level": "medium",
+        "threshold": 100.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "requirement:pt-req-011",
+      "label": "PT-REQ-011",
+      "properties": {
+        "component": "Transmission Control Unit",
+        "metric": "shift_completion_ms",
+        "operator": "<=",
+        "requirement": "Full gear engagement must complete within 800 ms from shift command initiation.",
+        "safety_level": "medium",
+        "threshold": 800.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "requirement:pt-req-012",
+      "label": "PT-REQ-012",
+      "properties": {
+        "component": "Transmission Control Unit",
+        "metric": "gear_slip_ratio",
+        "operator": "<=",
+        "requirement": "Gear slip ratio during shift must not exceed 0.05 to ensure mechanical integrity.",
+        "safety_level": "medium",
+        "threshold": 0.05
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "file:src_tcu_shift_controller.c",
+      "label": "src/tcu/shift_controller.c",
+      "properties": {
+        "path": "src/tcu/shift_controller.c"
+      },
+      "type": "file"
+    },
+    {
+      "id": "test_failure:pt-tcu-sq-01",
+      "label": "PT-TCU-SQ-01",
+      "properties": {
+        "baseline_status": "passed",
+        "category": "introduced_failures",
+        "component": "Transmission Control Unit",
+        "current_status": "failed"
+      },
+      "type": "test_failure"
+    },
+    {
+      "id": "threshold_evidence:pt-req-010_torque_hole_ms_pt-tcu-sq-01",
+      "label": "torque_hole_ms",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 87.0,
+        "current_passed": false,
+        "current_value": 143.0,
+        "operator": "<=",
+        "requirement_id": "PT-REQ-010",
+        "test_id": "PT-TCU-SQ-01",
+        "threshold": 100.0
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:pt-req-011_shift_completion_ms_pt-tcu-sq-01",
+      "label": "shift_completion_ms",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 720.0,
+        "current_passed": true,
+        "current_value": 780.0,
+        "operator": "<=",
+        "requirement_id": "PT-REQ-011",
+        "test_id": "PT-TCU-SQ-01",
+        "threshold": 800.0
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:pt-req-012_gear_slip_ratio_pt-tcu-sq-01",
+      "label": "gear_slip_ratio",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 0.031,
+        "current_passed": true,
+        "current_value": 0.033,
+        "operator": "<=",
+        "requirement_id": "PT-REQ-012",
+        "test_id": "PT-TCU-SQ-01",
+        "threshold": 0.05
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:pt-req-010_torque_hole_ms_pt-tcu-sq-02",
+      "label": "torque_hole_ms",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 92.0,
+        "current_passed": true,
+        "current_value": 95.0,
+        "operator": "<=",
+        "requirement_id": "PT-REQ-010",
+        "test_id": "PT-TCU-SQ-02",
+        "threshold": 100.0
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:pt-req-011_shift_completion_ms_pt-tcu-sq-02",
+      "label": "shift_completion_ms",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 755.0,
+        "current_passed": true,
+        "current_value": 762.0,
+        "operator": "<=",
+        "requirement_id": "PT-REQ-011",
+        "test_id": "PT-TCU-SQ-02",
+        "threshold": 800.0
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:pt-req-012_gear_slip_ratio_pt-tcu-sq-02",
+      "label": "gear_slip_ratio",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 0.028,
+        "current_passed": true,
+        "current_value": 0.03,
+        "operator": "<=",
+        "requirement_id": "PT-REQ-012",
+        "test_id": "PT-TCU-SQ-02",
+        "threshold": 0.05
+      },
+      "type": "threshold_evidence"
+    }
+  ],
+  "schema_version": "evidence_graph.v0.3",
+  "summary": {
+    "comparison_summary": {
+      "introduced_failures": 1,
+      "metric_deltas": 6,
+      "missing_baseline": 0,
+      "missing_current": 0,
+      "preexisting_failures": 0,
+      "resolved_failures": 0,
+      "total_tests": 2,
+      "unchanged_passes": 1
+    },
+    "components": 1,
+    "confidence": "high",
+    "confidence_factors": 5,
+    "edge_count": 48,
+    "evidence_summary": [
+      "Verdict is confirmed regression.",
+      "PT-TCU-SQ-01 failed only in the current run.",
+      "torque_hole_ms for PT-REQ-010 was 143, outside <= 100.",
+      "Mapped affected files: src/tcu/shift_controller.c.",
+      "torque_hole_ms materially worsened from 87.0 to 143.0."
+    ],
+    "files": 1,
+    "node_count": 33,
+    "recommendations": 2,
+    "requirements": 3,
+    "risk": "medium",
+    "risk_drivers": 7,
+    "rules": 5,
+    "signal_summaries": 0,
+    "tests_or_failures": 1,
+    "threshold_evidence": 6,
+    "verdict": "confirmed_regression"
+  }
+}

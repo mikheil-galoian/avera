@@ -1,0 +1,14 @@
+{
+  "src/tcu/shift_controller.c": {
+    "component": "Transmission Control Unit",
+    "requirements": [
+      "PT-REQ-010",
+      "PT-REQ-011",
+      "PT-REQ-012"
+    ],
+    "tests": [
+      "PT-TCU-SQ-01",
+      "PT-TCU-SQ-02"
+    ]
+  }
+}

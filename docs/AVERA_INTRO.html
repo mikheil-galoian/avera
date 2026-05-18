@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AVERA — What It Is, How It Works, What It Gives You</title>
+    <style>
+      :root {
+        --bg:      #f4f6fb;
+        --surface: #ffffff;
+        --muted:   #64748b;
+        --text:    #0f172a;
+        --border:  #e2e8f0;
+        --bad:     #dc2626;
+        --good:    #16a34a;
+        --accent:  #2563eb;
+        --code-bg: #f1f5f9;
+      }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font: 15px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .page {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 52px 28px 80px;
+      }
+
+      /* ── Top label ── */
+      .top-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .1em;
+        color: var(--accent);
+        margin-bottom: 14px;
+      }
+      .page-title {
+        font-size: 34px;
+        font-weight: 800;
+        line-height: 1.12;
+        margin-bottom: 14px;
+      }
+      .page-sub {
+        font-size: 16px;
+        color: var(--muted);
+        max-width: 640px;
+        line-height: 1.6;
+        margin-bottom: 48px;
+      }
+
+      /* ── Section ── */
+      .section {
+        margin-bottom: 44px;
+      }
+      .section-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .1em;
+        color: var(--muted);
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 24px 28px;
+      }
+      .panel + .panel { margin-top: 12px; }
+      h2 {
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+      p { font-size: 14px; color: var(--text); line-height: 1.7; }
+      p + p { margin-top: 10px; }
+      ul { padding-left: 18px; }
+      li { font-size: 14px; line-height: 1.65; }
+      li + li { margin-top: 6px; }
+
+      /* ── Workflow steps ── */
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      .step {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 20px;
+      }
+      .step-num {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        margin-bottom: 8px;
+      }
+      .step-title {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .step-body {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      /* ── Inputs / Outputs grid ── */
+      .io-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .io-panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 20px 24px;
+      }
+      .io-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        color: var(--muted);
+        margin-bottom: 12px;
+      }
+
+      /* ── Evidence table ── */
+      .ev-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      .ev-table th {
+        text-align: left;
+        font-weight: 600;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: var(--muted);
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      .ev-table td {
+        padding: 10px 10px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+      }
+      .ev-table tr:last-child td { border-bottom: none; }
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12px;
+        background: var(--code-bg);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+      .badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .badge.red   { background: #fef2f2; color: var(--bad); }
+      .badge.green { background: #f0fdf4; color: var(--good); }
+      .badge.gray  { background: var(--code-bg); color: var(--muted); }
+
+      /* ── Compare ── */
+      .compare-row {
+        display: grid;
+        grid-template-columns: 180px 1fr 24px 1fr 100px;
+        gap: 8px;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 13px;
+      }
+      .compare-row:last-child { border-bottom: none; }
+      .compare-row .signal { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--muted); }
+      .compare-row .before { font-weight: 600; color: var(--muted); }
+      .compare-row .arrow  { color: var(--muted); text-align: center; }
+      .compare-row .after  { font-weight: 700; color: var(--bad); }
+      .compare-row .req    { font-size: 11px; color: var(--muted); text-align: right; }
+
+      /* ── Decision block ── */
+      .decision-block {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 10px;
+        padding: 20px 24px;
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+      }
+      .decision-icon {
+        font-size: 28px;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+      .decision-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--bad);
+        margin-bottom: 6px;
+      }
+      .decision-body {
+        font-size: 13px;
+        color: #7f1d1d;
+        line-height: 1.6;
+      }
+
+      /* ── Domain proof ── */
+      .domain-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .domain-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 20px 24px;
+      }
+      .domain-tag {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        color: var(--accent);
+        margin-bottom: 8px;
+      }
+      .domain-title {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+
+      /* ── Footer ── */
+      .footer {
+        margin-top: 48px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      @media (max-width: 720px) {
+        .steps      { grid-template-columns: 1fr; }
+        .io-grid    { grid-template-columns: 1fr; }
+        .domain-grid{ grid-template-columns: 1fr; }
+        .compare-row{ grid-template-columns: 1fr 1fr 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+  <div class="page">
+
+    <!-- Title -->
+    <div class="top-label">AVERA · Automotive Verification, Evidence &amp; Risk Architecture</div>
+    <h1 class="page-title">What it is. How it works.<br>What it gives you.</h1>
+    <p class="page-sub">
+      AVERA is a local engineering tool that takes your existing verification artifacts,
+      compares baseline versus current results, maps impact to requirements, and produces
+      a structured release decision — backed by explicit evidence, not interpretation.
+    </p>
+
+    <!-- ── 1. WHAT IS IT ── -->
+    <div class="section">
+      <div class="section-label">1 · What it is</div>
+      <div class="panel">
+        <h2>The problem it solves</h2>
+        <p>
+          Every automotive engineering team already has requirements, tests, verification runs, logs, and change history.
+          What is often missing is a reliable way to connect those artifacts into one proof chain before release.
+        </p>
+        <p style="margin-top:14px;">
+          When a change is made, the team needs to answer four questions quickly:
+        </p>
+        <ul style="margin-top:12px;">
+          <li>Is this failure new or was it already there before the change?</li>
+          <li>Which requirements does the failure actually touch?</li>
+          <li>Is the evidence strong enough to justify a release block?</li>
+          <li>Who needs to act, and what exactly should they verify next?</li>
+        </ul>
+        <p style="margin-top:14px;">
+          AVERA answers those four questions from your existing artifacts — without guessing,
+          without summarizing vaguely, and without losing the evidence chain when the result is handed to another reviewer.
+        </p>
+      </div>
+    </div>
+
+    <!-- ── 2. HOW IT WORKS ── -->
+    <div class="section">
+      <div class="section-label">2 · How it works</div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">Step 1</div>
+          <div class="step-title">You provide your artifacts</div>
+          <div class="step-body">
+            Change description, baseline verification results, current verification results,
+            requirements export, and component map. All local files — no upload, no account.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">Step 2</div>
+          <div class="step-title">AVERA runs the analysis</div>
+          <div class="step-body">
+            One command. AVERA compares baseline vs current, maps failures to requirements,
+            classifies risk conservatively, and evaluates whether the evidence justifies a release block.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">Step 3</div>
+          <div class="step-title">You get a structured result</div>
+          <div class="step-body">
+            A verdict, confidence score, affected requirements list, threshold evidence,
+            decision record, and a portable workspace pack for handoff — all generated locally.
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <div class="io-grid">
+          <div class="io-panel">
+            <div class="io-label">What you put in</div>
+            <ul>
+              <li>Change description <span class="mono">.txt</span></li>
+              <li>Baseline results <span class="mono">baseline_results.json</span></li>
+              <li>Current results <span class="mono">current_results.json</span></li>
+              <li>Requirements <span class="mono">requirements.csv</span></li>
+              <li>Component map <span class="mono">component_map.json</span></li>
+              <li>Signal trace (optional) <span class="mono">signal_trace.csv</span></li>
+            </ul>
+          </div>
+          <div class="io-panel">
+            <div class="io-label">What comes out</div>
+            <ul>
+              <li>Report <span class="mono">avera-report.json / .md</span></li>
+              <li>Evidence graph <span class="mono">avera-evidence-graph.json</span></li>
+              <li>Gate result — pass / review / block</li>
+              <li>Traceability index</li>
+              <li>Decision record with owner routing</li>
+              <li>Workspace pack for handoff</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 3. REAL EXAMPLE: BMS ── -->
+    <div class="section">
+      <div class="section-label">3 · Real example — BMS fast-charge regression</div>
+
+      <div class="panel" style="margin-bottom:12px;">
+        <h2>The change</h2>
+        <p>
+          An engineer modified the BMS fast-charge cooling logic in
+          <span class="mono">src/bms/thermal_manager.c</span> to reduce
+          unnecessary coolant pump activity during early fast charging.
+          The code diff looked contained. The behavioral effect was not.
+        </p>
+      </div>
+
+      <div class="panel" style="margin-bottom:12px;">
+        <h2>What AVERA measured</h2>
+        <div class="compare-row" style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); padding-bottom:6px;">
+          <div>Signal</div><div>Baseline</div><div></div><div>Current</div><div>Threshold</div>
+        </div>
+        <div class="compare-row">
+          <div class="signal">max_cell_temp_c</div>
+          <div class="before">47.1 °C</div>
+          <div class="arrow">→</div>
+          <div class="after">52.8 °C</div>
+          <div class="req">≤ 50.0 °C</div>
+        </div>
+        <div class="compare-row">
+          <div class="signal">cooling_response_ms</div>
+          <div class="before">420 ms</div>
+          <div class="arrow">→</div>
+          <div class="after">610 ms</div>
+          <div class="req">≤ 500 ms</div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:12px;">
+        <h2>Requirements violated</h2>
+        <table class="ev-table">
+          <thead>
+            <tr>
+              <th>Requirement</th>
+              <th>Text</th>
+              <th>Safety level</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="mono">BMS-REQ-112</span></td>
+              <td>Maximum cell temperature during fast charging must not exceed 50 °C</td>
+              <td><span class="badge red">high</span></td>
+              <td><span class="badge red">violated</span></td>
+            </tr>
+            <tr>
+              <td><span class="mono">BMS-REQ-118</span></td>
+              <td>Cooling response delay during fast charging must not exceed 500 ms</td>
+              <td><span class="badge gray">medium</span></td>
+              <td><span class="badge red">violated</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="decision-block">
+        <div class="decision-icon">⛔</div>
+        <div>
+          <div class="decision-title">Block before release · confirmed_regression · risk: high · confidence: 0.95</div>
+          <div class="decision-body">
+            The failure appeared only after the change. The baseline passed. Both metrics crossed their requirement thresholds.
+            The changed file maps directly to the component that owns those requirements.
+            AVERA routes this to: <strong>validation_and_component_owner</strong>.
+            Recommended next verification: <span style="font-family: monospace;">BMS-HIL-FASTCHARGE-07</span>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 4. SECOND DOMAIN ── -->
+    <div class="section">
+      <div class="section-label">4 · Same model — different domain</div>
+      <p style="font-size:14px; color:var(--muted); margin-bottom:14px;">
+        The evidence model is not domain-specific. The same pipeline that classifies a BMS regression
+        also classifies an ADAS pedestrian detection failure — with the same structure and the same confidence logic.
+      </p>
+      <div class="domain-grid">
+        <div class="domain-card">
+          <div class="domain-tag">Domain 1 — BMS</div>
+          <div class="domain-title">Thermal control regression</div>
+          <table class="ev-table">
+            <tr><td style="color:var(--muted); font-size:12px;">Verdict</td><td><span class="badge red">confirmed_regression</span></td></tr>
+            <tr><td style="color:var(--muted); font-size:12px;">Risk</td><td><span class="badge red">high</span></td></tr>
+            <tr><td style="color:var(--muted); font-size:12px;">Confidence</td><td><strong>0.95</strong></td></tr>
+            <tr><td style="color:var(--muted); font-size:12px;">Requirements</td><td><span class="mono">BMS-REQ-112, BMS-REQ-118</span></td></tr>
+          </table>
+        </div>
+        <div class="domain-card">
+          <div class="domain-tag">Domain 2 — ADAS</div>
+          <div class="domain-title">Pedestrian detection regression</div>
+          <table class="ev-table">
+            <tr><td style="color:var(--muted); font-size:12px;">Verdict</td><td><span class="badge red">confirmed_regression</span></td></tr>
+            <tr><td style="color:var(--muted); font-size:12px;">Risk</td><td><span class="badge red">high</span></td></tr>
+            <tr><td style="color:var(--muted); font-size:12px;">Confidence</td><td><strong>0.95</strong></td></tr>
+            <tr><td style="color:var(--muted); font-size:12px;">Requirements</td><td><span class="mono">ADAS-REQ-204, ADAS-REQ-219</span></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 5. WHAT IT GIVES YOU ── -->
+    <div class="section">
+      <div class="section-label">5 · What it gives you</div>
+      <div class="panel">
+        <h2>Without AVERA</h2>
+        <ul>
+          <li>You see that a test failed — but not whether it was already failing before the change</li>
+          <li>You know something is wrong — but not which requirements are actually affected</li>
+          <li>You have a feeling it should be blocked — but not a structured decision with evidence attached</li>
+          <li>You explain the issue to a reviewer — and they have to reconstruct the context from scratch</li>
+        </ul>
+      </div>
+      <div class="panel" style="margin-top:12px;">
+        <h2>With AVERA</h2>
+        <ul>
+          <li>New failure vs preexisting failure — distinguished automatically from baseline comparison</li>
+          <li>Requirement impact — mapped from changed file through component to affected requirements</li>
+          <li>Release decision — structured as block / review / pass with confidence score and rationale</li>
+          <li>Handoff artifact — workspace pack contains the full evidence chain, ready for any reviewer</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ── 6. CURRENT STATE ── -->
+    <div class="section">
+      <div class="section-label">6 · Current state</div>
+      <div class="panel">
+        <table class="ev-table">
+          <tbody>
+            <tr>
+              <td style="color:var(--muted); width:220px;">Kernel</td>
+              <td>Local Python · ingestion → classification → gate → decision → pack</td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);">Test suite</td>
+              <td><strong>63 passed</strong> · all fixture scenarios verified</td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);">Fixture domains</td>
+              <td>BMS (8 scenarios) · ADAS (1 scenario)</td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);">Verdict classes</td>
+              <td>confirmed_regression · successful_change · preexisting_failure · worsened_preexisting · insufficient_evidence · environment_failure · coverage_gap</td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);">Artifact adapters</td>
+              <td>JUnit/xUnit XML · simulation CSV · log CSV · requirements export variants</td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);">Demo shell</td>
+              <td>Streamlit · one command launch · <span class="mono">./start_demo.sh</span></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);">Deployment</td>
+              <td>Local-first · no cloud · no account · no external dependencies</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Question ── -->
+    <div class="section">
+      <div class="panel" style="border-left: 3px solid var(--accent); background: var(--accent-light);">
+        <h2 style="color: var(--accent);">Does this match your workflow?</h2>
+        <p style="font-size:14px;">
+          If your team does regression review manually — comparing test results, digging through logs,
+          making release decisions without a structured evidence chain — AVERA is built for exactly that.
+          Drop a comment or reach out if you want to try it on a real scenario from your domain.
+        </p>
+      </div>
+    </div>
+
+    <div class="footer">
+      AVERA · Automotive Verification, Evidence &amp; Risk Architecture ·
+      All numbers on this page are generated from real fixture runs, not mock data.
+    </div>
+
+  </div>
+  </body>
+</html>

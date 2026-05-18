@@ -1,0 +1,80 @@
+{
+  "runId": "eval-adas-perception-v2.4.0",
+  "stage": "sil",
+  "modelVersion": "2.4.0",
+  "timestamp": "2026-04-15T09:00:00Z",
+  "tests": [
+    {
+      "testId": "SC-SAFETY-012-night-rain",
+      "name": "Pedestrian detection - night rain scenario",
+      "requirement": "REQ-SAFETY-012",
+      "component": "adas-perception-module",
+      "metric": "detection_rate",
+      "value": 0.97,
+      "threshold": 0.95,
+      "operator": ">=",
+      "passed": true,
+      "stage": "sil"
+    },
+    {
+      "testId": "SC-SAFETY-012-night-clear",
+      "name": "Pedestrian detection - night clear scenario",
+      "requirement": "REQ-SAFETY-012",
+      "component": "adas-perception-module",
+      "metric": "detection_rate",
+      "value": 0.99,
+      "threshold": 0.95,
+      "operator": ">=",
+      "passed": true,
+      "stage": "sil"
+    },
+    {
+      "testId": "SC-SAFETY-008-highway",
+      "name": "Vehicle false positive rate - highway",
+      "requirement": "REQ-SAFETY-008",
+      "component": "adas-perception-module",
+      "metric": "false_positive_rate",
+      "value": 0.02,
+      "threshold": 0.05,
+      "operator": "<=",
+      "passed": true,
+      "stage": "sil"
+    },
+    {
+      "testId": "SC-SAFETY-015-latency",
+      "name": "Pedestrian detection latency p95",
+      "requirement": "REQ-SAFETY-015",
+      "component": "adas-perception-module",
+      "metric": "latency_p95_ms",
+      "value": 38.2,
+      "threshold": 50.0,
+      "operator": "<=",
+      "passed": true,
+      "stage": "hil"
+    },
+    {
+      "testId": "SC-PERF-001-map",
+      "name": "Overall mAP benchmark",
+      "requirement": "REQ-PERF-001",
+      "component": "adas-perception-module",
+      "metric": "map_score",
+      "value": 0.847,
+      "threshold": 0.82,
+      "operator": ">=",
+      "passed": true,
+      "stage": "sil"
+    },
+    {
+      "testId": "SC-PERF-003-inference",
+      "name": "Model inference time on TDA4VM",
+      "requirement": "REQ-PERF-003",
+      "component": "adas-perception-module",
+      "metric": "inference_time_ms",
+      "value": 21.4,
+      "threshold": 25.0,
+      "operator": "<=",
+      "passed": true,
+      "stage": "hil"
+    }
+  ]
+}

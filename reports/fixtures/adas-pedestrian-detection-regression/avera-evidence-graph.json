@@ -1,0 +1,495 @@
+{
+  "edges": [
+    {
+      "relation": "classified_as",
+      "source": "change",
+      "target": "risk"
+    },
+    {
+      "relation": "recommends",
+      "source": "risk",
+      "target": "recommendation:adas-hil-vru-12"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:r1_confirmed_threshold_regression",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:r2_introduced_test_failure",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_baseline_pass_current_threshold_fail",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_introduced_failure_present",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_material_metric_worsening",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_affected_file_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_baseline_current_pair_present",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_introduced_failure_detected",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_requirement_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_threshold_crossing_detected",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:risk_high",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:safety_level_high",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_failed_adas-req-204_pedestrian_recall",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_failed_adas-req-219_brake_trigger_latency_ms",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:verdict_confirmed_regression",
+      "target": "risk"
+    },
+    {
+      "relation": "affects_component",
+      "source": "change",
+      "target": "component:adas_pedestrian_detection"
+    },
+    {
+      "relation": "contributes_to",
+      "source": "component:adas_pedestrian_detection",
+      "target": "risk"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:adas-req-204",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:adas_pedestrian_detection",
+      "target": "requirement:adas-req-204"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:adas-req-219",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:adas_pedestrian_detection",
+      "target": "requirement:adas-req-219"
+    },
+    {
+      "relation": "touches_file",
+      "source": "change",
+      "target": "file:src_adas_perception_pedestrian_classifier.cpp"
+    },
+    {
+      "relation": "maps_to_component",
+      "source": "file:src_adas_perception_pedestrian_classifier.cpp",
+      "target": "component:adas_pedestrian_detection"
+    },
+    {
+      "relation": "observed_in",
+      "source": "change",
+      "target": "test_failure:adas-sil-vru-regression-03"
+    },
+    {
+      "relation": "supports",
+      "source": "test_failure:adas-sil-vru-regression-03",
+      "target": "risk"
+    },
+    {
+      "relation": "occurs_in",
+      "source": "test_failure:adas-sil-vru-regression-03",
+      "target": "component:adas_pedestrian_detection"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:adas-req-204_pedestrian_recall_adas-sil-vru-regression-03",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:adas-req-204_pedestrian_recall_adas-sil-vru-regression-03",
+      "target": "requirement:adas-req-204"
+    },
+    {
+      "relation": "contains_metric",
+      "source": "test_failure:adas-sil-vru-regression-03",
+      "target": "threshold_evidence:adas-req-204_pedestrian_recall_adas-sil-vru-regression-03"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:adas-req-219_brake_trigger_latency_ms_adas-sil-vru-regression-03",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:adas-req-219_brake_trigger_latency_ms_adas-sil-vru-regression-03",
+      "target": "requirement:adas-req-219"
+    },
+    {
+      "relation": "contains_metric",
+      "source": "test_failure:adas-sil-vru-regression-03",
+      "target": "threshold_evidence:adas-req-219_brake_trigger_latency_ms_adas-sil-vru-regression-03"
+    },
+    {
+      "relation": "supports",
+      "source": "signal_summary:adas-sil-vru-regression-03_brake_trigger_latency_ms",
+      "target": "risk"
+    },
+    {
+      "relation": "summarizes_test",
+      "source": "signal_summary:adas-sil-vru-regression-03_brake_trigger_latency_ms",
+      "target": "test_failure:adas-sil-vru-regression-03"
+    },
+    {
+      "relation": "supports_threshold",
+      "source": "signal_summary:adas-sil-vru-regression-03_brake_trigger_latency_ms",
+      "target": "threshold_evidence:adas-req-219_brake_trigger_latency_ms_adas-sil-vru-regression-03"
+    },
+    {
+      "relation": "supports",
+      "source": "signal_summary:adas-sil-vru-regression-03_pedestrian_recall",
+      "target": "risk"
+    },
+    {
+      "relation": "summarizes_test",
+      "source": "signal_summary:adas-sil-vru-regression-03_pedestrian_recall",
+      "target": "test_failure:adas-sil-vru-regression-03"
+    },
+    {
+      "relation": "supports_threshold",
+      "source": "signal_summary:adas-sil-vru-regression-03_pedestrian_recall",
+      "target": "threshold_evidence:adas-req-204_pedestrian_recall_adas-sil-vru-regression-03"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "change",
+      "label": "Change under assessment",
+      "properties": {
+        "description": "An engineer retuned pedestrian classification confidence thresholds in\nsrc/adas/perception/pedestrian_classifier.cpp to reduce false positives from roadside objects in\nthe urban daylight pedestrian-crossing scenario.\n\nThe baseline mapped regression test passed before the change. The current run shows pedestrian\nrecall falling from 0.972 to 0.903 and brake trigger latency increasing from 104 ms to 146 ms in\nthe same scenario. AVERA should map the changed file to ADAS Pedestrian Detection, compare\nbaseline and current evidence, and classify the outcome as a high-confidence confirmed regression\nrather than a BMS-specific result."
+      },
+      "type": "change"
+    },
+    {
+      "id": "risk",
+      "label": "high",
+      "properties": {
+        "confidence": "high",
+        "verdict": "confirmed_regression"
+      },
+      "type": "risk"
+    },
+    {
+      "id": "recommendation:adas-hil-vru-12",
+      "label": "ADAS-HIL-VRU-12",
+      "properties": {
+        "check": "ADAS-HIL-VRU-12"
+      },
+      "type": "recommendation"
+    },
+    {
+      "id": "rule:r1_confirmed_threshold_regression",
+      "label": "R1_confirmed_threshold_regression",
+      "properties": {
+        "value": "R1_confirmed_threshold_regression"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:r2_introduced_test_failure",
+      "label": "R2_introduced_test_failure",
+      "properties": {
+        "value": "R2_introduced_test_failure"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_baseline_pass_current_threshold_fail",
+      "label": "signal_baseline_pass_current_threshold_fail",
+      "properties": {
+        "value": "signal_baseline_pass_current_threshold_fail"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_introduced_failure_present",
+      "label": "signal_introduced_failure_present",
+      "properties": {
+        "value": "signal_introduced_failure_present"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_material_metric_worsening",
+      "label": "signal_material_metric_worsening",
+      "properties": {
+        "value": "signal_material_metric_worsening"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "confidence_factor:+_affected_file_mapped",
+      "label": "+ affected_file_mapped",
+      "properties": {
+        "value": "+ affected_file_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_baseline_current_pair_present",
+      "label": "+ baseline_current_pair_present",
+      "properties": {
+        "value": "+ baseline_current_pair_present"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_introduced_failure_detected",
+      "label": "+ introduced_failure_detected",
+      "properties": {
+        "value": "+ introduced_failure_detected"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_requirement_mapped",
+      "label": "+ requirement_mapped",
+      "properties": {
+        "value": "+ requirement_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_threshold_crossing_detected",
+      "label": "+ threshold_crossing_detected",
+      "properties": {
+        "value": "+ threshold_crossing_detected"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "risk_driver:risk_high",
+      "label": "risk:high",
+      "properties": {
+        "value": "risk:high"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:safety_level_high",
+      "label": "safety_level:high",
+      "properties": {
+        "value": "safety_level:high"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_failed_adas-req-204_pedestrian_recall",
+      "label": "threshold_failed:ADAS-REQ-204:pedestrian_recall",
+      "properties": {
+        "value": "threshold_failed:ADAS-REQ-204:pedestrian_recall"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_failed_adas-req-219_brake_trigger_latency_ms",
+      "label": "threshold_failed:ADAS-REQ-219:brake_trigger_latency_ms",
+      "properties": {
+        "value": "threshold_failed:ADAS-REQ-219:brake_trigger_latency_ms"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:verdict_confirmed_regression",
+      "label": "verdict:confirmed_regression",
+      "properties": {
+        "value": "verdict:confirmed_regression"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "component:adas_pedestrian_detection",
+      "label": "ADAS Pedestrian Detection",
+      "type": "component"
+    },
+    {
+      "id": "requirement:adas-req-204",
+      "label": "ADAS-REQ-204",
+      "properties": {
+        "component": "ADAS Pedestrian Detection",
+        "metric": "pedestrian_recall",
+        "operator": ">=",
+        "requirement": "Pedestrian recall in urban daylight regression suite must not fall below 0.95",
+        "safety_level": "high",
+        "threshold": 0.95
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "requirement:adas-req-219",
+      "label": "ADAS-REQ-219",
+      "properties": {
+        "component": "ADAS Pedestrian Detection",
+        "metric": "brake_trigger_latency_ms",
+        "operator": "<=",
+        "requirement": "Maximum emergency braking trigger latency for pedestrian crossing scenarios must not exceed 120 ms",
+        "safety_level": "high",
+        "threshold": 120.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "file:src_adas_perception_pedestrian_classifier.cpp",
+      "label": "src/adas/perception/pedestrian_classifier.cpp",
+      "properties": {
+        "path": "src/adas/perception/pedestrian_classifier.cpp"
+      },
+      "type": "file"
+    },
+    {
+      "id": "test_failure:adas-sil-vru-regression-03",
+      "label": "ADAS-SIL-VRU-REGRESSION-03",
+      "properties": {
+        "baseline_status": "passed",
+        "category": "introduced_failures",
+        "component": "ADAS Pedestrian Detection",
+        "current_status": "failed"
+      },
+      "type": "test_failure"
+    },
+    {
+      "id": "threshold_evidence:adas-req-204_pedestrian_recall_adas-sil-vru-regression-03",
+      "label": "pedestrian_recall",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 0.972,
+        "current_passed": false,
+        "current_value": 0.903,
+        "operator": ">=",
+        "requirement_id": "ADAS-REQ-204",
+        "test_id": "ADAS-SIL-VRU-REGRESSION-03",
+        "threshold": 0.95
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:adas-req-219_brake_trigger_latency_ms_adas-sil-vru-regression-03",
+      "label": "brake_trigger_latency_ms",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 104.0,
+        "current_passed": false,
+        "current_value": 146.0,
+        "operator": "<=",
+        "requirement_id": "ADAS-REQ-219",
+        "test_id": "ADAS-SIL-VRU-REGRESSION-03",
+        "threshold": 120.0
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "signal_summary:adas-sil-vru-regression-03_brake_trigger_latency_ms",
+      "label": "brake_trigger_latency_ms",
+      "properties": {
+        "count": 4,
+        "last": 146.0,
+        "max": 146.0,
+        "min": 104.0,
+        "signal": "brake_trigger_latency_ms",
+        "test_id": "ADAS-SIL-VRU-REGRESSION-03",
+        "unit": "ms"
+      },
+      "type": "signal_summary"
+    },
+    {
+      "id": "signal_summary:adas-sil-vru-regression-03_pedestrian_recall",
+      "label": "pedestrian_recall",
+      "properties": {
+        "count": 4,
+        "last": 0.903,
+        "max": 0.972,
+        "min": 0.903,
+        "signal": "pedestrian_recall",
+        "test_id": "ADAS-SIL-VRU-REGRESSION-03",
+        "unit": "ratio"
+      },
+      "type": "signal_summary"
+    }
+  ],
+  "schema_version": "evidence_graph.v0.3",
+  "summary": {
+    "comparison_summary": {
+      "introduced_failures": 1,
+      "metric_deltas": 2,
+      "missing_baseline": 0,
+      "missing_current": 0,
+      "preexisting_failures": 0,
+      "resolved_failures": 0,
+      "total_tests": 1,
+      "unchanged_passes": 0
+    },
+    "components": 1,
+    "confidence": "high",
+    "confidence_factors": 5,
+    "edge_count": 40,
+    "evidence_summary": [
+      "Verdict is confirmed regression.",
+      "ADAS-SIL-VRU-REGRESSION-03 failed only in the current run.",
+      "pedestrian_recall for ADAS-REQ-204 was 0.903, outside >= 0.95.",
+      "brake_trigger_latency_ms for ADAS-REQ-219 was 146, outside <= 120.",
+      "Mapped affected files: src/adas/perception/pedestrian_classifier.cpp.",
+      "brake_trigger_latency_ms materially worsened from 104.0 to 146.0."
+    ],
+    "files": 1,
+    "node_count": 27,
+    "recommendations": 1,
+    "requirements": 2,
+    "risk": "high",
+    "risk_drivers": 5,
+    "rules": 5,
+    "signal_summaries": 2,
+    "tests_or_failures": 1,
+    "threshold_evidence": 2,
+    "verdict": "confirmed_regression"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "runId": "baseline-bms-preexisting-001",
+  "stage": "baseline",
+  "tests": [
+    {
+      "id": "BMS-SIL-FASTCHARGE-01",
+      "component": "BMS Thermal Control",
+      "status": "failed",
+      "metrics": {
+        "max_cell_temp_c": 51.4,
+        "cooling_response_ms": 535
+      },
+      "evidence": "Baseline already exceeded the fast-charge thermal threshold before the current change."
+    }
+  ]
+}

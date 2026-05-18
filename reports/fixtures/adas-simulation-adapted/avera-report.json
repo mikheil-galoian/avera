@@ -1,0 +1,171 @@
+{
+  "affected_components": [
+    "ADAS Pedestrian Detection"
+  ],
+  "affected_files": [
+    "src/adas/perception/pedestrian_classifier.cpp"
+  ],
+  "affected_requirements": [
+    {
+      "component": "ADAS Pedestrian Detection",
+      "id": "ADAS-REQ-204",
+      "metadata": {},
+      "metric": "pedestrian_recall",
+      "next_checks": [
+        "ADAS-HIL-VRU-12"
+      ],
+      "operator": ">=",
+      "requirement": "Pedestrian recall in urban daylight regression suite must not fall below 0.95",
+      "safety_level": "high",
+      "threshold": 0.95
+    },
+    {
+      "component": "ADAS Pedestrian Detection",
+      "id": "ADAS-REQ-219",
+      "metadata": {},
+      "metric": "brake_trigger_latency_ms",
+      "next_checks": [
+        "ADAS-HIL-VRU-12"
+      ],
+      "operator": "<=",
+      "requirement": "Maximum emergency braking trigger latency for pedestrian crossing scenarios must not exceed 120 ms",
+      "safety_level": "high",
+      "threshold": 120.0
+    }
+  ],
+  "comparison_summary": {
+    "introduced_failures": 1,
+    "metric_deltas": 2,
+    "missing_baseline": 0,
+    "missing_current": 0,
+    "preexisting_failures": 0,
+    "resolved_failures": 0,
+    "total_tests": 1,
+    "unchanged_passes": 0
+  },
+  "confidence": "high",
+  "confidence_factors": [
+    "+ baseline_current_pair_present",
+    "+ introduced_failure_detected",
+    "+ threshold_crossing_detected",
+    "+ requirement_mapped",
+    "+ affected_file_mapped"
+  ],
+  "confidence_score": 0.95,
+  "evidence_summary": [
+    "Verdict is confirmed regression.",
+    "ADAS-SIL-VRU-REGRESSION-03 failed only in the current run.",
+    "pedestrian_recall for ADAS-REQ-204 was 0.903, outside >= 0.95.",
+    "brake_trigger_latency_ms for ADAS-REQ-219 was 146, outside <= 120.",
+    "Mapped affected files: src/adas/perception/pedestrian_classifier.cpp.",
+    "brake_trigger_latency_ms materially worsened from 104.0 to 146.0."
+  ],
+  "introduced_failures": [
+    {
+      "baseline_metrics": {
+        "brake_trigger_latency_ms": 104.0,
+        "pedestrian_recall": 0.972
+      },
+      "baseline_status": "passed",
+      "classification": "introduced_failure",
+      "component": "ADAS Pedestrian Detection",
+      "current_metrics": {
+        "brake_trigger_latency_ms": 146.0,
+        "pedestrian_recall": 0.903
+      },
+      "current_status": "failed",
+      "evidence": [
+        "ADAS-SIL-VRU-REGRESSION-03: introduced failure.",
+        "baseline simulation kept pedestrian recall above threshold\nbaseline simulation triggered braking within required latency",
+        "pedestrian recall fell below mapped requirement after threshold retune\nbrake trigger latency exceeded mapped requirement after threshold retune",
+        "brake_trigger_latency_ms increased from 104 to 146.",
+        "pedestrian_recall decreased from 0.972 to 0.903."
+      ],
+      "metric_deltas": [
+        {
+          "baseline": 104.0,
+          "current": 146.0,
+          "delta": 42.0,
+          "metric": "brake_trigger_latency_ms",
+          "percent_delta": 40.38461538461539,
+          "test_id": "ADAS-SIL-VRU-REGRESSION-03"
+        },
+        {
+          "baseline": 0.972,
+          "current": 0.903,
+          "delta": -0.06899999999999995,
+          "metric": "pedestrian_recall",
+          "percent_delta": -7.0987654320987605,
+          "test_id": "ADAS-SIL-VRU-REGRESSION-03"
+        }
+      ],
+      "test_id": "ADAS-SIL-VRU-REGRESSION-03"
+    }
+  ],
+  "preexisting_failures": [],
+  "recommended_next_checks": [
+    "ADAS-HIL-VRU-12"
+  ],
+  "risk": "high",
+  "risk_drivers": [
+    "verdict:confirmed_regression",
+    "risk:high",
+    "safety_level:high",
+    "threshold_failed:ADAS-REQ-204:pedestrian_recall",
+    "threshold_failed:ADAS-REQ-219:brake_trigger_latency_ms"
+  ],
+  "rules_triggered": [
+    "R1_confirmed_threshold_regression",
+    "R2_introduced_test_failure",
+    "signal_baseline_pass_current_threshold_fail",
+    "signal_introduced_failure_present",
+    "signal_material_metric_worsening"
+  ],
+  "schema_version": "avera.assessment.v0.2",
+  "signal_summary": [
+    {
+      "count": 4,
+      "last": 146.0,
+      "max": 146.0,
+      "min": 104.0,
+      "signal": "brake_trigger_latency_ms",
+      "test_id": "ADAS-SIL-VRU-REGRESSION-03",
+      "unit": "ms"
+    },
+    {
+      "count": 4,
+      "last": 0.903,
+      "max": 0.972,
+      "min": 0.903,
+      "signal": "pedestrian_recall",
+      "test_id": "ADAS-SIL-VRU-REGRESSION-03",
+      "unit": "ratio"
+    }
+  ],
+  "signal_trace_points": 8,
+  "threshold_evidence": [
+    {
+      "baseline_passed": true,
+      "baseline_value": 0.972,
+      "current_passed": false,
+      "current_value": 0.903,
+      "metric": "pedestrian_recall",
+      "operator": ">=",
+      "requirement_id": "ADAS-REQ-204",
+      "test_id": "ADAS-SIL-VRU-REGRESSION-03",
+      "threshold": 0.95
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 104.0,
+      "current_passed": false,
+      "current_value": 146.0,
+      "metric": "brake_trigger_latency_ms",
+      "operator": "<=",
+      "requirement_id": "ADAS-REQ-219",
+      "test_id": "ADAS-SIL-VRU-REGRESSION-03",
+      "threshold": 120.0
+    }
+  ],
+  "verdict": "confirmed_regression"
+}

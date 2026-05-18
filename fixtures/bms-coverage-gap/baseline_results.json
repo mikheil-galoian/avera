@@ -1,0 +1,16 @@
+{
+  "runId": "baseline-bms-coverage-gap-001",
+  "stage": "baseline",
+  "tests": [
+    {
+      "id": "BMS-SIL-FASTCHARGE-01",
+      "component": "BMS Thermal Control",
+      "status": "passed",
+      "metrics": {
+        "max_cell_temp_c": 47.2,
+        "cooling_response_ms": 445
+      },
+      "evidence": "Baseline run only covered thermal control and did not exercise SOC drift requirements."
+    }
+  ]
+}

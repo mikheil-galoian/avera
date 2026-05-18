@@ -1,0 +1,87 @@
+{
+  "affected_components": [
+    "BMS Thermal Control"
+  ],
+  "affected_files": [
+    "src/bms/thermal_manager.c"
+  ],
+  "affected_requirements": [
+    {
+      "component": "BMS Thermal Control",
+      "id": "BMS-REQ-118",
+      "metadata": {},
+      "metric": "cooling_response_ms",
+      "next_checks": [
+        "BMS-HIL-FASTCHARGE-07"
+      ],
+      "operator": "<=",
+      "requirement": "Cooling response delay during fast charging must not exceed 500 ms",
+      "safety_level": "medium",
+      "threshold": 500.0
+    }
+  ],
+  "comparison_summary": {
+    "introduced_failures": 0,
+    "metric_deltas": 1,
+    "missing_baseline": 0,
+    "missing_current": 0,
+    "preexisting_failures": 0,
+    "resolved_failures": 0,
+    "total_tests": 1,
+    "unchanged_passes": 0
+  },
+  "confidence": "low",
+  "confidence_factors": [
+    "+ baseline_current_pair_present",
+    "+ requirement_mapped",
+    "+ affected_file_mapped",
+    "- incomplete_or_inconclusive_current_evidence"
+  ],
+  "confidence_score": 0.39,
+  "evidence_summary": [
+    "Verdict is insufficient evidence.",
+    "Mapped affected files: src/bms/thermal_manager.c."
+  ],
+  "introduced_failures": [],
+  "preexisting_failures": [],
+  "recommended_next_checks": [
+    "BMS-HIL-FASTCHARGE-07"
+  ],
+  "risk": "unknown",
+  "risk_drivers": [
+    "verdict:insufficient_evidence",
+    "risk:unknown",
+    "safety_level:medium",
+    "threshold_passed:BMS-REQ-118:cooling_response_ms"
+  ],
+  "rules_triggered": [
+    "R8_insufficient_evidence",
+    "signal_unrecognized_or_inconclusive_status"
+  ],
+  "schema_version": "avera.assessment.v0.2",
+  "threshold_evidence": [
+    {
+      "baseline_passed": true,
+      "baseline_value": 47.8,
+      "current_passed": null,
+      "current_value": null,
+      "metric": "max_cell_temp_c",
+      "operator": "<=",
+      "requirement_id": "BMS-REQ-112",
+      "test_id": "BMS-SIL-FASTCHARGE-01",
+      "threshold": 50.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 440.0,
+      "current_passed": true,
+      "current_value": 472.0,
+      "metric": "cooling_response_ms",
+      "operator": "<=",
+      "requirement_id": "BMS-REQ-118",
+      "test_id": "BMS-SIL-FASTCHARGE-01",
+      "threshold": 500.0
+    }
+  ],
+  "verdict": "insufficient_evidence"
+}

@@ -1,0 +1,19 @@
+{
+  "runId": "current-bms-coverage-gap-001",
+  "stage": "current",
+  "changedFiles": [
+    "src/bms/soc_estimator.c"
+  ],
+  "tests": [
+    {
+      "id": "BMS-SIL-FASTCHARGE-01",
+      "component": "BMS Thermal Control",
+      "status": "passed",
+      "metrics": {
+        "max_cell_temp_c": 47.0,
+        "cooling_response_ms": 440
+      },
+      "evidence": "Current run repeated thermal coverage but did not execute the mapped SOC drift verification."
+    }
+  ]
+}

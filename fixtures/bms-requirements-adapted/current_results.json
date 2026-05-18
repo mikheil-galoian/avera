@@ -1,0 +1,19 @@
+{
+  "runId": "current-bms-req-001",
+  "stage": "current",
+  "changedFiles": [
+    "src/bms/thermal_manager.c"
+  ],
+  "tests": [
+    {
+      "id": "BMS-SIL-FASTCHARGE-01",
+      "component": "BMS Thermal Control",
+      "status": "failed",
+      "metrics": {
+        "max_cell_temp_c": 52.8,
+        "cooling_response_ms": 612.0
+      },
+      "evidence": "Fast-charge cooling logic regression raised max cell temperature and delayed cooling response beyond mapped BMS requirements."
+    }
+  ]
+}

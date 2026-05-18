@@ -1,0 +1,5 @@
+An engineer changed the fast-charge cooling ramp in src/bms/thermal_manager.c.
+
+The baseline run already failed BMS-REQ-112 and BMS-REQ-118. The current run still fails the same
+requirements, but both measured values are materially worse after the change. AVERA should classify
+this as a worsened preexisting failure with high risk and high confidence.

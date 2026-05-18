@@ -1,0 +1,5 @@
+An engineer changed the BMS fast-charge cooling logic in src/bms/thermal_manager.c.
+
+The current verification run is inconclusive because the maximum cell temperature metric is missing.
+AVERA should avoid assigning fault without comparable baseline and current evidence, classify the
+outcome as insufficient evidence, and request a rerun of the mapped HIL check.

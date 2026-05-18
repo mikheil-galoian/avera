@@ -1,0 +1,6 @@
+An engineer changed the BMS fast-charge cooling logic in src/bms/thermal_manager.c.
+
+The intended behavior was to reduce unnecessary coolant pump activity during early fast charging.
+The observed current run shows slower cooling response and a maximum cell temperature above the
+BMS-REQ-112 threshold. AVERA should map the changed file to BMS Thermal Control, compare baseline
+and current verification results, and classify the outcome as a high-confidence confirmed regression.

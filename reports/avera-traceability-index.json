@@ -1,0 +1,1473 @@
+{
+  "components": [
+    {
+      "component": "ADAS Pedestrian Detection",
+      "failures": [],
+      "gate_history": [
+        {
+          "gate_exit_codes": [
+            1
+          ],
+          "gate_status": "block",
+          "records": [
+            {
+              "reasons": [
+                "blocking verdict: confirmed_regression",
+                "risk high exceeds allowed risk medium"
+              ],
+              "report_path": "reports/smoke-fast-charge/avera-report.json",
+              "risk": "high",
+              "timestamp_utc": "2026-04-23T06:36:23Z",
+              "verdict": "confirmed_regression"
+            }
+          ],
+          "status": "block"
+        }
+      ],
+      "requirements": [
+        "ADAS-REQ-204",
+        "ADAS-REQ-219"
+      ],
+      "risk_history": [
+        {
+          "records": [
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-05-02T10:30:20Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-log-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:19:42Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-log-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:17:45Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-requirements-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:14:13Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-requirements-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:12:05Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/adas-simulation-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:08:34Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/adas-simulation-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:07:39Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/adas-pedestrian-detection-regression/avera-report.json",
+              "timestamp_utc": "2026-04-29T10:00:59Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-29T08:19:28Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "/Users/mac/Desktop/AVERA/reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-28T13:59:21Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-worsened-preexisting/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:40:22Z",
+              "verdict": "worsened_preexisting_failure"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-mixed-results/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:31Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:06Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "gate",
+              "report_path": "reports/smoke-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:36:23Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/smoke-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:35:44Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "current_report",
+              "report_path": null,
+              "timestamp_utc": null,
+              "verdict": "confirmed_regression"
+            }
+          ],
+          "risk": "high"
+        },
+        {
+          "records": [
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-successful-change/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:40:08Z",
+              "verdict": "successful_change"
+            }
+          ],
+          "risk": "low"
+        },
+        {
+          "records": [
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-preexisting-failure/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:49Z",
+              "verdict": "preexisting_failure"
+            },
+            {
+              "confidence": "low",
+              "confidence_score": 0.36,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-coverage-gap/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:38:38Z",
+              "verdict": "requirements_coverage_gap"
+            }
+          ],
+          "risk": "medium"
+        },
+        {
+          "records": [
+            {
+              "confidence": "low",
+              "confidence_score": 0.39,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-insufficient-evidence/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:18Z",
+              "verdict": "insufficient_evidence"
+            },
+            {
+              "confidence": "low",
+              "confidence_score": 0.45,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-environment-failure/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:38:52Z",
+              "verdict": "environment_failure"
+            }
+          ],
+          "risk": "unknown"
+        }
+      ],
+      "tests": [],
+      "threshold_evidence": []
+    },
+    {
+      "component": "BMS Cell Balancing",
+      "failures": [],
+      "gate_history": [
+        {
+          "gate_exit_codes": [
+            1
+          ],
+          "gate_status": "block",
+          "records": [
+            {
+              "reasons": [
+                "blocking verdict: confirmed_regression",
+                "risk high exceeds allowed risk medium"
+              ],
+              "report_path": "reports/smoke-fast-charge/avera-report.json",
+              "risk": "high",
+              "timestamp_utc": "2026-04-23T06:36:23Z",
+              "verdict": "confirmed_regression"
+            }
+          ],
+          "status": "block"
+        }
+      ],
+      "requirements": [
+        "BMS-REQ-112",
+        "BMS-REQ-118",
+        "BMS-REQ-205",
+        "BMS-REQ-301"
+      ],
+      "risk_history": [
+        {
+          "records": [
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-05-02T10:30:20Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-log-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:19:42Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-log-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:17:45Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-requirements-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:14:13Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-requirements-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:12:05Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/adas-simulation-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:08:34Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/adas-simulation-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:07:39Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/adas-pedestrian-detection-regression/avera-report.json",
+              "timestamp_utc": "2026-04-29T10:00:59Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-29T08:19:28Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "/Users/mac/Desktop/AVERA/reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-28T13:59:21Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-worsened-preexisting/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:40:22Z",
+              "verdict": "worsened_preexisting_failure"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-mixed-results/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:31Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:06Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "gate",
+              "report_path": "reports/smoke-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:36:23Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/smoke-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:35:44Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "current_report",
+              "report_path": null,
+              "timestamp_utc": null,
+              "verdict": "confirmed_regression"
+            }
+          ],
+          "risk": "high"
+        },
+        {
+          "records": [
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-successful-change/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:40:08Z",
+              "verdict": "successful_change"
+            }
+          ],
+          "risk": "low"
+        },
+        {
+          "records": [
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-preexisting-failure/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:49Z",
+              "verdict": "preexisting_failure"
+            },
+            {
+              "confidence": "low",
+              "confidence_score": 0.36,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-coverage-gap/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:38:38Z",
+              "verdict": "requirements_coverage_gap"
+            }
+          ],
+          "risk": "medium"
+        },
+        {
+          "records": [
+            {
+              "confidence": "low",
+              "confidence_score": 0.39,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-insufficient-evidence/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:18Z",
+              "verdict": "insufficient_evidence"
+            },
+            {
+              "confidence": "low",
+              "confidence_score": 0.45,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-environment-failure/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:38:52Z",
+              "verdict": "environment_failure"
+            }
+          ],
+          "risk": "unknown"
+        }
+      ],
+      "tests": [],
+      "threshold_evidence": []
+    },
+    {
+      "component": "BMS Contactor Control",
+      "failures": [],
+      "gate_history": [
+        {
+          "gate_exit_codes": [
+            1
+          ],
+          "gate_status": "block",
+          "records": [
+            {
+              "reasons": [
+                "blocking verdict: confirmed_regression",
+                "risk high exceeds allowed risk medium"
+              ],
+              "report_path": "reports/smoke-fast-charge/avera-report.json",
+              "risk": "high",
+              "timestamp_utc": "2026-04-23T06:36:23Z",
+              "verdict": "confirmed_regression"
+            }
+          ],
+          "status": "block"
+        }
+      ],
+      "requirements": [],
+      "risk_history": [
+        {
+          "records": [
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-05-02T10:30:20Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-log-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:19:42Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-log-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:17:45Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-requirements-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:14:13Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-requirements-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:12:05Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/adas-simulation-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:08:34Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/adas-simulation-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:07:39Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/adas-pedestrian-detection-regression/avera-report.json",
+              "timestamp_utc": "2026-04-29T10:00:59Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-29T08:19:28Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "/Users/mac/Desktop/AVERA/reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-28T13:59:21Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-worsened-preexisting/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:40:22Z",
+              "verdict": "worsened_preexisting_failure"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-mixed-results/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:31Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:06Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "gate",
+              "report_path": "reports/smoke-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:36:23Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/smoke-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:35:44Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "current_report",
+              "report_path": null,
+              "timestamp_utc": null,
+              "verdict": "confirmed_regression"
+            }
+          ],
+          "risk": "high"
+        },
+        {
+          "records": [
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-successful-change/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:40:08Z",
+              "verdict": "successful_change"
+            }
+          ],
+          "risk": "low"
+        },
+        {
+          "records": [
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-preexisting-failure/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:49Z",
+              "verdict": "preexisting_failure"
+            },
+            {
+              "confidence": "low",
+              "confidence_score": 0.36,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-coverage-gap/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:38:38Z",
+              "verdict": "requirements_coverage_gap"
+            }
+          ],
+          "risk": "medium"
+        },
+        {
+          "records": [
+            {
+              "confidence": "low",
+              "confidence_score": 0.39,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-insufficient-evidence/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:18Z",
+              "verdict": "insufficient_evidence"
+            },
+            {
+              "confidence": "low",
+              "confidence_score": 0.45,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-environment-failure/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:38:52Z",
+              "verdict": "environment_failure"
+            }
+          ],
+          "risk": "unknown"
+        }
+      ],
+      "tests": [],
+      "threshold_evidence": []
+    },
+    {
+      "component": "BMS State Of Charge Estimation",
+      "failures": [],
+      "gate_history": [
+        {
+          "gate_exit_codes": [
+            1
+          ],
+          "gate_status": "block",
+          "records": [
+            {
+              "reasons": [
+                "blocking verdict: confirmed_regression",
+                "risk high exceeds allowed risk medium"
+              ],
+              "report_path": "reports/smoke-fast-charge/avera-report.json",
+              "risk": "high",
+              "timestamp_utc": "2026-04-23T06:36:23Z",
+              "verdict": "confirmed_regression"
+            }
+          ],
+          "status": "block"
+        }
+      ],
+      "requirements": [
+        "BMS-REQ-205",
+        "BMS-REQ-206"
+      ],
+      "risk_history": [
+        {
+          "records": [
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-05-02T10:30:20Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-log-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:19:42Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-log-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:17:45Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-requirements-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:14:13Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-requirements-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:12:05Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/adas-simulation-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:08:34Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/adas-simulation-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:07:39Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/adas-pedestrian-detection-regression/avera-report.json",
+              "timestamp_utc": "2026-04-29T10:00:59Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-29T08:19:28Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "/Users/mac/Desktop/AVERA/reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-28T13:59:21Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-worsened-preexisting/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:40:22Z",
+              "verdict": "worsened_preexisting_failure"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-mixed-results/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:31Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:06Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "gate",
+              "report_path": "reports/smoke-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:36:23Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/smoke-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:35:44Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "current_report",
+              "report_path": null,
+              "timestamp_utc": null,
+              "verdict": "confirmed_regression"
+            }
+          ],
+          "risk": "high"
+        },
+        {
+          "records": [
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-successful-change/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:40:08Z",
+              "verdict": "successful_change"
+            }
+          ],
+          "risk": "low"
+        },
+        {
+          "records": [
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-preexisting-failure/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:49Z",
+              "verdict": "preexisting_failure"
+            },
+            {
+              "confidence": "low",
+              "confidence_score": 0.36,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-coverage-gap/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:38:38Z",
+              "verdict": "requirements_coverage_gap"
+            }
+          ],
+          "risk": "medium"
+        },
+        {
+          "records": [
+            {
+              "confidence": "low",
+              "confidence_score": 0.39,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-insufficient-evidence/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:18Z",
+              "verdict": "insufficient_evidence"
+            },
+            {
+              "confidence": "low",
+              "confidence_score": 0.45,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-environment-failure/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:38:52Z",
+              "verdict": "environment_failure"
+            }
+          ],
+          "risk": "unknown"
+        }
+      ],
+      "tests": [],
+      "threshold_evidence": []
+    },
+    {
+      "component": "BMS Thermal Control",
+      "failures": [
+        {
+          "baseline_metrics": {
+            "cooling_response_ms": 420,
+            "max_cell_temp_c": 47.1
+          },
+          "baseline_status": "passed",
+          "category": "introduced_failures",
+          "classification": "introduced_failure",
+          "component": "BMS Thermal Control",
+          "current_metrics": {
+            "cooling_response_ms": 610,
+            "max_cell_temp_c": 52.8
+          },
+          "current_status": "failed",
+          "evidence": [
+            "BMS-SIL-FASTCHARGE-01: introduced failure.",
+            "Maximum cell temperature exceeded fast-charge threshold after the cooling logic change.",
+            "cooling_response_ms increased from 420 to 610.",
+            "max_cell_temp_c increased from 47.1 to 52.8."
+          ],
+          "metric_deltas": [
+            {
+              "baseline": 420.0,
+              "current": 610.0,
+              "delta": 190.0,
+              "metric": "cooling_response_ms",
+              "percent_delta": 45.23809523809524,
+              "test_id": "BMS-SIL-FASTCHARGE-01"
+            },
+            {
+              "baseline": 47.1,
+              "current": 52.8,
+              "delta": 5.699999999999996,
+              "metric": "max_cell_temp_c",
+              "percent_delta": 12.101910828025469,
+              "test_id": "BMS-SIL-FASTCHARGE-01"
+            }
+          ],
+          "requirement_id": null,
+          "test_id": "BMS-SIL-FASTCHARGE-01"
+        }
+      ],
+      "gate_history": [
+        {
+          "gate_exit_codes": [
+            1
+          ],
+          "gate_status": "block",
+          "records": [
+            {
+              "reasons": [
+                "blocking verdict: confirmed_regression",
+                "risk high exceeds allowed risk medium"
+              ],
+              "report_path": "reports/smoke-fast-charge/avera-report.json",
+              "risk": "high",
+              "timestamp_utc": "2026-04-23T06:36:23Z",
+              "verdict": "confirmed_regression"
+            }
+          ],
+          "status": "block"
+        }
+      ],
+      "requirements": [
+        "BMS-REQ-112",
+        "BMS-REQ-118"
+      ],
+      "risk_history": [
+        {
+          "records": [
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-05-02T10:30:20Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-log-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:19:42Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-log-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:17:45Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-requirements-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:14:13Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-requirements-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:12:05Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/adas-simulation-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:08:34Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/adas-simulation-adapted/avera-report.json",
+              "timestamp_utc": "2026-04-30T20:07:39Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/adas-pedestrian-detection-regression/avera-report.json",
+              "timestamp_utc": "2026-04-29T10:00:59Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-29T08:19:28Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "/Users/mac/Desktop/AVERA/reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-28T13:59:21Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-worsened-preexisting/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:40:22Z",
+              "verdict": "worsened_preexisting_failure"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-mixed-results/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:31Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:06Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "gate",
+              "report_path": "reports/smoke-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:36:23Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/smoke-fast-charge/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:35:44Z",
+              "verdict": "confirmed_regression"
+            },
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "current_report",
+              "report_path": null,
+              "timestamp_utc": null,
+              "verdict": "confirmed_regression"
+            }
+          ],
+          "risk": "high"
+        },
+        {
+          "records": [
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-successful-change/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:40:08Z",
+              "verdict": "successful_change"
+            }
+          ],
+          "risk": "low"
+        },
+        {
+          "records": [
+            {
+              "confidence": "high",
+              "confidence_score": 0.95,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-preexisting-failure/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:49Z",
+              "verdict": "preexisting_failure"
+            },
+            {
+              "confidence": "low",
+              "confidence_score": 0.36,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-coverage-gap/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:38:38Z",
+              "verdict": "requirements_coverage_gap"
+            }
+          ],
+          "risk": "medium"
+        },
+        {
+          "records": [
+            {
+              "confidence": "low",
+              "confidence_score": 0.39,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-insufficient-evidence/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:39:18Z",
+              "verdict": "insufficient_evidence"
+            },
+            {
+              "confidence": "low",
+              "confidence_score": 0.45,
+              "record_type": "analysis",
+              "report_path": "reports/fixtures/bms-environment-failure/avera-report.json",
+              "timestamp_utc": "2026-04-23T06:38:52Z",
+              "verdict": "environment_failure"
+            }
+          ],
+          "risk": "unknown"
+        }
+      ],
+      "tests": [
+        "BMS-SIL-FASTCHARGE-01"
+      ],
+      "threshold_evidence": [
+        {
+          "baseline_passed": true,
+          "baseline_value": 47.1,
+          "current_passed": false,
+          "current_value": 52.8,
+          "metric": "max_cell_temp_c",
+          "operator": "<=",
+          "requirement_id": "BMS-REQ-112",
+          "test_id": "BMS-SIL-FASTCHARGE-01",
+          "threshold": 50.0
+        },
+        {
+          "baseline_passed": true,
+          "baseline_value": 420.0,
+          "current_passed": false,
+          "current_value": 610.0,
+          "metric": "cooling_response_ms",
+          "operator": "<=",
+          "requirement_id": "BMS-REQ-118",
+          "test_id": "BMS-SIL-FASTCHARGE-01",
+          "threshold": 500.0
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "gate_exit_codes": [
+        1
+      ],
+      "gate_status": "block",
+      "records": [
+        {
+          "reasons": [
+            "blocking verdict: confirmed_regression",
+            "risk high exceeds allowed risk medium"
+          ],
+          "report_path": "reports/smoke-fast-charge/avera-report.json",
+          "risk": "high",
+          "timestamp_utc": "2026-04-23T06:36:23Z",
+          "verdict": "confirmed_regression"
+        }
+      ],
+      "status": "block"
+    }
+  ],
+  "requirements": [
+    {
+      "components": [
+        "ADAS Pedestrian Detection"
+      ],
+      "requirement": "ADAS-REQ-204",
+      "tests": []
+    },
+    {
+      "components": [
+        "ADAS Pedestrian Detection"
+      ],
+      "requirement": "ADAS-REQ-219",
+      "tests": []
+    },
+    {
+      "components": [
+        "BMS Cell Balancing",
+        "BMS Thermal Control"
+      ],
+      "metric": "max_cell_temp_c",
+      "requirement": "Maximum cell temperature during fast charging must not exceed 50 C",
+      "safety_level": "high",
+      "tests": [
+        "BMS-SIL-FASTCHARGE-01"
+      ]
+    },
+    {
+      "components": [
+        "BMS Cell Balancing",
+        "BMS Thermal Control"
+      ],
+      "metric": "cooling_response_ms",
+      "requirement": "Cooling response delay during fast charging must not exceed 500 ms",
+      "safety_level": "medium",
+      "tests": [
+        "BMS-SIL-FASTCHARGE-01"
+      ]
+    },
+    {
+      "components": [
+        "BMS Cell Balancing",
+        "BMS State Of Charge Estimation"
+      ],
+      "requirement": "BMS-REQ-205",
+      "tests": []
+    },
+    {
+      "components": [
+        "BMS State Of Charge Estimation"
+      ],
+      "requirement": "BMS-REQ-206",
+      "tests": []
+    },
+    {
+      "components": [
+        "BMS Cell Balancing"
+      ],
+      "requirement": "BMS-REQ-301",
+      "tests": []
+    }
+  ],
+  "risks": [
+    {
+      "records": [
+        {
+          "confidence": "high",
+          "confidence_score": 0.95,
+          "record_type": "analysis",
+          "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+          "timestamp_utc": "2026-05-02T10:30:20Z",
+          "verdict": "confirmed_regression"
+        },
+        {
+          "confidence": "high",
+          "confidence_score": 0.95,
+          "record_type": "analysis",
+          "report_path": "reports/fixtures/bms-log-adapted/avera-report.json",
+          "timestamp_utc": "2026-04-30T20:19:42Z",
+          "verdict": "confirmed_regression"
+        },
+        {
+          "confidence": "high",
+          "confidence_score": 0.95,
+          "record_type": "analysis",
+          "report_path": "reports/fixtures/bms-log-adapted/avera-report.json",
+          "timestamp_utc": "2026-04-30T20:17:45Z",
+          "verdict": "confirmed_regression"
+        },
+        {
+          "confidence": "high",
+          "confidence_score": 0.95,
+          "record_type": "analysis",
+          "report_path": "reports/fixtures/bms-requirements-adapted/avera-report.json",
+          "timestamp_utc": "2026-04-30T20:14:13Z",
+          "verdict": "confirmed_regression"
+        },
+        {
+          "confidence": "high",
+          "confidence_score": 0.95,
+          "record_type": "analysis",
+          "report_path": "reports/fixtures/bms-requirements-adapted/avera-report.json",
+          "timestamp_utc": "2026-04-30T20:12:05Z",
+          "verdict": "confirmed_regression"
+        },
+        {
+          "confidence": "high",
+          "confidence_score": 0.95,
+          "record_type": "analysis",
+          "report_path": "reports/fixtures/adas-simulation-adapted/avera-report.json",
+          "timestamp_utc": "2026-04-30T20:08:34Z",
+          "verdict": "confirmed_regression"
+        },
+        {
+          "confidence": "high",
+          "confidence_score": 0.95,
+          "record_type": "analysis",
+          "report_path": "reports/fixtures/adas-simulation-adapted/avera-report.json",
+          "timestamp_utc": "2026-04-30T20:07:39Z",
+          "verdict": "confirmed_regression"
+        },
+        {
+          "confidence": "high",
+          "confidence_score": 0.95,
+          "record_type": "analysis",
+          "report_path": "reports/fixtures/adas-pedestrian-detection-regression/avera-report.json",
+          "timestamp_utc": "2026-04-29T10:00:59Z",
+          "verdict": "confirmed_regression"
+        },
+        {
+          "confidence": "high",
+          "confidence_score": 0.95,
+          "record_type": "analysis",
+          "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+          "timestamp_utc": "2026-04-29T08:19:28Z",
+          "verdict": "confirmed_regression"
+        },
+        {
+          "confidence": "high",
+          "confidence_score": 0.95,
+          "record_type": "analysis",
+          "report_path": "/Users/mac/Desktop/AVERA/reports/fixtures/bms-fast-charge/avera-report.json",
+          "timestamp_utc": "2026-04-28T13:59:21Z",
+          "verdict": "confirmed_regression"
+        },
+        {
+          "confidence": "high",
+          "confidence_score": 0.95,
+          "record_type": "analysis",
+          "report_path": "reports/fixtures/bms-worsened-preexisting/avera-report.json",
+          "timestamp_utc": "2026-04-23T06:40:22Z",
+          "verdict": "worsened_preexisting_failure"
+        },
+        {
+          "confidence": "high",
+          "confidence_score": 0.95,
+          "record_type": "analysis",
+          "report_path": "reports/fixtures/bms-mixed-results/avera-report.json",
+          "timestamp_utc": "2026-04-23T06:39:31Z",
+          "verdict": "confirmed_regression"
+        },
+        {
+          "confidence": "high",
+          "confidence_score": 0.95,
+          "record_type": "analysis",
+          "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+          "timestamp_utc": "2026-04-23T06:39:06Z",
+          "verdict": "confirmed_regression"
+        },
+        {
+          "confidence": "high",
+          "confidence_score": 0.95,
+          "record_type": "gate",
+          "report_path": "reports/smoke-fast-charge/avera-report.json",
+          "timestamp_utc": "2026-04-23T06:36:23Z",
+          "verdict": "confirmed_regression"
+        },
+        {
+          "confidence": "high",
+          "confidence_score": 0.95,
+          "record_type": "analysis",
+          "report_path": "reports/smoke-fast-charge/avera-report.json",
+          "timestamp_utc": "2026-04-23T06:35:44Z",
+          "verdict": "confirmed_regression"
+        },
+        {
+          "confidence": "high",
+          "confidence_score": 0.95,
+          "record_type": "current_report",
+          "report_path": null,
+          "timestamp_utc": null,
+          "verdict": "confirmed_regression"
+        }
+      ],
+      "risk": "high"
+    },
+    {
+      "records": [
+        {
+          "confidence": "high",
+          "confidence_score": 0.95,
+          "record_type": "analysis",
+          "report_path": "reports/fixtures/bms-successful-change/avera-report.json",
+          "timestamp_utc": "2026-04-23T06:40:08Z",
+          "verdict": "successful_change"
+        }
+      ],
+      "risk": "low"
+    },
+    {
+      "records": [
+        {
+          "confidence": "high",
+          "confidence_score": 0.95,
+          "record_type": "analysis",
+          "report_path": "reports/fixtures/bms-preexisting-failure/avera-report.json",
+          "timestamp_utc": "2026-04-23T06:39:49Z",
+          "verdict": "preexisting_failure"
+        },
+        {
+          "confidence": "low",
+          "confidence_score": 0.36,
+          "record_type": "analysis",
+          "report_path": "reports/fixtures/bms-coverage-gap/avera-report.json",
+          "timestamp_utc": "2026-04-23T06:38:38Z",
+          "verdict": "requirements_coverage_gap"
+        }
+      ],
+      "risk": "medium"
+    },
+    {
+      "records": [
+        {
+          "confidence": "low",
+          "confidence_score": 0.39,
+          "record_type": "analysis",
+          "report_path": "reports/fixtures/bms-insufficient-evidence/avera-report.json",
+          "timestamp_utc": "2026-04-23T06:39:18Z",
+          "verdict": "insufficient_evidence"
+        },
+        {
+          "confidence": "low",
+          "confidence_score": 0.45,
+          "record_type": "analysis",
+          "report_path": "reports/fixtures/bms-environment-failure/avera-report.json",
+          "timestamp_utc": "2026-04-23T06:38:52Z",
+          "verdict": "environment_failure"
+        }
+      ],
+      "risk": "unknown"
+    }
+  ],
+  "schema_version": "avera.traceability_index.v0.1",
+  "summary": {
+    "component_count": 5,
+    "confidence": "high",
+    "confidence_score": 0.95,
+    "failure_count": 1,
+    "memory_analysis_records": 19,
+    "memory_gate_records": 1,
+    "requirement_count": 7,
+    "risk": "high",
+    "test_count": 1,
+    "verdict": "confirmed_regression"
+  },
+  "tests": [
+    {
+      "components": [
+        "BMS Thermal Control"
+      ],
+      "requirements": [
+        "BMS-REQ-112",
+        "BMS-REQ-118"
+      ],
+      "test": "BMS-SIL-FASTCHARGE-01"
+    }
+  ]
+}

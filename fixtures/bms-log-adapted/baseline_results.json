@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "adapter": "log_csv.v0",
+    "row_count": 2,
+    "source_format": "verification_log_csv",
+    "source_path": "fixtures/bms-log-adapted/baseline_verification_log.csv",
+    "test_count": 1
+  },
+  "runId": "baseline-bms-log-001",
+  "stage": "baseline",
+  "tests": [
+    {
+      "component": "BMS Thermal Control",
+      "evidence": "baseline HIL run stayed below temperature threshold\nbaseline HIL run kept cooling response within target",
+      "id": "BMS-HIL-FASTCHARGE-07",
+      "metadata": {
+        "adapter": "log_csv.v0",
+        "environments": [
+          "HIL-rig-3",
+          "HIL-rig-3"
+        ],
+        "metric_units": {
+          "cooling_response_ms": "ms",
+          "max_cell_temp_c": "C"
+        },
+        "source_rows": [
+          1,
+          2
+        ],
+        "timestamps_utc": [
+          "2026-05-01T09:00:00Z",
+          "2026-05-01T09:00:05Z"
+        ]
+      },
+      "metrics": {
+        "cooling_response_ms": 412.0,
+        "max_cell_temp_c": 47.1
+      },
+      "status": "passed"
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "affected_components": [
+    "Emissions Management System"
+  ],
+  "affected_files": [
+    "src/ems/emissions_monitor.c"
+  ],
+  "affected_requirements": [
+    {
+      "component": "Emissions Management System",
+      "id": "PT-REQ-030",
+      "metadata": {},
+      "metric": "nox_mg_per_km",
+      "next_checks": [
+        "PT-EMS-NOX-01"
+      ],
+      "operator": "<=",
+      "requirement": "NO\u2093 emissions must not exceed 60 mg/km (Euro 6d type-approval limit).",
+      "safety_level": "low",
+      "threshold": 60.0
+    },
+    {
+      "component": "Emissions Management System",
+      "id": "PT-REQ-031",
+      "metadata": {},
+      "metric": "co2_g_per_km",
+      "next_checks": [
+        "PT-EMS-NOX-01"
+      ],
+      "operator": "<=",
+      "requirement": "Fleet-average CO\u2082 emissions must not exceed 95 g/km (EU fleet CO\u2082 regulation target).",
+      "safety_level": "low",
+      "threshold": 95.0
+    }
+  ],
+  "comparison_summary": {
+    "introduced_failures": 0,
+    "metric_deltas": 2,
+    "missing_baseline": 0,
+    "missing_current": 0,
+    "preexisting_failures": 0,
+    "resolved_failures": 0,
+    "total_tests": 1,
+    "unchanged_passes": 1
+  },
+  "confidence": "high",
+  "confidence_factors": [
+    "+ baseline_current_pair_present",
+    "+ requirement_mapped",
+    "+ affected_file_mapped"
+  ],
+  "confidence_score": 0.95,
+  "evidence_summary": [
+    "Verdict is successful change.",
+    "Mapped affected files: src/ems/emissions_monitor.c."
+  ],
+  "introduced_failures": [],
+  "preexisting_failures": [],
+  "recommended_next_checks": [
+    "PT-EMS-NOX-01"
+  ],
+  "risk": "low",
+  "risk_drivers": [
+    "verdict:successful_change",
+    "risk:low",
+    "safety_level:low",
+    "threshold_passed:PT-REQ-030:nox_mg_per_km",
+    "threshold_passed:PT-REQ-031:co2_g_per_km"
+  ],
+  "rules_triggered": [
+    "R7_successful_covered_change"
+  ],
+  "schema_version": "avera.assessment.v0.2",
+  "threshold_evidence": [
+    {
+      "baseline_passed": true,
+      "baseline_value": 54.0,
+      "current_passed": true,
+      "current_value": 49.0,
+      "metric": "nox_mg_per_km",
+      "operator": "<=",
+      "requirement_id": "PT-REQ-030",
+      "test_id": "PT-EMS-NOX-01",
+      "threshold": 60.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 91.0,
+      "current_passed": true,
+      "current_value": 88.0,
+      "metric": "co2_g_per_km",
+      "operator": "<=",
+      "requirement_id": "PT-REQ-031",
+      "test_id": "PT-EMS-NOX-01",
+      "threshold": 95.0
+    }
+  ],
+  "verdict": "successful_change"
+}

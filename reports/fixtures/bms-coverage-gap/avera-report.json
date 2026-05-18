@@ -1,0 +1,74 @@
+{
+  "affected_components": [
+    "BMS State Of Charge Estimation"
+  ],
+  "affected_files": [
+    "src/bms/soc_estimator.c"
+  ],
+  "affected_requirements": [
+    {
+      "component": "BMS State Of Charge Estimation",
+      "id": "BMS-REQ-205",
+      "metadata": {},
+      "metric": "soc_drift_pct",
+      "next_checks": [
+        "BMS-SIL-SOC-DRIFT-03"
+      ],
+      "operator": "<=",
+      "requirement": "State of charge estimate drift over a 30 minute drive cycle must not exceed 2 percent",
+      "safety_level": "medium",
+      "threshold": 2.0
+    },
+    {
+      "component": "BMS State Of Charge Estimation",
+      "id": "BMS-REQ-206",
+      "metadata": {},
+      "metric": "current_integration_error_pct",
+      "next_checks": [
+        "BMS-SIL-SOC-DRIFT-03"
+      ],
+      "operator": "<=",
+      "requirement": "Pack current integration error must not exceed 1.5 percent",
+      "safety_level": "medium",
+      "threshold": 1.5
+    }
+  ],
+  "comparison_summary": {
+    "introduced_failures": 0,
+    "metric_deltas": 2,
+    "missing_baseline": 0,
+    "missing_current": 0,
+    "preexisting_failures": 0,
+    "resolved_failures": 0,
+    "total_tests": 1,
+    "unchanged_passes": 1
+  },
+  "confidence": "low",
+  "confidence_factors": [
+    "+ requirement_mapped",
+    "+ affected_file_mapped",
+    "- no_metric_requirement_coverage"
+  ],
+  "confidence_score": 0.36,
+  "evidence_summary": [
+    "Verdict is requirements coverage gap.",
+    "Mapped affected files: src/bms/soc_estimator.c."
+  ],
+  "introduced_failures": [],
+  "preexisting_failures": [],
+  "recommended_next_checks": [
+    "BMS-SIL-SOC-DRIFT-03"
+  ],
+  "risk": "medium",
+  "risk_drivers": [
+    "verdict:requirements_coverage_gap",
+    "risk:medium",
+    "safety_level:medium"
+  ],
+  "rules_triggered": [
+    "R6_requirements_coverage_gap"
+  ],
+  "schema_version": "avera.assessment.v0.2",
+  "threshold_evidence": [],
+  "verdict": "requirements_coverage_gap"
+}

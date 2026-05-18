@@ -1,0 +1,123 @@
+{
+  "affected_components": [
+    "BMS Thermal Control"
+  ],
+  "affected_files": [
+    "src/bms/thermal_manager.c"
+  ],
+  "affected_requirements": [
+    {
+      "component": "BMS Thermal Control",
+      "id": "BMS-REQ-112",
+      "metadata": {},
+      "metric": "max_cell_temp_c",
+      "next_checks": [
+        "BMS-HIL-FASTCHARGE-07"
+      ],
+      "operator": "<=",
+      "requirement": "Maximum cell temperature during fast charging must not exceed 50 C",
+      "safety_level": "high",
+      "threshold": 50.0
+    },
+    {
+      "component": "BMS Thermal Control",
+      "id": "BMS-REQ-118",
+      "metadata": {},
+      "metric": "cooling_response_ms",
+      "next_checks": [
+        "BMS-HIL-FASTCHARGE-07"
+      ],
+      "operator": "<=",
+      "requirement": "Cooling response delay during fast charging must not exceed 500 ms",
+      "safety_level": "medium",
+      "threshold": 500.0
+    }
+  ],
+  "comparison_summary": {
+    "introduced_failures": 1,
+    "metric_deltas": 0,
+    "missing_baseline": 0,
+    "missing_current": 0,
+    "preexisting_failures": 0,
+    "resolved_failures": 0,
+    "total_tests": 1,
+    "unchanged_passes": 0
+  },
+  "confidence": "low",
+  "confidence_factors": [
+    "+ baseline_current_pair_present",
+    "+ introduced_failure_detected",
+    "+ requirement_mapped",
+    "+ affected_file_mapped",
+    "+ environment_failure_pattern_matched"
+  ],
+  "confidence_score": 0.45,
+  "evidence_summary": [
+    "Verdict is environment failure.",
+    "BMS-HIL-FASTCHARGE-07 failed only in the current run.",
+    "Mapped affected files: src/bms/thermal_manager.c.",
+    "BMS-HIL-FASTCHARGE-07 matched environment failure pattern: unavailable_runner."
+  ],
+  "introduced_failures": [
+    {
+      "baseline_metrics": {
+        "cooling_response_ms": 430,
+        "max_cell_temp_c": 47.5
+      },
+      "baseline_status": "passed",
+      "classification": "introduced_failure",
+      "component": "BMS Thermal Control",
+      "current_metrics": {},
+      "current_status": "error",
+      "evidence": [
+        "BMS-HIL-FASTCHARGE-07: introduced failure.",
+        "Baseline HIL bench run completed normally and stayed within mapped BMS requirements.",
+        "The test harness aborted before collecting requirement metrics because the HIL bench was unavailable."
+      ],
+      "metric_deltas": [],
+      "test_id": "BMS-HIL-FASTCHARGE-07"
+    }
+  ],
+  "preexisting_failures": [],
+  "recommended_next_checks": [
+    "BMS-HIL-FASTCHARGE-07"
+  ],
+  "risk": "unknown",
+  "risk_drivers": [
+    "verdict:environment_failure",
+    "risk:unknown",
+    "safety_level:high",
+    "safety_level:medium"
+  ],
+  "rules_triggered": [
+    "R5_environment_failure",
+    "signal_environment_failure_pattern",
+    "signal_introduced_failure_present"
+  ],
+  "schema_version": "avera.assessment.v0.2",
+  "threshold_evidence": [
+    {
+      "baseline_passed": true,
+      "baseline_value": 47.5,
+      "current_passed": null,
+      "current_value": null,
+      "metric": "max_cell_temp_c",
+      "operator": "<=",
+      "requirement_id": "BMS-REQ-112",
+      "test_id": "BMS-HIL-FASTCHARGE-07",
+      "threshold": 50.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 430.0,
+      "current_passed": null,
+      "current_value": null,
+      "metric": "cooling_response_ms",
+      "operator": "<=",
+      "requirement_id": "BMS-REQ-118",
+      "test_id": "BMS-HIL-FASTCHARGE-07",
+      "threshold": 500.0
+    }
+  ],
+  "verdict": "environment_failure"
+}

@@ -1,0 +1,25 @@
+{
+  "runId": "etcs-current-2024-12",
+  "stage": "hil",
+  "changedFiles": ["src/etcs/braking/emergency_brake_controller.c"],
+  "tests": [
+    {
+      "id": "ETCS-HIL-BRAKE-01",
+      "component": "ETCS Emergency Braking",
+      "status": "failed",
+      "metrics": {
+        "brake_application_ms": 1387.0,
+        "brake_confirm_ms": 451.0
+      },
+      "evidence": "Emergency brake application and confirmation times both exceeded SIL 4 thresholds after priority queue refactor in brake controller."
+    },
+    {
+      "id": "ETCS-HIL-SIGNAL-03",
+      "component": "ETCS Cab Signalling",
+      "status": "passed",
+      "metrics": {
+        "supervision_cycle_ms": 86.0
+      }
+    }
+  ]
+}

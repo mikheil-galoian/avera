@@ -1,0 +1,645 @@
+{
+  "edges": [
+    {
+      "relation": "classified_as",
+      "source": "change",
+      "target": "risk"
+    },
+    {
+      "relation": "recommends",
+      "source": "risk",
+      "target": "recommendation:fadec-eng-hil-01"
+    },
+    {
+      "relation": "recommends",
+      "source": "risk",
+      "target": "recommendation:fadec-eng-hil-01,fadec-eng-hil-02"
+    },
+    {
+      "relation": "recommends",
+      "source": "risk",
+      "target": "recommendation:fadec-fuel-sil-01"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:r1_confirmed_threshold_regression",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:r2_introduced_test_failure",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_baseline_pass_current_threshold_fail",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_introduced_failure_present",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_material_metric_worsening",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_affected_file_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_baseline_current_pair_present",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_introduced_failure_detected",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_requirement_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_threshold_crossing_detected",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:risk_release_blocking",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:safety_level_dal-a",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:safety_level_dal-b",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_failed_fadec-req-001_overspeed_response_ms",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_passed_fadec-req-002_fuel_flow_error_pct",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_passed_fadec-req-003_cycle_time_ms",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:verdict_confirmed_regression",
+      "target": "risk"
+    },
+    {
+      "relation": "affects_component",
+      "source": "change",
+      "target": "component:full_authority_digital_engine_control"
+    },
+    {
+      "relation": "contributes_to",
+      "source": "component:full_authority_digital_engine_control",
+      "target": "risk"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:fadec-req-001",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:full_authority_digital_engine_control",
+      "target": "requirement:fadec-req-001"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:fadec-req-002",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:full_authority_digital_engine_control",
+      "target": "requirement:fadec-req-002"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:fadec-req-003",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:full_authority_digital_engine_control",
+      "target": "requirement:fadec-req-003"
+    },
+    {
+      "relation": "touches_file",
+      "source": "change",
+      "target": "file:src_fadec_fuel_control.c"
+    },
+    {
+      "relation": "maps_to_component",
+      "source": "file:src_fadec_fuel_control.c",
+      "target": "component:full_authority_digital_engine_control"
+    },
+    {
+      "relation": "touches_file",
+      "source": "change",
+      "target": "file:src_fadec_overspeed_protection.c"
+    },
+    {
+      "relation": "maps_to_component",
+      "source": "file:src_fadec_overspeed_protection.c",
+      "target": "component:full_authority_digital_engine_control"
+    },
+    {
+      "relation": "observed_in",
+      "source": "change",
+      "target": "test_failure:fadec-eng-hil-01"
+    },
+    {
+      "relation": "supports",
+      "source": "test_failure:fadec-eng-hil-01",
+      "target": "risk"
+    },
+    {
+      "relation": "occurs_in",
+      "source": "test_failure:fadec-eng-hil-01",
+      "target": "component:full_authority_digital_engine_control"
+    },
+    {
+      "relation": "observed_in",
+      "source": "change",
+      "target": "test_failure:fadec-eng-hil-02"
+    },
+    {
+      "relation": "supports",
+      "source": "test_failure:fadec-eng-hil-02",
+      "target": "risk"
+    },
+    {
+      "relation": "occurs_in",
+      "source": "test_failure:fadec-eng-hil-02",
+      "target": "component:full_authority_digital_engine_control"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:fadec-req-001_overspeed_response_ms_fadec-eng-hil-01",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:fadec-req-001_overspeed_response_ms_fadec-eng-hil-01",
+      "target": "requirement:fadec-req-001"
+    },
+    {
+      "relation": "contains_metric",
+      "source": "test_failure:fadec-eng-hil-01",
+      "target": "threshold_evidence:fadec-req-001_overspeed_response_ms_fadec-eng-hil-01"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:fadec-req-003_cycle_time_ms_fadec-eng-hil-01",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:fadec-req-003_cycle_time_ms_fadec-eng-hil-01",
+      "target": "requirement:fadec-req-003"
+    },
+    {
+      "relation": "contains_metric",
+      "source": "test_failure:fadec-eng-hil-01",
+      "target": "threshold_evidence:fadec-req-003_cycle_time_ms_fadec-eng-hil-01"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:fadec-req-001_overspeed_response_ms_fadec-eng-hil-02",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:fadec-req-001_overspeed_response_ms_fadec-eng-hil-02",
+      "target": "requirement:fadec-req-001"
+    },
+    {
+      "relation": "contains_metric",
+      "source": "test_failure:fadec-eng-hil-02",
+      "target": "threshold_evidence:fadec-req-001_overspeed_response_ms_fadec-eng-hil-02"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:fadec-req-003_cycle_time_ms_fadec-eng-hil-02",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:fadec-req-003_cycle_time_ms_fadec-eng-hil-02",
+      "target": "requirement:fadec-req-003"
+    },
+    {
+      "relation": "contains_metric",
+      "source": "test_failure:fadec-eng-hil-02",
+      "target": "threshold_evidence:fadec-req-003_cycle_time_ms_fadec-eng-hil-02"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:fadec-req-002_fuel_flow_error_pct_fadec-fuel-sil-01",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:fadec-req-002_fuel_flow_error_pct_fadec-fuel-sil-01",
+      "target": "requirement:fadec-req-002"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "change",
+      "label": "Change under assessment",
+      "properties": {
+        "description": "Refactored interrupt handler in overspeed_protection.c to reduce CPU load during\nhigh-frequency engine monitoring cycles. The interrupt latency optimization\nintroduced a 19 ms delay in the overspeed protection response path, causing\nFADEC-REQ-001 (<=50 ms) to be violated at 63.2 ms.\n\nDAL-A requirement. Release blocking. Requires immediate root cause analysis\nand re-verification before any further integration."
+      },
+      "type": "change"
+    },
+    {
+      "id": "risk",
+      "label": "release_blocking",
+      "properties": {
+        "confidence": "high",
+        "verdict": "confirmed_regression"
+      },
+      "type": "risk"
+    },
+    {
+      "id": "recommendation:fadec-eng-hil-01",
+      "label": "FADEC-ENG-HIL-01",
+      "properties": {
+        "check": "FADEC-ENG-HIL-01"
+      },
+      "type": "recommendation"
+    },
+    {
+      "id": "recommendation:fadec-eng-hil-01,fadec-eng-hil-02",
+      "label": "FADEC-ENG-HIL-01,FADEC-ENG-HIL-02",
+      "properties": {
+        "check": "FADEC-ENG-HIL-01,FADEC-ENG-HIL-02"
+      },
+      "type": "recommendation"
+    },
+    {
+      "id": "recommendation:fadec-fuel-sil-01",
+      "label": "FADEC-FUEL-SIL-01",
+      "properties": {
+        "check": "FADEC-FUEL-SIL-01"
+      },
+      "type": "recommendation"
+    },
+    {
+      "id": "rule:r1_confirmed_threshold_regression",
+      "label": "R1_confirmed_threshold_regression",
+      "properties": {
+        "value": "R1_confirmed_threshold_regression"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:r2_introduced_test_failure",
+      "label": "R2_introduced_test_failure",
+      "properties": {
+        "value": "R2_introduced_test_failure"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_baseline_pass_current_threshold_fail",
+      "label": "signal_baseline_pass_current_threshold_fail",
+      "properties": {
+        "value": "signal_baseline_pass_current_threshold_fail"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_introduced_failure_present",
+      "label": "signal_introduced_failure_present",
+      "properties": {
+        "value": "signal_introduced_failure_present"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_material_metric_worsening",
+      "label": "signal_material_metric_worsening",
+      "properties": {
+        "value": "signal_material_metric_worsening"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "confidence_factor:+_affected_file_mapped",
+      "label": "+ affected_file_mapped",
+      "properties": {
+        "value": "+ affected_file_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_baseline_current_pair_present",
+      "label": "+ baseline_current_pair_present",
+      "properties": {
+        "value": "+ baseline_current_pair_present"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_introduced_failure_detected",
+      "label": "+ introduced_failure_detected",
+      "properties": {
+        "value": "+ introduced_failure_detected"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_requirement_mapped",
+      "label": "+ requirement_mapped",
+      "properties": {
+        "value": "+ requirement_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_threshold_crossing_detected",
+      "label": "+ threshold_crossing_detected",
+      "properties": {
+        "value": "+ threshold_crossing_detected"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "risk_driver:risk_release_blocking",
+      "label": "risk:release_blocking",
+      "properties": {
+        "value": "risk:release_blocking"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:safety_level_dal-a",
+      "label": "safety_level:dal-a",
+      "properties": {
+        "value": "safety_level:dal-a"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:safety_level_dal-b",
+      "label": "safety_level:dal-b",
+      "properties": {
+        "value": "safety_level:dal-b"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_failed_fadec-req-001_overspeed_response_ms",
+      "label": "threshold_failed:FADEC-REQ-001:overspeed_response_ms",
+      "properties": {
+        "value": "threshold_failed:FADEC-REQ-001:overspeed_response_ms"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_passed_fadec-req-002_fuel_flow_error_pct",
+      "label": "threshold_passed:FADEC-REQ-002:fuel_flow_error_pct",
+      "properties": {
+        "value": "threshold_passed:FADEC-REQ-002:fuel_flow_error_pct"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_passed_fadec-req-003_cycle_time_ms",
+      "label": "threshold_passed:FADEC-REQ-003:cycle_time_ms",
+      "properties": {
+        "value": "threshold_passed:FADEC-REQ-003:cycle_time_ms"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:verdict_confirmed_regression",
+      "label": "verdict:confirmed_regression",
+      "properties": {
+        "value": "verdict:confirmed_regression"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "component:full_authority_digital_engine_control",
+      "label": "Full Authority Digital Engine Control",
+      "type": "component"
+    },
+    {
+      "id": "requirement:fadec-req-001",
+      "label": "FADEC-REQ-001",
+      "properties": {
+        "component": "Full Authority Digital Engine Control",
+        "metric": "overspeed_response_ms",
+        "operator": "<=",
+        "requirement": "Engine overspeed protection must activate within 50 ms when N1 exceeds 105% of rated speed.",
+        "safety_level": "dal-a",
+        "threshold": 50.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "requirement:fadec-req-002",
+      "label": "FADEC-REQ-002",
+      "properties": {
+        "component": "Full Authority Digital Engine Control",
+        "metric": "fuel_flow_error_pct",
+        "operator": "<=",
+        "requirement": "Fuel flow computation error shall not exceed 0.5% of full-scale flow at any operating point.",
+        "safety_level": "dal-b",
+        "threshold": 0.5
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "requirement:fadec-req-003",
+      "label": "FADEC-REQ-003",
+      "properties": {
+        "component": "Full Authority Digital Engine Control",
+        "metric": "cycle_time_ms",
+        "operator": "<=",
+        "requirement": "Engine control loop cycle time shall not exceed 10 ms under maximum computational load.",
+        "safety_level": "dal-a",
+        "threshold": 10.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "file:src_fadec_fuel_control.c",
+      "label": "src/fadec/fuel_control.c",
+      "properties": {
+        "path": "src/fadec/fuel_control.c"
+      },
+      "type": "file"
+    },
+    {
+      "id": "file:src_fadec_overspeed_protection.c",
+      "label": "src/fadec/overspeed_protection.c",
+      "properties": {
+        "path": "src/fadec/overspeed_protection.c"
+      },
+      "type": "file"
+    },
+    {
+      "id": "test_failure:fadec-eng-hil-01",
+      "label": "FADEC-ENG-HIL-01",
+      "properties": {
+        "baseline_status": "passed",
+        "category": "introduced_failures",
+        "component": "Full Authority Digital Engine Control",
+        "current_status": "failed"
+      },
+      "type": "test_failure"
+    },
+    {
+      "id": "test_failure:fadec-eng-hil-02",
+      "label": "FADEC-ENG-HIL-02",
+      "properties": {
+        "baseline_status": "passed",
+        "category": "introduced_failures",
+        "component": "Full Authority Digital Engine Control",
+        "current_status": "failed"
+      },
+      "type": "test_failure"
+    },
+    {
+      "id": "threshold_evidence:fadec-req-001_overspeed_response_ms_fadec-eng-hil-01",
+      "label": "overspeed_response_ms",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 42.0,
+        "current_passed": false,
+        "current_value": 63.2,
+        "operator": "<=",
+        "requirement_id": "FADEC-REQ-001",
+        "test_id": "FADEC-ENG-HIL-01",
+        "threshold": 50.0
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:fadec-req-003_cycle_time_ms_fadec-eng-hil-01",
+      "label": "cycle_time_ms",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 8.1,
+        "current_passed": true,
+        "current_value": 9.7,
+        "operator": "<=",
+        "requirement_id": "FADEC-REQ-003",
+        "test_id": "FADEC-ENG-HIL-01",
+        "threshold": 10.0
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:fadec-req-001_overspeed_response_ms_fadec-eng-hil-02",
+      "label": "overspeed_response_ms",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 44.5,
+        "current_passed": false,
+        "current_value": 61.8,
+        "operator": "<=",
+        "requirement_id": "FADEC-REQ-001",
+        "test_id": "FADEC-ENG-HIL-02",
+        "threshold": 50.0
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:fadec-req-003_cycle_time_ms_fadec-eng-hil-02",
+      "label": "cycle_time_ms",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 8.4,
+        "current_passed": true,
+        "current_value": 9.5,
+        "operator": "<=",
+        "requirement_id": "FADEC-REQ-003",
+        "test_id": "FADEC-ENG-HIL-02",
+        "threshold": 10.0
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:fadec-req-002_fuel_flow_error_pct_fadec-fuel-sil-01",
+      "label": "fuel_flow_error_pct",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 0.31,
+        "current_passed": true,
+        "current_value": 0.33,
+        "operator": "<=",
+        "requirement_id": "FADEC-REQ-002",
+        "test_id": "FADEC-FUEL-SIL-01",
+        "threshold": 0.5
+      },
+      "type": "threshold_evidence"
+    }
+  ],
+  "schema_version": "evidence_graph.v0.3",
+  "summary": {
+    "comparison_summary": {
+      "introduced_failures": 2,
+      "metric_deltas": 5,
+      "missing_baseline": 0,
+      "missing_current": 0,
+      "preexisting_failures": 0,
+      "resolved_failures": 0,
+      "total_tests": 3,
+      "unchanged_passes": 1
+    },
+    "components": 1,
+    "confidence": "high",
+    "confidence_factors": 5,
+    "edge_count": 53,
+    "evidence_summary": [
+      "Verdict is confirmed regression.",
+      "FADEC-ENG-HIL-01 failed only in the current run.",
+      "FADEC-ENG-HIL-02 failed only in the current run.",
+      "overspeed_response_ms for FADEC-REQ-001 was 63.2, outside <= 50.",
+      "overspeed_response_ms for FADEC-REQ-001 was 61.8, outside <= 50.",
+      "Mapped affected files: src/fadec/fuel_control.c, src/fadec/overspeed_protection.c.",
+      "cycle_time_ms materially worsened from 8.1 to 9.7.",
+      "overspeed_response_ms materially worsened from 42.0 to 63.2.",
+      "cycle_time_ms materially worsened from 8.4 to 9.5.",
+      "overspeed_response_ms materially worsened from 44.5 to 61.8."
+    ],
+    "files": 2,
+    "node_count": 35,
+    "recommendations": 3,
+    "requirements": 3,
+    "risk": "release_blocking",
+    "risk_drivers": 7,
+    "rules": 5,
+    "signal_summaries": 0,
+    "tests_or_failures": 2,
+    "threshold_evidence": 5,
+    "verdict": "confirmed_regression"
+  }
+}

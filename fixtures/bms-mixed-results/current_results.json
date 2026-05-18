@@ -1,0 +1,36 @@
+{
+  "runId": "current-bms-mixed-results-001",
+  "stage": "current",
+  "changedFiles": [
+    "src/bms/thermal_manager.c"
+  ],
+  "tests": [
+    {
+      "id": "BMS-SIL-FASTCHARGE-01",
+      "component": "BMS Thermal Control",
+      "status": "failed",
+      "metrics": {
+        "max_cell_temp_c": 53.4,
+        "cooling_response_ms": 640
+      },
+      "evidence": "Fast-charge thermal control passed in baseline but violates mapped high-safety requirements after the thermal manager change."
+    },
+    {
+      "id": "BMS-SIL-BALANCE-02",
+      "component": "BMS Cell Balancing",
+      "status": "failed",
+      "metrics": {
+        "cell_delta_mv": 41.0
+      },
+      "evidence": "Balancing remains above threshold, but it was already failing in baseline and is not mapped to the changed file."
+    },
+    {
+      "id": "BMS-SIL-CONTACTOR-01",
+      "component": "BMS Contactor Control",
+      "status": "passed",
+      "metrics": {
+        "contactor_close_ms": 92.0
+      }
+    }
+  ]
+}

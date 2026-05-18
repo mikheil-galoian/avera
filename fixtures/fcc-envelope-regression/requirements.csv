@@ -1,0 +1,4 @@
+id,component,requirement,metric,operator,threshold,safety_level,next_checks
+FCC-REQ-001,Flight Control Computer,Control surface actuation latency from pilot input to surface movement shall not exceed 80 ms.,actuation_latency_ms,<=,80.0,dal-a,"FCC-CTRL-HIL-01,FCC-CTRL-HIL-02"
+FCC-REQ-002,Flight Control Computer,Envelope protection system must engage within 200 ms upon detection of an overspeed exceedance.,envelope_engage_ms,<=,200.0,dal-a,FCC-ENV-HIL-01
+FCC-REQ-003,Flight Control Computer,Control law computation jitter shall not exceed 2 ms between consecutive cycles.,compute_jitter_ms,<=,2.0,dal-b,FCC-CTRL-HIL-01

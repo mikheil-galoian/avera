@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "adapter": "log_csv.v0",
+    "row_count": 2,
+    "source_format": "verification_log_csv",
+    "source_path": "fixtures/bms-log-adapted/current_verification_log.csv",
+    "test_count": 1
+  },
+  "runId": "current-bms-log-001",
+  "stage": "current",
+  "tests": [
+    {
+      "component": "BMS Thermal Control",
+      "evidence": "current HIL run exceeded the maximum allowed cell temperature\ncurrent HIL run showed cooling response slower than allowed",
+      "id": "BMS-HIL-FASTCHARGE-07",
+      "metadata": {
+        "adapter": "log_csv.v0",
+        "environments": [
+          "HIL-rig-3",
+          "HIL-rig-3"
+        ],
+        "metric_units": {
+          "cooling_response_ms": "ms",
+          "max_cell_temp_c": "C"
+        },
+        "source_rows": [
+          1,
+          2
+        ],
+        "timestamps_utc": [
+          "2026-05-01T11:00:00Z",
+          "2026-05-01T11:00:05Z"
+        ]
+      },
+      "metrics": {
+        "cooling_response_ms": 638.0,
+        "max_cell_temp_c": 52.8
+      },
+      "status": "failed"
+    }
+  ]
+}

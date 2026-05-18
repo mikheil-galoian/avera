@@ -1,0 +1,59 @@
+{
+  "action": "block",
+  "actions": [
+    "freeze_release_candidate",
+    "reproduce_failure_on_target_test_path",
+    "inspect_changed_component_and_requirement_links",
+    "open_corrective_action_loop"
+  ],
+  "category": "containment_required",
+  "confidence": "high",
+  "confidence_score": 0.95,
+  "context": {
+    "component_count": 5,
+    "requirement_count": 7,
+    "test_count": 1,
+    "top_components": [
+      "BMS Thermal Control"
+    ]
+  },
+  "corrective_actions": [
+    "prepare_root_cause_ticket",
+    "assign_fix_owner_for_affected_component",
+    "capture_reproduction_artifacts"
+  ],
+  "escalation": {
+    "level": "program_blocker",
+    "notify": [
+      "component_owner",
+      "validation_lead",
+      "release_manager"
+    ]
+  },
+  "gate_status": null,
+  "owner": "validation_and_component_owner",
+  "owner_routing": {
+    "focus_component": "BMS Thermal Control",
+    "primary_owner": "validation_and_component_owner",
+    "supporting_owners": [
+      "release_manager",
+      "requirements_owner"
+    ]
+  },
+  "priority": "immediate",
+  "rationale": [
+    "verdict:confirmed_regression",
+    "risk:high",
+    "confidence_score:0.95"
+  ],
+  "release_recommendation": "do_not_release",
+  "risk": "high",
+  "schema_version": "avera.decision.v0.2",
+  "status": "block",
+  "verdict": "confirmed_regression",
+  "verification_playbook": [
+    "rerun_failed_test_path",
+    "rerun_threshold_checks_for_affected_requirements",
+    "compare_against_last_passing_baseline"
+  ]
+}

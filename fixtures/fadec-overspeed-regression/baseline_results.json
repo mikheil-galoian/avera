@@ -1,0 +1,36 @@
+{
+  "runId": "fadec-baseline-v2.1.0",
+  "stage": "verification",
+  "changedFiles": [],
+  "tests": [
+    {
+      "id": "FADEC-ENG-HIL-01",
+      "component": "Full Authority Digital Engine Control",
+      "status": "passed",
+      "metrics": {
+        "overspeed_response_ms": 42.0,
+        "cycle_time_ms": 8.1
+      },
+      "evidence": "HIL bench test: overspeed protection triggered at 42 ms. Within 50 ms DAL-A limit."
+    },
+    {
+      "id": "FADEC-ENG-HIL-02",
+      "component": "Full Authority Digital Engine Control",
+      "status": "passed",
+      "metrics": {
+        "overspeed_response_ms": 44.5,
+        "cycle_time_ms": 8.4
+      },
+      "evidence": "HIL bench test (repeat run): overspeed protection triggered at 44.5 ms."
+    },
+    {
+      "id": "FADEC-FUEL-SIL-01",
+      "component": "Full Authority Digital Engine Control",
+      "status": "passed",
+      "metrics": {
+        "fuel_flow_error_pct": 0.31
+      },
+      "evidence": "SIL test: fuel flow error 0.31% across full operating range. Within 0.5% DAL-B limit."
+    }
+  ]
+}

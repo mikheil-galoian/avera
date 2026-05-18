@@ -1,0 +1,13 @@
+# AVERA Demo Shell — deployment requirements
+# Pin minor versions; patch updates allowed via ~=
+
+# Core engine
+avera @ file:./src
+
+# Demo UI
+streamlit~=1.44
+
+# API server (optional, used by avera-api gate)
+fastapi~=0.110
+uvicorn[standard]~=0.29
+pydantic~=2.0

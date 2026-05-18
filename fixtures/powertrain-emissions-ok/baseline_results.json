@@ -1,0 +1,16 @@
+{
+  "runId": "baseline-pt-emissions-001",
+  "stage": "baseline",
+  "tests": [
+    {
+      "id": "PT-EMS-NOX-01",
+      "component": "Emissions Management System",
+      "status": "passed",
+      "metrics": {
+        "nox_mg_per_km": 54.0,
+        "co2_g_per_km": 91.0
+      },
+      "evidence": ""
+    }
+  ]
+}

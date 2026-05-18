@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AVERA — ADAS Second-Domain Proof</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg:      #f4f6fb;
+        --surface: #ffffff;
+        --muted:   #64748b;
+        --text:    #0f172a;
+        --border:  #e2e8f0;
+        --good:    #0f9d58;
+        --bad:     #dc2626;
+        --accent:  #2563eb;
+        --accent-light: #eff6ff;
+      }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 48px 28px 64px;
+      }
+
+      /* ── Hero ─────────────────────────────────────── */
+      .hero {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 20px;
+        align-items: start;
+      }
+
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 28px;
+      }
+
+      .eyebrow {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        color: var(--accent);
+        margin-bottom: 10px;
+      }
+
+      .hero-title {
+        font-size: 30px;
+        font-weight: 700;
+        line-height: 1.15;
+        margin-bottom: 12px;
+      }
+
+      .lede {
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 24px;
+      }
+
+      /* ── Metric cards ────────────────────────────── */
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+
+      .metric {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 14px 14px 12px;
+      }
+
+      .metric-label {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+
+      .metric-value {
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.2;
+        color: var(--text);
+        word-break: break-word;
+      }
+
+      .metric-value.bad   { color: var(--bad); }
+      .metric-value.good  { color: var(--good); }
+
+      .metric-sub {
+        margin-top: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--good);
+      }
+
+      .metric-mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.3;
+        word-break: break-all;
+      }
+
+      /* ── Decision panel ──────────────────────────── */
+      .decision-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .release-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: #fef2f2;
+        color: var(--bad);
+        font-size: 13px;
+        font-weight: 700;
+        border: 1px solid #fecaca;
+        width: fit-content;
+        margin-top: 8px;
+      }
+
+      .decision-desc {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.6;
+        margin-top: 10px;
+      }
+
+      .kv {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 8px 12px;
+        align-items: baseline;
+      }
+
+      .kv-label {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      .kv-value {
+        font-size: 13px;
+        color: var(--text);
+        font-weight: 500;
+        word-break: break-all;
+      }
+
+      .kv-value.mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12px;
+      }
+
+      /* ── Grid sections ───────────────────────────── */
+      .section-title {
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: var(--muted);
+        margin: 32px 0 12px;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .panel h2 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 14px;
+        color: var(--text);
+      }
+
+      ul {
+        padding-left: 18px;
+      }
+      li {
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--text);
+      }
+      li + li { margin-top: 8px; }
+
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 13px;
+        background: #f1f5f9;
+        padding: 1px 5px;
+        border-radius: 4px;
+      }
+
+      /* ── Compare cards ───────────────────────────── */
+      .compare {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .compare-card {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 14px;
+      }
+
+      .compare-card .signal-name {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+
+      .compare-card .values {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .compare-card .val-before {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--muted);
+      }
+
+      .compare-card .arrow {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .compare-card .val-after {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--bad);
+      }
+
+      /* ── Footer ──────────────────────────────────── */
+      .footer {
+        margin-top: 32px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      /* ── Responsive ──────────────────────────────── */
+      @media (max-width: 860px) {
+        .hero { grid-template-columns: 1fr; }
+        .metrics { grid-template-columns: repeat(2, 1fr); }
+        .grid-2 { grid-template-columns: 1fr; }
+        .compare { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+
+      <!-- Hero -->
+      <section class="hero">
+
+        <!-- Left: verdict + metrics -->
+        <div class="panel">
+          <div class="eyebrow">AVERA · Second-Domain Proof</div>
+          <h1 class="hero-title">ADAS pedestrian detection regression</h1>
+          <p class="lede">
+            The same AVERA evidence model that catches a BMS regression also classifies
+            an ADAS pedestrian detection failure as a high-confidence confirmed regression.
+          </p>
+          <div class="metrics">
+            <div class="metric">
+              <div class="metric-label">Verdict</div>
+              <div class="metric-value bad">confirmed regression</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Risk</div>
+              <div class="metric-value bad">high</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Confidence</div>
+              <div class="metric-value good">high</div>
+              <div class="metric-sub">0.95 score</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Follow-up</div>
+              <div class="metric-value metric-mono">ADAS-HIL-VRU-12</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: decision -->
+        <div class="panel decision-panel">
+          <div>
+            <div class="eyebrow">Release outcome</div>
+            <div style="font-size:18px; font-weight:700; margin-top:6px;">Portable proof chain</div>
+            <div class="release-badge">⛔ Block before release</div>
+            <p class="decision-desc">
+              AVERA maps the changed file, compares baseline and current evidence,
+              links the failing requirements, and escalates as a reviewable engineering decision.
+            </p>
+          </div>
+          <div class="kv">
+            <div class="kv-label">Changed file</div>
+            <div class="kv-value mono">src/adas/perception/pedestrian_classifier.cpp</div>
+            <div class="kv-label">Component</div>
+            <div class="kv-value">ADAS Pedestrian Detection</div>
+            <div class="kv-label">Test</div>
+            <div class="kv-value mono">ADAS-SIL-VRU-REGRESSION-03</div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- What changed / Why blocked -->
+      <div class="section-title">Analysis</div>
+      <div class="grid-2">
+        <div class="panel">
+          <h2>What changed</h2>
+          <ul>
+            <li>An engineer retuned pedestrian classification confidence thresholds to reduce roadside false positives.</li>
+            <li>The baseline regression test passed before the change.</li>
+            <li>The current run now fails in the same urban daylight pedestrian-crossing scenario.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h2>Why AVERA blocks this</h2>
+          <ul>
+            <li><strong>ADAS-REQ-204</strong>: pedestrian recall dropped below <span class="mono">&gt;= 0.95</span>.</li>
+            <li><strong>ADAS-REQ-219</strong>: braking trigger latency exceeded <span class="mono">&lt;= 120 ms</span>.</li>
+            <li>The failure appears only in the current run — classified as an introduced regression.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Baseline vs current / Evidence -->
+      <div class="section-title">Evidence</div>
+      <div class="grid-2">
+        <div class="panel">
+          <h2>Baseline vs current</h2>
+          <div class="compare">
+            <div class="compare-card">
+              <div class="signal-name">pedestrian_recall</div>
+              <div class="values">
+                <span class="val-before">0.972</span>
+                <span class="arrow">→</span>
+                <span class="val-after">0.903</span>
+              </div>
+            </div>
+            <div class="compare-card">
+              <div class="signal-name">brake_trigger_latency_ms</div>
+              <div class="values">
+                <span class="val-before">104</span>
+                <span class="arrow">→</span>
+                <span class="val-after">146</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Evidence summary</h2>
+          <ul>
+            <li><span class="mono">ADAS-SIL-VRU-REGRESSION-03</span> failed only in the current run.</li>
+            <li>Pedestrian recall and braking latency both moved outside their mapped requirement thresholds.</li>
+            <li>The changed file maps directly to the affected ADAS component.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer">
+        AVERA static showcase asset · generated from working
+        <span class="mono">adas-pedestrian-detection-regression</span> artifacts.
+      </div>
+
+    </div>
+  </body>
+</html>

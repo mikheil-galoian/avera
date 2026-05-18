@@ -1,0 +1,12 @@
+{
+  "src/adas/perception/pedestrian_classifier.cpp": {
+    "component": "ADAS Pedestrian Detection",
+    "requirements": [
+      "ADAS-REQ-204",
+      "ADAS-REQ-219"
+    ],
+    "tests": [
+      "ADAS-SIL-VRU-REGRESSION-03"
+    ]
+  }
+}

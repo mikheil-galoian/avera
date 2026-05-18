@@ -1,0 +1,36 @@
+{
+  "runId": "fadec-current-v2.2.0",
+  "stage": "verification",
+  "changedFiles": ["src/fadec/overspeed_protection.c"],
+  "tests": [
+    {
+      "id": "FADEC-ENG-HIL-01",
+      "component": "Full Authority Digital Engine Control",
+      "status": "failed",
+      "metrics": {
+        "overspeed_response_ms": 63.2,
+        "cycle_time_ms": 9.7
+      },
+      "evidence": "HIL bench test: overspeed protection triggered at 63.2 ms. EXCEEDS 50 ms DAL-A limit. Regression introduced by refactoring of interrupt handler in overspeed_protection.c."
+    },
+    {
+      "id": "FADEC-ENG-HIL-02",
+      "component": "Full Authority Digital Engine Control",
+      "status": "failed",
+      "metrics": {
+        "overspeed_response_ms": 61.8,
+        "cycle_time_ms": 9.5
+      },
+      "evidence": "HIL bench test (repeat run): overspeed protection triggered at 61.8 ms. EXCEEDS 50 ms DAL-A limit."
+    },
+    {
+      "id": "FADEC-FUEL-SIL-01",
+      "component": "Full Authority Digital Engine Control",
+      "status": "passed",
+      "metrics": {
+        "fuel_flow_error_pct": 0.33
+      },
+      "evidence": "SIL test: fuel flow error 0.33%. Within 0.5% DAL-B limit. No regression."
+    }
+  ]
+}

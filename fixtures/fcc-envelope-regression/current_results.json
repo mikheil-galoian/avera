@@ -1,0 +1,36 @@
+{
+  "runId": "fcc-current-v3.1.0",
+  "stage": "verification",
+  "changedFiles": ["src/fcc/envelope_protection.c"],
+  "tests": [
+    {
+      "id": "FCC-CTRL-HIL-01",
+      "component": "Flight Control Computer",
+      "status": "passed",
+      "metrics": {
+        "actuation_latency_ms": 63.0,
+        "compute_jitter_ms": 1.5
+      },
+      "evidence": "HIL bench: actuation latency 63 ms, jitter 1.5 ms. No regression."
+    },
+    {
+      "id": "FCC-CTRL-HIL-02",
+      "component": "Flight Control Computer",
+      "status": "passed",
+      "metrics": {
+        "actuation_latency_ms": 65.0,
+        "compute_jitter_ms": 1.7
+      },
+      "evidence": "HIL bench (repeat): no regression on actuation path."
+    },
+    {
+      "id": "FCC-ENV-HIL-01",
+      "component": "Flight Control Computer",
+      "status": "failed",
+      "metrics": {
+        "envelope_engage_ms": 247.0
+      },
+      "evidence": "HIL bench: envelope protection engaged at 247 ms. EXCEEDS 200 ms DAL-A limit. Regression in envelope_protection.c priority scheduling."
+    }
+  ]
+}

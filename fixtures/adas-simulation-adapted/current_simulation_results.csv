@@ -1,0 +1,3 @@
+test_id,component,status,metric,value,unit,scenario,evidence
+ADAS-SIL-VRU-REGRESSION-03,ADAS Pedestrian Detection,failed,pedestrian_recall,0.903,ratio,ADAS-VRU-URBAN-CROSSING,pedestrian recall fell below mapped requirement after threshold retune
+ADAS-SIL-VRU-REGRESSION-03,ADAS Pedestrian Detection,failed,brake_trigger_latency_ms,146.0,ms,ADAS-VRU-URBAN-CROSSING,brake trigger latency exceeded mapped requirement after threshold retune

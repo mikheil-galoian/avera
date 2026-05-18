@@ -1,0 +1,12 @@
+{
+  "src/etcs/braking/emergency_brake_controller.c": {
+    "component": "ETCS Emergency Braking",
+    "requirements": ["ETCS-REQ-001", "ETCS-REQ-002"],
+    "tests": ["ETCS-HIL-BRAKE-01"]
+  },
+  "src/etcs/signalling/cab_signal_processor.c": {
+    "component": "ETCS Cab Signalling",
+    "requirements": ["ETCS-REQ-003"],
+    "tests": ["ETCS-HIL-SIGNAL-03"]
+  }
+}

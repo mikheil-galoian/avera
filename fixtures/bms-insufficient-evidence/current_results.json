@@ -1,0 +1,18 @@
+{
+  "runId": "current-bms-insufficient-001",
+  "stage": "current",
+  "changedFiles": [
+    "src/bms/thermal_manager.c"
+  ],
+  "tests": [
+    {
+      "id": "BMS-SIL-FASTCHARGE-01",
+      "component": "BMS Thermal Control",
+      "status": "inconclusive",
+      "metrics": {
+        "cooling_response_ms": 472
+      },
+      "evidence": "Current run lost the maximum cell temperature sensor stream, so BMS-REQ-112 cannot be compared against baseline."
+    }
+  ]
+}

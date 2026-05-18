@@ -1,0 +1,194 @@
+# ── AVERA Safety Gate ────────────────────────────────────────────────────────
+#
+# PURPOSE
+# ───────
+# This workflow demonstrates AVERA as a CI/CD gate enforcer.
+# It runs the AVERA analysis engine against every domain fixture and
+# enforces the exit-code contract:
+#
+#   Exit 0  → verdict is safe (successful_change or non-blocking regression)
+#   Exit 1  → verdict is RELEASE_BLOCKING — pipeline fails, PR cannot merge
+#   Exit 2  → analysis error (missing files, corrupt inputs)
+#
+# INVESTOR DEMO VALUE
+# ───────────────────
+# This file is the evidence that AVERA is not just a reporting tool —
+# it is an automated safety gate that integrates into any CI/CD system.
+# The same contract works in Jenkins, GitLab CI, Azure Pipelines, etc.
+#
+# TRIGGERS
+# ────────
+# • Push / PR to main or develop that touches fixtures or source
+# • Manual dispatch with optional fixture override
+# • Can be called as a reusable workflow from any external repo
+
+name: AVERA Safety Gate
+
+on:
+  push:
+    branches: ["main", "develop"]
+    paths:
+      - "fixtures/**"
+      - "src/**"
+  pull_request:
+    branches: ["main", "develop"]
+    paths:
+      - "fixtures/**"
+      - "src/**"
+  workflow_dispatch:
+    inputs:
+      fixture:
+        description: "Fixture to analyze (leave blank = all)"
+        required: false
+        default: ""
+      fail_on_release_blocking:
+        description: "Fail pipeline on release_blocking verdict"
+        required: false
+        default: "true"
+
+jobs:
+  # ── Job 1: Unit & integration tests ────────────────────────────────────────
+  tests:
+    name: "Tests — pytest"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install AVERA
+        run: pip install -e ".[api,dev]" --quiet
+
+      - name: Run full test suite
+        run: |
+          python -m pytest tests/ -v --tb=short \
+            --junit-xml=reports/junit/test-results.xml
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: reports/junit/
+
+
+  # ── Job 2: Safety gate — all four industry domains ─────────────────────────
+  safety-gate:
+    name: "Safety Gate — ${{ matrix.fixture }}"
+    runs-on: ubuntu-latest
+    needs: tests
+
+    # Run one job per fixture in parallel
+    strategy:
+      fail-fast: false        # report ALL failures, not just the first
+      matrix:
+        fixture:
+          - bms-fast-charge                    # Automotive / ISO 26262 / ASIL-D
+          - adas-pedestrian-detection-regression  # Automotive / ASIL-D
+          - powertrain-overspeed-regression    # Automotive / ASIL-D → release_blocking
+          - fadec-overspeed-regression         # Aviation   / DO-178C / DAL-A → release_blocking
+          - fcc-envelope-regression            # Aviation   / DO-178C / DAL-A → release_blocking
+          - etcs-brake-response-regression     # Railway    / EN-50128 / SIL-4 → release_blocking
+          - infusion-pump-flow-regression      # Medical    / IEC-62304 / Class-C
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install AVERA
+        run: pip install -e ".[api]" --quiet
+
+      # ── Core gate step ──────────────────────────────────────────────────────
+      # avera-api exits with code 1 if risk == release_blocking.
+      # GitHub Actions treats non-zero exit as step failure → job fails → PR blocked.
+      - name: "Run AVERA gate — ${{ matrix.fixture }}"
+        id: gate
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "  AVERA Safety Gate"
+          echo "  Fixture : ${{ matrix.fixture }}"
+          echo "  Commit  : ${{ github.sha }}"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+          # Run analysis — exit code 1 = release_blocking
+          python -m avera.api.app \
+            --project "fixtures/${{ matrix.fixture }}" \
+            --json \
+            2>&1 | tee /tmp/avera-output.txt
+
+          EXIT_CODE=${PIPESTATUS[0]}
+
+          # Extract key fields for the summary
+          VERDICT=$(grep '"verdict"' /tmp/avera-output.txt | head -1 | sed 's/.*: "\(.*\)".*/\1/')
+          RISK=$(grep '"risk"' /tmp/avera-output.txt | head -1 | sed 's/.*: "\(.*\)".*/\1/')
+          CONF=$(grep '"confidence_score"' /tmp/avera-output.txt | head -1 | sed 's/.*: \(.*\),.*/\1/')
+
+          echo ""
+          echo "  VERDICT          : $VERDICT"
+          echo "  RISK             : $RISK"
+          echo "  CONFIDENCE SCORE : $CONF"
+          echo ""
+
+          # Write to GitHub step summary (visible in Actions UI)
+          {
+            echo "## AVERA Gate Result — \`${{ matrix.fixture }}\`"
+            echo ""
+            echo "| Field | Value |"
+            echo "|-------|-------|"
+            echo "| Verdict | \`$VERDICT\` |"
+            echo "| Risk | \`$RISK\` |"
+            echo "| Confidence | \`$CONF\` |"
+            echo "| Exit Code | \`$EXIT_CODE\` |"
+            echo ""
+            if [ "$EXIT_CODE" = "1" ]; then
+              echo "> ❌ **RELEASE BLOCKED** — safety-critical regression detected."
+              echo "> This fixture cannot be merged until the regression is resolved."
+            elif [ "$EXIT_CODE" = "0" ]; then
+              echo "> ✅ **Gate passed** — no release-blocking issues found."
+            else
+              echo "> ⚠️ **Analysis error** — check input files and engine logs."
+            fi
+          } >> $GITHUB_STEP_SUMMARY
+
+          # Propagate exit code — this is what blocks the PR
+          exit $EXIT_CODE
+
+      # ── Upload evidence report ──────────────────────────────────────────────
+      - name: Upload AVERA evidence report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: "avera-report-${{ matrix.fixture }}"
+          path: /tmp/avera-output.txt
+          retention-days: 30
+
+
+  # ── Job 3: Gate summary ─────────────────────────────────────────────────────
+  gate-summary:
+    name: "Gate Summary"
+    runs-on: ubuntu-latest
+    needs: safety-gate
+    if: always()
+
+    steps:
+      - name: Report gate outcome
+        run: |
+          if [ "${{ needs.safety-gate.result }}" = "success" ]; then
+            echo "✅ All AVERA safety gates passed."
+            echo "   4 domains verified: Automotive / Aviation / Railway / Medical"
+          else
+            echo "❌ One or more AVERA safety gates FAILED."
+            echo "   Release-blocking regressions were detected."
+            echo "   Review the individual job summaries above."
+            exit 1
+          fi

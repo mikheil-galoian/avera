@@ -1,0 +1,1 @@
+"""AVERA demo shell package."""

@@ -1,0 +1,397 @@
+{
+  "edges": [
+    {
+      "relation": "classified_as",
+      "source": "change",
+      "target": "risk"
+    },
+    {
+      "relation": "recommends",
+      "source": "risk",
+      "target": "recommendation:bms-hil-fastcharge-07"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:r3_preexisting_failure",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_preexisting_failure_present",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_affected_file_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_baseline_current_pair_present",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_preexisting_failure_detected",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_requirement_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:risk_medium",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:safety_level_high",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:safety_level_medium",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_failed_bms-req-112_max_cell_temp_c",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_failed_bms-req-118_cooling_response_ms",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:verdict_preexisting_failure",
+      "target": "risk"
+    },
+    {
+      "relation": "affects_component",
+      "source": "change",
+      "target": "component:bms_thermal_control"
+    },
+    {
+      "relation": "contributes_to",
+      "source": "component:bms_thermal_control",
+      "target": "risk"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:bms-req-112",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:bms_thermal_control",
+      "target": "requirement:bms-req-112"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:bms-req-118",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:bms_thermal_control",
+      "target": "requirement:bms-req-118"
+    },
+    {
+      "relation": "touches_file",
+      "source": "change",
+      "target": "file:src_bms_thermal_manager.c"
+    },
+    {
+      "relation": "maps_to_component",
+      "source": "file:src_bms_thermal_manager.c",
+      "target": "component:bms_thermal_control"
+    },
+    {
+      "relation": "observed_in",
+      "source": "change",
+      "target": "test_failure:bms-sil-fastcharge-01"
+    },
+    {
+      "relation": "supports",
+      "source": "test_failure:bms-sil-fastcharge-01",
+      "target": "risk"
+    },
+    {
+      "relation": "occurs_in",
+      "source": "test_failure:bms-sil-fastcharge-01",
+      "target": "component:bms_thermal_control"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:bms-req-112_max_cell_temp_c_bms-sil-fastcharge-01",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:bms-req-112_max_cell_temp_c_bms-sil-fastcharge-01",
+      "target": "requirement:bms-req-112"
+    },
+    {
+      "relation": "contains_metric",
+      "source": "test_failure:bms-sil-fastcharge-01",
+      "target": "threshold_evidence:bms-req-112_max_cell_temp_c_bms-sil-fastcharge-01"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:bms-req-118_cooling_response_ms_bms-sil-fastcharge-01",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:bms-req-118_cooling_response_ms_bms-sil-fastcharge-01",
+      "target": "requirement:bms-req-118"
+    },
+    {
+      "relation": "contains_metric",
+      "source": "test_failure:bms-sil-fastcharge-01",
+      "target": "threshold_evidence:bms-req-118_cooling_response_ms_bms-sil-fastcharge-01"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "change",
+      "label": "Change under assessment",
+      "properties": {
+        "description": "An engineer made a small tuning change in src/bms/thermal_manager.c.\n\nThe baseline run already failed BMS-REQ-112 and BMS-REQ-118 before this change. The current run\ncontinues to fail the same requirements with similar or slightly improved metrics. AVERA should\nclassify the outcome as a preexisting failure, not a newly introduced agent-caused regression."
+      },
+      "type": "change"
+    },
+    {
+      "id": "risk",
+      "label": "medium",
+      "properties": {
+        "confidence": "high",
+        "verdict": "preexisting_failure"
+      },
+      "type": "risk"
+    },
+    {
+      "id": "recommendation:bms-hil-fastcharge-07",
+      "label": "BMS-HIL-FASTCHARGE-07",
+      "properties": {
+        "check": "BMS-HIL-FASTCHARGE-07"
+      },
+      "type": "recommendation"
+    },
+    {
+      "id": "rule:r3_preexisting_failure",
+      "label": "R3_preexisting_failure",
+      "properties": {
+        "value": "R3_preexisting_failure"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_preexisting_failure_present",
+      "label": "signal_preexisting_failure_present",
+      "properties": {
+        "value": "signal_preexisting_failure_present"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "confidence_factor:+_affected_file_mapped",
+      "label": "+ affected_file_mapped",
+      "properties": {
+        "value": "+ affected_file_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_baseline_current_pair_present",
+      "label": "+ baseline_current_pair_present",
+      "properties": {
+        "value": "+ baseline_current_pair_present"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_preexisting_failure_detected",
+      "label": "+ preexisting_failure_detected",
+      "properties": {
+        "value": "+ preexisting_failure_detected"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_requirement_mapped",
+      "label": "+ requirement_mapped",
+      "properties": {
+        "value": "+ requirement_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "risk_driver:risk_medium",
+      "label": "risk:medium",
+      "properties": {
+        "value": "risk:medium"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:safety_level_high",
+      "label": "safety_level:high",
+      "properties": {
+        "value": "safety_level:high"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:safety_level_medium",
+      "label": "safety_level:medium",
+      "properties": {
+        "value": "safety_level:medium"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_failed_bms-req-112_max_cell_temp_c",
+      "label": "threshold_failed:BMS-REQ-112:max_cell_temp_c",
+      "properties": {
+        "value": "threshold_failed:BMS-REQ-112:max_cell_temp_c"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_failed_bms-req-118_cooling_response_ms",
+      "label": "threshold_failed:BMS-REQ-118:cooling_response_ms",
+      "properties": {
+        "value": "threshold_failed:BMS-REQ-118:cooling_response_ms"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:verdict_preexisting_failure",
+      "label": "verdict:preexisting_failure",
+      "properties": {
+        "value": "verdict:preexisting_failure"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "component:bms_thermal_control",
+      "label": "BMS Thermal Control",
+      "type": "component"
+    },
+    {
+      "id": "requirement:bms-req-112",
+      "label": "BMS-REQ-112",
+      "properties": {
+        "component": "BMS Thermal Control",
+        "metric": "max_cell_temp_c",
+        "operator": "<=",
+        "requirement": "Maximum cell temperature during fast charging must not exceed 50 C",
+        "safety_level": "high",
+        "threshold": 50.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "requirement:bms-req-118",
+      "label": "BMS-REQ-118",
+      "properties": {
+        "component": "BMS Thermal Control",
+        "metric": "cooling_response_ms",
+        "operator": "<=",
+        "requirement": "Cooling response delay during fast charging must not exceed 500 ms",
+        "safety_level": "medium",
+        "threshold": 500.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "file:src_bms_thermal_manager.c",
+      "label": "src/bms/thermal_manager.c",
+      "properties": {
+        "path": "src/bms/thermal_manager.c"
+      },
+      "type": "file"
+    },
+    {
+      "id": "test_failure:bms-sil-fastcharge-01",
+      "label": "BMS-SIL-FASTCHARGE-01",
+      "properties": {
+        "baseline_status": "failed",
+        "category": "preexisting_failures",
+        "component": "BMS Thermal Control",
+        "current_status": "failed"
+      },
+      "type": "test_failure"
+    },
+    {
+      "id": "threshold_evidence:bms-req-112_max_cell_temp_c_bms-sil-fastcharge-01",
+      "label": "max_cell_temp_c",
+      "properties": {
+        "baseline_passed": false,
+        "baseline_value": 51.4,
+        "current_passed": false,
+        "current_value": 51.1,
+        "operator": "<=",
+        "requirement_id": "BMS-REQ-112",
+        "test_id": "BMS-SIL-FASTCHARGE-01",
+        "threshold": 50.0
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:bms-req-118_cooling_response_ms_bms-sil-fastcharge-01",
+      "label": "cooling_response_ms",
+      "properties": {
+        "baseline_passed": false,
+        "baseline_value": 535.0,
+        "current_passed": false,
+        "current_value": 528.0,
+        "operator": "<=",
+        "requirement_id": "BMS-REQ-118",
+        "test_id": "BMS-SIL-FASTCHARGE-01",
+        "threshold": 500.0
+      },
+      "type": "threshold_evidence"
+    }
+  ],
+  "schema_version": "evidence_graph.v0.3",
+  "summary": {
+    "comparison_summary": {
+      "introduced_failures": 0,
+      "metric_deltas": 2,
+      "missing_baseline": 0,
+      "missing_current": 0,
+      "preexisting_failures": 1,
+      "resolved_failures": 0,
+      "total_tests": 1,
+      "unchanged_passes": 0
+    },
+    "components": 1,
+    "confidence": "high",
+    "confidence_factors": 4,
+    "edge_count": 31,
+    "evidence_summary": [
+      "Verdict is preexisting failure.",
+      "BMS-SIL-FASTCHARGE-01 failed in both baseline and current runs.",
+      "max_cell_temp_c for BMS-REQ-112 was 51.1, outside <= 50.",
+      "cooling_response_ms for BMS-REQ-118 was 528, outside <= 500.",
+      "Mapped affected files: src/bms/thermal_manager.c."
+    ],
+    "files": 1,
+    "node_count": 22,
+    "recommendations": 1,
+    "requirements": 2,
+    "risk": "medium",
+    "risk_drivers": 6,
+    "rules": 2,
+    "signal_summaries": 0,
+    "tests_or_failures": 1,
+    "threshold_evidence": 2,
+    "verdict": "preexisting_failure"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "runId": "current-bms-worsened-preexisting-001",
+  "stage": "current",
+  "changedFiles": [
+    "src/bms/thermal_manager.c"
+  ],
+  "tests": [
+    {
+      "id": "BMS-SIL-FASTCHARGE-01",
+      "component": "BMS Thermal Control",
+      "status": "failed",
+      "metrics": {
+        "max_cell_temp_c": 56.9,
+        "cooling_response_ms": 675
+      },
+      "evidence": "Current verification fails the same mapped requirements with materially worse thermal and cooling metrics."
+    }
+  ]
+}

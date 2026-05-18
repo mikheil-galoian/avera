@@ -1,0 +1,319 @@
+{
+  "edges": [
+    {
+      "relation": "classified_as",
+      "source": "change",
+      "target": "risk"
+    },
+    {
+      "relation": "recommends",
+      "source": "risk",
+      "target": "recommendation:pt-ems-nox-01"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:r7_successful_covered_change",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_affected_file_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_baseline_current_pair_present",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_requirement_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:risk_low",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:safety_level_low",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_passed_pt-req-030_nox_mg_per_km",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_passed_pt-req-031_co2_g_per_km",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:verdict_successful_change",
+      "target": "risk"
+    },
+    {
+      "relation": "affects_component",
+      "source": "change",
+      "target": "component:emissions_management_system"
+    },
+    {
+      "relation": "contributes_to",
+      "source": "component:emissions_management_system",
+      "target": "risk"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:pt-req-030",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:emissions_management_system",
+      "target": "requirement:pt-req-030"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:pt-req-031",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:emissions_management_system",
+      "target": "requirement:pt-req-031"
+    },
+    {
+      "relation": "touches_file",
+      "source": "change",
+      "target": "file:src_ems_emissions_monitor.c"
+    },
+    {
+      "relation": "maps_to_component",
+      "source": "file:src_ems_emissions_monitor.c",
+      "target": "component:emissions_management_system"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:pt-req-030_nox_mg_per_km_pt-ems-nox-01",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:pt-req-030_nox_mg_per_km_pt-ems-nox-01",
+      "target": "requirement:pt-req-030"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:pt-req-031_co2_g_per_km_pt-ems-nox-01",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:pt-req-031_co2_g_per_km_pt-ems-nox-01",
+      "target": "requirement:pt-req-031"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "change",
+      "label": "Change under assessment",
+      "properties": {
+        "description": "Emissions management calibration updated in src/ems/emissions_monitor.c to improve SCR dosing efficiency.  Both NO\u2093 and CO\u2082 metrics improved versus baseline.  No threshold violations."
+      },
+      "type": "change"
+    },
+    {
+      "id": "risk",
+      "label": "low",
+      "properties": {
+        "confidence": "high",
+        "verdict": "successful_change"
+      },
+      "type": "risk"
+    },
+    {
+      "id": "recommendation:pt-ems-nox-01",
+      "label": "PT-EMS-NOX-01",
+      "properties": {
+        "check": "PT-EMS-NOX-01"
+      },
+      "type": "recommendation"
+    },
+    {
+      "id": "rule:r7_successful_covered_change",
+      "label": "R7_successful_covered_change",
+      "properties": {
+        "value": "R7_successful_covered_change"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "confidence_factor:+_affected_file_mapped",
+      "label": "+ affected_file_mapped",
+      "properties": {
+        "value": "+ affected_file_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_baseline_current_pair_present",
+      "label": "+ baseline_current_pair_present",
+      "properties": {
+        "value": "+ baseline_current_pair_present"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_requirement_mapped",
+      "label": "+ requirement_mapped",
+      "properties": {
+        "value": "+ requirement_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "risk_driver:risk_low",
+      "label": "risk:low",
+      "properties": {
+        "value": "risk:low"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:safety_level_low",
+      "label": "safety_level:low",
+      "properties": {
+        "value": "safety_level:low"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_passed_pt-req-030_nox_mg_per_km",
+      "label": "threshold_passed:PT-REQ-030:nox_mg_per_km",
+      "properties": {
+        "value": "threshold_passed:PT-REQ-030:nox_mg_per_km"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_passed_pt-req-031_co2_g_per_km",
+      "label": "threshold_passed:PT-REQ-031:co2_g_per_km",
+      "properties": {
+        "value": "threshold_passed:PT-REQ-031:co2_g_per_km"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:verdict_successful_change",
+      "label": "verdict:successful_change",
+      "properties": {
+        "value": "verdict:successful_change"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "component:emissions_management_system",
+      "label": "Emissions Management System",
+      "type": "component"
+    },
+    {
+      "id": "requirement:pt-req-030",
+      "label": "PT-REQ-030",
+      "properties": {
+        "component": "Emissions Management System",
+        "metric": "nox_mg_per_km",
+        "operator": "<=",
+        "requirement": "NO\u2093 emissions must not exceed 60 mg/km (Euro 6d type-approval limit).",
+        "safety_level": "low",
+        "threshold": 60.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "requirement:pt-req-031",
+      "label": "PT-REQ-031",
+      "properties": {
+        "component": "Emissions Management System",
+        "metric": "co2_g_per_km",
+        "operator": "<=",
+        "requirement": "Fleet-average CO\u2082 emissions must not exceed 95 g/km (EU fleet CO\u2082 regulation target).",
+        "safety_level": "low",
+        "threshold": 95.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "file:src_ems_emissions_monitor.c",
+      "label": "src/ems/emissions_monitor.c",
+      "properties": {
+        "path": "src/ems/emissions_monitor.c"
+      },
+      "type": "file"
+    },
+    {
+      "id": "threshold_evidence:pt-req-030_nox_mg_per_km_pt-ems-nox-01",
+      "label": "nox_mg_per_km",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 54.0,
+        "current_passed": true,
+        "current_value": 49.0,
+        "operator": "<=",
+        "requirement_id": "PT-REQ-030",
+        "test_id": "PT-EMS-NOX-01",
+        "threshold": 60.0
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:pt-req-031_co2_g_per_km_pt-ems-nox-01",
+      "label": "co2_g_per_km",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 91.0,
+        "current_passed": true,
+        "current_value": 88.0,
+        "operator": "<=",
+        "requirement_id": "PT-REQ-031",
+        "test_id": "PT-EMS-NOX-01",
+        "threshold": 95.0
+      },
+      "type": "threshold_evidence"
+    }
+  ],
+  "schema_version": "evidence_graph.v0.3",
+  "summary": {
+    "comparison_summary": {
+      "introduced_failures": 0,
+      "metric_deltas": 2,
+      "missing_baseline": 0,
+      "missing_current": 0,
+      "preexisting_failures": 0,
+      "resolved_failures": 0,
+      "total_tests": 1,
+      "unchanged_passes": 1
+    },
+    "components": 1,
+    "confidence": "high",
+    "confidence_factors": 3,
+    "edge_count": 23,
+    "evidence_summary": [
+      "Verdict is successful change.",
+      "Mapped affected files: src/ems/emissions_monitor.c."
+    ],
+    "files": 1,
+    "node_count": 18,
+    "recommendations": 1,
+    "requirements": 2,
+    "risk": "low",
+    "risk_drivers": 5,
+    "rules": 1,
+    "signal_summaries": 0,
+    "tests_or_failures": 0,
+    "threshold_evidence": 2,
+    "verdict": "successful_change"
+  }
+}

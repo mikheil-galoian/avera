@@ -1,0 +1,222 @@
+{
+  "affected_components": [
+    "adas-perception-module"
+  ],
+  "affected_files": [
+    "model/adas-perception-module"
+  ],
+  "affected_requirements": [
+    {
+      "component": "adas-perception-module",
+      "id": "REQ-SAFETY-012",
+      "metadata": {},
+      "metric": "detection_rate",
+      "next_checks": [],
+      "operator": ">=",
+      "requirement": "Pedestrian detection rate shall be >= 0.95 in all lighting conditions including night and rain",
+      "safety_level": "d",
+      "threshold": 0.95
+    },
+    {
+      "component": "adas-perception-module",
+      "id": "REQ-SAFETY-008",
+      "metadata": {},
+      "metric": "false_positive_rate",
+      "next_checks": [],
+      "operator": "<=",
+      "requirement": "False positive rate for vehicle detection shall be <= 0.05 on highway scenarios",
+      "safety_level": "c",
+      "threshold": 0.05
+    },
+    {
+      "component": "adas-perception-module",
+      "id": "REQ-SAFETY-015",
+      "metadata": {},
+      "metric": "latency_p95_ms",
+      "next_checks": [],
+      "operator": "<=",
+      "requirement": "Pedestrian detection latency shall be <= 50ms at 95th percentile",
+      "safety_level": "c",
+      "threshold": 50.0
+    },
+    {
+      "component": "adas-perception-module",
+      "id": "REQ-PERF-001",
+      "metadata": {},
+      "metric": "map_score",
+      "next_checks": [],
+      "operator": ">=",
+      "requirement": "Overall mAP on standard ADAS benchmark shall be >= 0.82",
+      "safety_level": "low",
+      "threshold": 0.82
+    },
+    {
+      "component": "adas-perception-module",
+      "id": "REQ-PERF-003",
+      "metadata": {},
+      "metric": "inference_time_ms",
+      "next_checks": [],
+      "operator": "<=",
+      "requirement": "Model inference time shall be <= 25ms on target hardware TDA4VM",
+      "safety_level": "low",
+      "threshold": 25.0
+    },
+    {
+      "component": "adas-perception-module",
+      "id": "REQ-INTEG-001",
+      "metadata": {},
+      "metric": "output_schema_version",
+      "next_checks": [],
+      "operator": "=",
+      "requirement": "Perception module output format shall conform to AveraPerceptionOutput v2 schema",
+      "safety_level": "low",
+      "threshold": 2.0
+    }
+  ],
+  "comparison_summary": {
+    "introduced_failures": 1,
+    "metric_deltas": 6,
+    "missing_baseline": 0,
+    "missing_current": 0,
+    "preexisting_failures": 0,
+    "resolved_failures": 0,
+    "total_tests": 6,
+    "unchanged_passes": 5
+  },
+  "confidence": "high",
+  "confidence_factors": [
+    "+ baseline_current_pair_present",
+    "+ introduced_failure_detected",
+    "+ threshold_crossing_detected",
+    "+ requirement_mapped",
+    "+ affected_file_mapped"
+  ],
+  "confidence_score": 0.95,
+  "evidence_summary": [
+    "Verdict is confirmed regression.",
+    "SC-SAFETY-012-night-rain failed only in the current run.",
+    "detection_rate for REQ-SAFETY-012 was 0.94, outside >= 0.95.",
+    "Mapped affected files: model/adas-perception-module."
+  ],
+  "introduced_failures": [
+    {
+      "baseline_metrics": {
+        "detection_rate": 0.97
+      },
+      "baseline_status": "passed",
+      "classification": "introduced_failure",
+      "component": "adas-perception-module",
+      "current_metrics": {
+        "detection_rate": 0.94
+      },
+      "current_status": "failed",
+      "evidence": [
+        "SC-SAFETY-012-night-rain: introduced failure.",
+        "detection_rate decreased from 0.97 to 0.94."
+      ],
+      "metric_deltas": [
+        {
+          "baseline": 0.97,
+          "current": 0.94,
+          "delta": -0.030000000000000027,
+          "metric": "detection_rate",
+          "percent_delta": -3.092783505154642,
+          "test_id": "SC-SAFETY-012-night-rain"
+        }
+      ],
+      "test_id": "SC-SAFETY-012-night-rain"
+    }
+  ],
+  "preexisting_failures": [],
+  "recommended_next_checks": [],
+  "risk": "release_blocking",
+  "risk_drivers": [
+    "verdict:confirmed_regression",
+    "risk:release_blocking",
+    "safety_level:c",
+    "safety_level:d",
+    "safety_level:low",
+    "threshold_passed:REQ-PERF-001:map_score",
+    "threshold_passed:REQ-PERF-003:inference_time_ms",
+    "threshold_passed:REQ-SAFETY-008:false_positive_rate",
+    "threshold_passed:REQ-SAFETY-012:detection_rate",
+    "threshold_failed:REQ-SAFETY-012:detection_rate",
+    "threshold_passed:REQ-SAFETY-015:latency_p95_ms"
+  ],
+  "rules_triggered": [
+    "R1_confirmed_threshold_regression",
+    "R2_introduced_test_failure",
+    "signal_baseline_pass_current_threshold_fail",
+    "signal_introduced_failure_present"
+  ],
+  "schema_version": "avera.assessment.v0.2",
+  "threshold_evidence": [
+    {
+      "baseline_passed": true,
+      "baseline_value": 0.847,
+      "current_passed": true,
+      "current_value": 0.863,
+      "metric": "map_score",
+      "operator": ">=",
+      "requirement_id": "REQ-PERF-001",
+      "test_id": "SC-PERF-001-map",
+      "threshold": 0.82
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 21.4,
+      "current_passed": true,
+      "current_value": 22.1,
+      "metric": "inference_time_ms",
+      "operator": "<=",
+      "requirement_id": "REQ-PERF-003",
+      "test_id": "SC-PERF-003-inference",
+      "threshold": 25.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 0.02,
+      "current_passed": true,
+      "current_value": 0.02,
+      "metric": "false_positive_rate",
+      "operator": "<=",
+      "requirement_id": "REQ-SAFETY-008",
+      "test_id": "SC-SAFETY-008-highway",
+      "threshold": 0.05
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 0.99,
+      "current_passed": true,
+      "current_value": 0.98,
+      "metric": "detection_rate",
+      "operator": ">=",
+      "requirement_id": "REQ-SAFETY-012",
+      "test_id": "SC-SAFETY-012-night-clear",
+      "threshold": 0.95
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 0.97,
+      "current_passed": false,
+      "current_value": 0.94,
+      "metric": "detection_rate",
+      "operator": ">=",
+      "requirement_id": "REQ-SAFETY-012",
+      "test_id": "SC-SAFETY-012-night-rain",
+      "threshold": 0.95
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 38.2,
+      "current_passed": true,
+      "current_value": 41.7,
+      "metric": "latency_p95_ms",
+      "operator": "<=",
+      "requirement_id": "REQ-SAFETY-015",
+      "test_id": "SC-SAFETY-015-latency",
+      "threshold": 50.0
+    }
+  ],
+  "verdict": "confirmed_regression"
+}

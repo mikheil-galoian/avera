@@ -1,0 +1,7 @@
+id,component,requirement,metric,operator,threshold,safety_level
+REQ-SAFETY-012,adas-perception-module,Pedestrian detection rate shall be >= 0.95 in all lighting conditions including night and rain,detection_rate,>=,0.95,d
+REQ-SAFETY-008,adas-perception-module,False positive rate for vehicle detection shall be <= 0.05 on highway scenarios,false_positive_rate,<=,0.05,c
+REQ-SAFETY-015,adas-perception-module,Pedestrian detection latency shall be <= 50ms at 95th percentile,latency_p95_ms,<=,50.0,c
+REQ-PERF-001,adas-perception-module,Overall mAP on standard ADAS benchmark shall be >= 0.82,map_score,>=,0.82,low
+REQ-PERF-003,adas-perception-module,Model inference time shall be <= 25ms on target hardware TDA4VM,inference_time_ms,<=,25.0,low
+REQ-INTEG-001,adas-perception-module,Perception module output format shall conform to AveraPerceptionOutput v2 schema,output_schema_version,=,2,low

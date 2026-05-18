@@ -1,0 +1,1 @@
+An engineer raised the overspeed limiter threshold in src/ecu/overspeed_protection.c from 7000 RPM to 7500 RPM to allow higher performance tuning profiles.  The change violates PT-REQ-001 (ASIL-D) and must be reverted or justified by a full safety case update per ISO 26262.

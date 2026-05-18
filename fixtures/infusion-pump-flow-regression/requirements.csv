@@ -1,0 +1,4 @@
+id,component,requirement,metric,operator,threshold,safety_level,next_checks
+IMD-REQ-001,Infusion Pump Dosage Control,Flow rate deviation from programmed dose must not exceed 5.0 percent under IEC-62304 Class C,flow_rate_deviation_pct,<=,5.0,class-c,IMD-SIL-FLOW-01
+IMD-REQ-002,Infusion Pump Dosage Control,Occlusion detection response time must not exceed 3000 ms,occlusion_detect_ms,<=,3000.0,class-c,IMD-SIL-FLOW-01
+IMD-REQ-003,Infusion Pump Alarm System,Over-infusion alarm must trigger within 500 ms of threshold breach,alarm_trigger_ms,<=,500.0,class-b,IMD-SIL-ALARM-02

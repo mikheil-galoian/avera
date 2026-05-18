@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AVERA — AI Change Verification for Safety-Critical Systems</title>
+  <style>
+    /* ── Reset & base ───────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:        #0a0c10;
+      --bg2:       #111520;
+      --bg3:       #161b28;
+      --border:    #1e2535;
+      --accent:    #3b82f6;
+      --accent2:   #60a5fa;
+      --green:     #22c55e;
+      --red:       #ef4444;
+      --orange:    #f97316;
+      --purple:    #a855f7;
+      --text:      #e2e8f0;
+      --muted:     #64748b;
+      --card-r:    12px;
+      --font:      'Inter', system-ui, -apple-system, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Layout helpers ─────────────────────────────────────────────── */
+    .container  { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .section    { padding: 96px 0; }
+    .section-sm { padding: 64px 0; }
+
+    /* ── Nav ────────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,12,16,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px;
+    }
+    .nav-logo { font-size: 20px; font-weight: 700; letter-spacing: -.5px; color: var(--text); }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a { color: var(--muted); font-size: 14px; transition: color .2s; }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+    .nav-cta {
+      background: var(--accent); color: #fff;
+      padding: 8px 20px; border-radius: 8px;
+      font-size: 14px; font-weight: 600;
+      transition: background .2s;
+    }
+    .nav-cta:hover { background: var(--accent2); text-decoration: none; }
+
+    /* ── Hero ───────────────────────────────────────────────────────── */
+    .hero {
+      padding: 120px 24px 96px;
+      text-align: center;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(59,130,246,.18) 0%, transparent 70%);
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.3);
+      color: var(--accent2); font-size: 13px; font-weight: 500;
+      padding: 6px 16px; border-radius: 99px; margin-bottom: 28px;
+    }
+    .hero-badge::before { content: "●"; font-size: 10px; color: var(--green); }
+    h1 {
+      font-size: clamp(36px, 6vw, 72px);
+      font-weight: 800; letter-spacing: -2px; line-height: 1.1;
+      margin-bottom: 24px;
+    }
+    h1 em { font-style: normal; color: var(--accent); }
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 20px); color: var(--muted);
+      max-width: 640px; margin: 0 auto 48px;
+    }
+    .hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--accent); color: #fff;
+      padding: 14px 32px; border-radius: 10px;
+      font-size: 15px; font-weight: 600;
+      transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 0 32px rgba(59,130,246,.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 40px rgba(59,130,246,.5); text-decoration: none; }
+    .btn-ghost {
+      background: transparent; color: var(--text);
+      padding: 14px 32px; border-radius: 10px;
+      font-size: 15px; font-weight: 600;
+      border: 1px solid var(--border);
+      transition: border-color .2s;
+    }
+    .btn-ghost:hover { border-color: var(--accent); text-decoration: none; }
+
+    /* ── Verdict strip ──────────────────────────────────────────────── */
+    .verdict-strip {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+      margin-top: 64px;
+    }
+    .verdict-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--bg2); border: 1px solid var(--border);
+      padding: 10px 18px; border-radius: 99px; font-size: 13px;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .dot-red    { background: var(--red); box-shadow: 0 0 8px var(--red); }
+    .dot-green  { background: var(--green); box-shadow: 0 0 8px var(--green); }
+    .dot-orange { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+    .dot-purple { background: var(--purple); box-shadow: 0 0 8px var(--purple); }
+
+    /* ── Section titles ─────────────────────────────────────────────── */
+    .section-label {
+      font-size: 12px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+    }
+    h2 {
+      font-size: clamp(28px, 4vw, 44px); font-weight: 800;
+      letter-spacing: -1px; margin-bottom: 16px;
+    }
+    .section-desc { font-size: 18px; color: var(--muted); max-width: 560px; }
+
+    /* ── Industry grid ──────────────────────────────────────────────── */
+    .industry-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px; margin-top: 56px;
+    }
+    .ind-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--card-r); padding: 28px 24px;
+      transition: border-color .2s, transform .2s;
+    }
+    .ind-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+    .ind-icon {
+      width: 48px; height: 48px;
+      display: block; margin-bottom: 16px;
+      color: var(--accent2);
+    }
+    .ind-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .ind-card .ind-std {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--accent2); margin-bottom: 10px;
+    }
+    .ind-card p { font-size: 14px; color: var(--muted); line-height: 1.55; }
+    .ind-card .ind-level {
+      margin-top: 16px; display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--muted);
+    }
+
+    /* ── How it works ───────────────────────────────────────────────── */
+    .steps { display: flex; gap: 0; margin-top: 56px; position: relative; }
+    .steps::before {
+      content: ''; position: absolute; top: 32px; left: calc(16.66% + 32px);
+      right: calc(16.66% + 32px); height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--purple));
+      opacity: .3;
+    }
+    .step { flex: 1; text-align: center; padding: 0 16px; }
+    .step-num {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: var(--bg2); border: 2px solid var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 800; color: var(--accent);
+      margin: 0 auto 20px; position: relative; z-index: 1;
+    }
+    .step h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .step p { font-size: 14px; color: var(--muted); line-height: 1.5; }
+
+    /* ── Evidence table ─────────────────────────────────────────────── */
+    .evidence-block {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--card-r); overflow: hidden; margin-top: 56px;
+    }
+    .ev-header {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+      background: var(--bg3); padding: 12px 20px;
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .ev-row {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+      padding: 14px 20px; font-size: 14px;
+      border-bottom: 1px solid var(--border); align-items: center;
+      transition: background .15s;
+    }
+    .ev-row:hover { background: rgba(59,130,246,.04); }
+    .ev-row:last-child { border-bottom: none; }
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 99px;
+      font-size: 11px; font-weight: 700; letter-spacing: .5px;
+    }
+    .badge-rb  { background: rgba(239,68,68,.15); color: #fca5a5; }
+    .badge-hi  { background: rgba(249,115,22,.15); color: #fdba74; }
+    .badge-med { background: rgba(234,179,8,.15);  color: #fde047; }
+    .badge-lo  { background: rgba(34,197,94,.15);  color: #86efac; }
+    .badge-reg { background: rgba(239,68,68,.12); color: #fca5a5; }
+    .badge-ok  { background: rgba(34,197,94,.12); color: #86efac; }
+    .domain-tag { font-size: 12px; color: var(--muted); }
+
+    /* ── Metrics row ────────────────────────────────────────────────── */
+    .metrics-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 20px; margin-top: 56px;
+    }
+    .metric-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--card-r); padding: 28px 24px;
+      text-align: center;
+    }
+    .metric-card .num {
+      font-size: 48px; font-weight: 800; letter-spacing: -2px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .metric-card .lbl { font-size: 14px; color: var(--muted); margin-top: 4px; }
+
+    /* ── CTA section ────────────────────────────────────────────────── */
+    .cta-section {
+      text-align: center;
+      background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(59,130,246,.1) 0%, transparent 70%);
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Footer ─────────────────────────────────────────────────────── */
+    footer {
+      padding: 40px 24px; text-align: center;
+      font-size: 13px; color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+    footer strong { color: var(--text); }
+
+    /* ── Responsive ─────────────────────────────────────────────────── */
+    @media (max-width: 760px) {
+      .steps { flex-direction: column; }
+      .steps::before { display: none; }
+      .ev-header, .ev-row { grid-template-columns: 2fr 1fr 1fr; }
+      .ev-header > *:nth-child(n+4),
+      .ev-row   > *:nth-child(n+4) { display: none; }
+      .metrics-row { grid-template-columns: repeat(2, 1fr); }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo"><span>AVERA</span></span>
+    <div class="nav-links">
+      <a href="#industries">Industries</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#evidence">Evidence</a>
+      <a href="#metrics">Why AVERA</a>
+    </div>
+    <a href="#demo" class="nav-cta">Request Demo</a>
+  </div>
+</nav>
+
+<!-- ── Hero ──────────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">AI-powered change verification · Safety-critical systems</div>
+    <h1>Stop guessing.<br><em>Know</em> before you ship.</h1>
+    <p class="hero-sub">
+      AVERA analyses every engineering change against your safety requirements,
+      produces a structured risk verdict in seconds, and blocks releases before
+      they become incidents.
+    </p>
+    <div class="hero-actions">
+      <a href="#demo" class="btn-primary">See the Live Demo</a>
+      <a href="#how-it-works" class="btn-ghost">How It Works</a>
+    </div>
+
+    <div class="verdict-strip">
+      <div class="verdict-pill">
+        <span class="dot dot-red"></span>
+        BMS — confirmed_regression — release_blocking
+      </div>
+      <div class="verdict-pill">
+        <span class="dot dot-red"></span>
+        FADEC DAL-A — confirmed_regression — release_blocking
+      </div>
+      <div class="verdict-pill">
+        <span class="dot dot-red"></span>
+        ETCS SIL-4 — confirmed_regression — release_blocking
+      </div>
+      <div class="verdict-pill">
+        <span class="dot dot-green"></span>
+        Powertrain — successful_change — low
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Industries ────────────────────────────────────────────────────────── -->
+<section class="section" id="industries">
+  <div class="container">
+    <p class="section-label">Industry Coverage</p>
+    <h2>One engine.<br>Four safety standards.</h2>
+    <p class="section-desc">
+      AVERA speaks the native language of each industry's certification authority —
+      no adapters, no custom scripts.
+    </p>
+
+    <div class="industry-grid">
+
+      <div class="ind-card">
+        <!-- Automotive: ECU / schematic chip symbol -->
+        <svg class="ind-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Automotive">
+          <rect x="14" y="14" width="20" height="20" rx="2" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="14" y1="20" x2="8"  y2="20" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="14" y1="24" x2="8"  y2="24" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="14" y1="28" x2="8"  y2="28" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="34" y1="20" x2="40" y2="20" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="34" y1="24" x2="40" y2="24" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="34" y1="28" x2="40" y2="28" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="20" y1="14" x2="20" y2="8"  stroke="currentColor" stroke-width="1.6"/>
+          <line x1="24" y1="14" x2="24" y2="8"  stroke="currentColor" stroke-width="1.6"/>
+          <line x1="28" y1="14" x2="28" y2="8"  stroke="currentColor" stroke-width="1.6"/>
+          <line x1="20" y1="34" x2="20" y2="40" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="24" y1="34" x2="24" y2="40" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="28" y1="34" x2="28" y2="40" stroke="currentColor" stroke-width="1.6"/>
+          <rect x="18" y="18" width="12" height="12" rx="1" stroke="currentColor" stroke-width="1.2" stroke-dasharray="2 1.5"/>
+        </svg>
+        <div class="ind-std">ISO 26262</div>
+        <h3>Automotive</h3>
+        <p>
+          ASIL A–D triage across BMS, ADAS, powertrain, and chassis.
+          Catch thermal regressions, perception recall drops, and
+          torque-limit violations before HIL sign-off.
+        </p>
+        <div class="ind-level">
+          <span class="dot dot-red"></span> Max level: ASIL-D (rank 4)
+        </div>
+      </div>
+
+      <div class="ind-card">
+        <!-- Aviation: altitude / flight envelope diamond -->
+        <svg class="ind-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Aviation">
+          <polygon points="24,6 42,24 24,42 6,24" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+          <polygon points="24,13 35,24 24,35 13,24" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+          <line x1="24" y1="6"  x2="24" y2="13" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="24" y1="35" x2="24" y2="42" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="6"  y1="24" x2="13" y2="24" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="35" y1="24" x2="42" y2="24" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="24" cy="24" r="2.5" fill="currentColor"/>
+        </svg>
+        <div class="ind-std">DO-178C</div>
+        <h3>Aviation</h3>
+        <p>
+          DAL A–E coverage with MC/DC awareness for FADEC and FCC.
+          Any DAL-A regression automatically escalates to
+          release-blocking — no manual triage.
+        </p>
+        <div class="ind-level">
+          <span class="dot dot-red"></span> Max level: DAL-A (rank 4)
+        </div>
+      </div>
+
+      <div class="ind-card">
+        <!-- Railway: track / signal topology diagram -->
+        <svg class="ind-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Railway">
+          <line x1="4"  y1="24" x2="44" y2="24" stroke="currentColor" stroke-width="2"/>
+          <line x1="4"  y1="30" x2="44" y2="30" stroke="currentColor" stroke-width="2"/>
+          <line x1="10" y1="22" x2="10" y2="32" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="18" y1="22" x2="18" y2="32" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="26" y1="22" x2="26" y2="32" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="34" y1="22" x2="34" y2="32" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="42" y1="22" x2="42" y2="32" stroke="currentColor" stroke-width="1.6"/>
+          <!-- Signal mast -->
+          <line x1="24" y1="8"  x2="24" y2="22" stroke="currentColor" stroke-width="1.4"/>
+          <rect x="18" y="8" width="12" height="7" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="21.5" cy="11.5" r="1.5" fill="currentColor" opacity=".4"/>
+          <circle cx="24.5" cy="11.5" r="1.5" fill="currentColor"/>
+          <circle cx="27.5" cy="11.5" r="1.5" fill="currentColor" opacity=".4"/>
+        </svg>
+        <div class="ind-std">EN-50128</div>
+        <h3>Railway</h3>
+        <p>
+          SIL 0–4 enforcement across ETCS brake controllers,
+          cab-signalling processors, and ATP logic.
+          SIL-4 threshold breach → immediate release block.
+        </p>
+        <div class="ind-level">
+          <span class="dot dot-red"></span> Max level: SIL-4 (rank 4)
+        </div>
+      </div>
+
+      <div class="ind-card">
+        <!-- Medical: waveform / pulse trace -->
+        <svg class="ind-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Medical">
+          <!-- Baseline -->
+          <line x1="4" y1="28" x2="12" y2="28" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <!-- Pulse -->
+          <polyline points="12,28 16,28 19,14 22,38 25,24 28,24 31,28 36,28"
+                    stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+          <line x1="36" y1="28" x2="44" y2="28" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <!-- Threshold line -->
+          <line x1="4" y1="18" x2="44" y2="18" stroke="currentColor" stroke-width="1" stroke-dasharray="3 2.5" opacity=".45"/>
+          <!-- Threshold label tick -->
+          <line x1="4" y1="16" x2="4" y2="20" stroke="currentColor" stroke-width="1.4" opacity=".6"/>
+          <!-- Limit label tick -->
+          <line x1="44" y1="16" x2="44" y2="20" stroke="currentColor" stroke-width="1.4" opacity=".6"/>
+        </svg>
+        <div class="ind-std">IEC-62304</div>
+        <h3>Medical</h3>
+        <p>
+          Class A/B/C analysis for infusion pumps, monitoring
+          systems, and implantable firmware. Class-C deviations
+          surface immediately with corrective action guidance.
+        </p>
+        <div class="ind-level">
+          <span class="dot dot-orange"></span> Max level: Class-C (rank 3)
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── How it works ───────────────────────────────────────────────────────── -->
+<section class="section" id="how-it-works" style="background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <p class="section-label">Process</p>
+    <h2>From commit to verdict<br>in three steps.</h2>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Ingest evidence</h3>
+        <p>
+          Supply baseline and current test results, a requirements CSV,
+          a component map, and a change description — via filesystem
+          path, REST API call, or CI pipeline POST.
+        </p>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>AVERA analyses</h3>
+        <p>
+          The engine evaluates threshold crossings, maps failures to
+          requirements, scores confidence, triggers domain-specific
+          safety rules, and derives a risk verdict.
+        </p>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Structured report</h3>
+        <p>
+          JSON report, Markdown narrative, evidence graph, traceability
+          index, decision artifact, and workspace pack — ready for human
+          review or automated gate enforcement.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Evidence table ────────────────────────────────────────────────────── -->
+<section class="section" id="evidence">
+  <div class="container">
+    <p class="section-label">Live Evidence</p>
+    <h2>Real scenarios.<br>Real verdicts.</h2>
+    <p class="section-desc">
+      All results below are generated by the AVERA engine against
+      prepared test fixtures — no hand-crafted outputs.
+    </p>
+
+    <div class="evidence-block">
+      <div class="ev-header">
+        <div>Scenario</div>
+        <div>Domain</div>
+        <div>Safety Level</div>
+        <div>Verdict</div>
+        <div>Risk</div>
+        <div>Confidence</div>
+      </div>
+
+      <div class="ev-row">
+        <div>BMS Fast-Charge Thermal</div>
+        <div class="domain-tag">Automotive</div>
+        <div>ASIL-D</div>
+        <div><span class="badge badge-reg">confirmed_regression</span></div>
+        <div><span class="badge badge-hi">high</span></div>
+        <div>0.95</div>
+      </div>
+      <div class="ev-row">
+        <div>BMS Successful Change</div>
+        <div class="domain-tag">Automotive</div>
+        <div>ASIL-C</div>
+        <div><span class="badge badge-ok">successful_change</span></div>
+        <div><span class="badge badge-lo">low</span></div>
+        <div>0.95</div>
+      </div>
+      <div class="ev-row">
+        <div>ADAS Pedestrian Detection</div>
+        <div class="domain-tag">Automotive</div>
+        <div>ASIL-D / high</div>
+        <div><span class="badge badge-reg">confirmed_regression</span></div>
+        <div><span class="badge badge-hi">high</span></div>
+        <div>0.95</div>
+      </div>
+      <div class="ev-row">
+        <div>Powertrain Overspeed</div>
+        <div class="domain-tag">Automotive</div>
+        <div>ASIL-D</div>
+        <div><span class="badge badge-reg">confirmed_regression</span></div>
+        <div><span class="badge badge-rb">release_blocking</span></div>
+        <div>0.95</div>
+      </div>
+      <div class="ev-row">
+        <div>FADEC Overspeed Response</div>
+        <div class="domain-tag">Aviation</div>
+        <div>DAL-A</div>
+        <div><span class="badge badge-reg">confirmed_regression</span></div>
+        <div><span class="badge badge-rb">release_blocking</span></div>
+        <div>0.95</div>
+      </div>
+      <div class="ev-row">
+        <div>FCC Envelope Protection</div>
+        <div class="domain-tag">Aviation</div>
+        <div>DAL-A</div>
+        <div><span class="badge badge-reg">confirmed_regression</span></div>
+        <div><span class="badge badge-rb">release_blocking</span></div>
+        <div>0.95</div>
+      </div>
+      <div class="ev-row">
+        <div>ETCS Brake Response</div>
+        <div class="domain-tag">Railway</div>
+        <div>SIL-4</div>
+        <div><span class="badge badge-reg">confirmed_regression</span></div>
+        <div><span class="badge badge-rb">release_blocking</span></div>
+        <div>0.95</div>
+      </div>
+      <div class="ev-row">
+        <div>Infusion Pump Flow Rate</div>
+        <div class="domain-tag">Medical</div>
+        <div>IEC Class-C</div>
+        <div><span class="badge badge-reg">confirmed_regression</span></div>
+        <div><span class="badge badge-hi">high</span></div>
+        <div>0.95</div>
+      </div>
+      <div class="ev-row">
+        <div>Powertrain Emissions</div>
+        <div class="domain-tag">Automotive</div>
+        <div>ASIL-B</div>
+        <div><span class="badge badge-ok">successful_change</span></div>
+        <div><span class="badge badge-lo">low</span></div>
+        <div>0.95</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Metrics ────────────────────────────────────────────────────────────── -->
+<section class="section" id="metrics" style="background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <p class="section-label">Why AVERA</p>
+    <h2>The numbers that matter.</h2>
+
+    <div class="metrics-row">
+      <div class="metric-card">
+        <div class="num">4</div>
+        <div class="lbl">Safety standards supported<br>(ISO 26262 · DO-178C · EN-50128 · IEC-62304)</div>
+      </div>
+      <div class="metric-card">
+        <div class="num">20</div>
+        <div class="lbl">Validated test scenarios<br>across all four domains</div>
+      </div>
+      <div class="metric-card">
+        <div class="num">667</div>
+        <div class="lbl">Automated tests<br>all passing — 0 failures</div>
+      </div>
+      <div class="metric-card">
+        <div class="num">&lt;1s</div>
+        <div class="lbl">Time to verdict<br>per change analysis</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── API callout ────────────────────────────────────────────────────────── -->
+<section class="section-sm" id="api">
+  <div class="container">
+    <p class="section-label">Integration</p>
+    <h2>Drop into any CI pipeline.</h2>
+    <p class="section-desc" style="margin-bottom: 32px;">
+      REST API with JSON-schema-validated request and response.
+      X-API-Key authentication. Token rotation. Zero-downtime deployment.
+    </p>
+
+    <div style="background: var(--bg2); border: 1px solid var(--border); border-radius: var(--card-r); padding: 28px; font-family: 'Fira Code', 'Cascadia Code', monospace; font-size: 14px; line-height: 1.7; overflow-x: auto;">
+      <span style="color: var(--muted);"># CI step — POST analysis inline, get structured verdict</span><br>
+      <span style="color: #86efac;">curl</span> <span style="color: #fdba74;">-X POST</span> https://api.avera.ai/analyze/inline <span style="color: #7dd3fc;">\</span><br>
+      &nbsp;&nbsp;<span style="color: #fdba74;">-H</span> <span style="color: #fde047;">"X-API-Key: $AVERA_API_KEY"</span> <span style="color: #7dd3fc;">\</span><br>
+      &nbsp;&nbsp;<span style="color: #fdba74;">-H</span> <span style="color: #fde047;">"Content-Type: application/json"</span> <span style="color: #7dd3fc;">\</span><br>
+      &nbsp;&nbsp;<span style="color: #fdba74;">-d</span> <span style="color: #fde047;">'@avera-payload.json'</span><br><br>
+      <span style="color: var(--muted);"># Response</span><br>
+      {<br>
+      &nbsp;&nbsp;<span style="color: #7dd3fc;">"verdict"</span>: <span style="color: #fde047;">"confirmed_regression"</span>,<br>
+      &nbsp;&nbsp;<span style="color: #7dd3fc;">"risk"</span>: <span style="color: #fca5a5;">"release_blocking"</span>,<br>
+      &nbsp;&nbsp;<span style="color: #7dd3fc;">"confidence_score"</span>: <span style="color: #86efac;">0.95</span>,<br>
+      &nbsp;&nbsp;<span style="color: #7dd3fc;">"affected_components"</span>: [<span style="color: #fde047;">"BMS Thermal Control"</span>],<br>
+      &nbsp;&nbsp;<span style="color: #7dd3fc;">"schema_version"</span>: <span style="color: #fde047;">"avera.assessment.v0.2"</span><br>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ────────────────────────────────────────────────────────────────── -->
+<section class="section cta-section" id="demo">
+  <div class="container" style="text-align: center;">
+    <p class="section-label">Get Started</p>
+    <h2>Ready to see AVERA<br>on your codebase?</h2>
+    <p style="color: var(--muted); font-size: 18px; margin: 16px auto 40px; max-width: 500px;">
+      Book a 30-minute technical walkthrough. We run the analysis on
+      your own evidence artifacts — live, in the session.
+    </p>
+    <div class="hero-actions">
+      <a href="mailto:hello@avera.ai" class="btn-primary">Request Demo</a>
+      <a href="#evidence" class="btn-ghost">View Evidence Table</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────── -->
+<footer>
+  <strong>AVERA</strong> — AI Change Verification Infrastructure for Safety-Critical Systems<br>
+  <span style="margin-top: 8px; display: block;">
+    Automotive · Aviation · Railway · Medical &nbsp;·&nbsp;
+    ISO 26262 · DO-178C · EN-50128 · IEC-62304
+  </span>
+</footer>
+
+</body>
+</html>

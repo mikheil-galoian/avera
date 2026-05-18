@@ -1,0 +1,19 @@
+{
+  "runId": "current-bms-success-001",
+  "stage": "current",
+  "changedFiles": [
+    "src/bms/thermal_manager.c"
+  ],
+  "tests": [
+    {
+      "id": "BMS-SIL-FASTCHARGE-01",
+      "component": "BMS Thermal Control",
+      "status": "passed",
+      "metrics": {
+        "max_cell_temp_c": 46.2,
+        "cooling_response_ms": 390
+      },
+      "evidence": "Fast-charge thermal behavior stayed within all mapped BMS requirements after the cooling logic change."
+    }
+  ]
+}

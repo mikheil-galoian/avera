@@ -1,0 +1,30 @@
+{
+  "src/bms/thermal_manager.c": {
+    "component": "BMS Thermal Control",
+    "requirements": [
+      "BMS-REQ-112",
+      "BMS-REQ-118"
+    ],
+    "tests": [
+      "BMS-SIL-FASTCHARGE-01"
+    ]
+  },
+  "src/bms/cell_balancer.c": {
+    "component": "BMS Cell Balancing",
+    "requirements": [
+      "BMS-REQ-205"
+    ],
+    "tests": [
+      "BMS-SIL-BALANCE-02"
+    ]
+  },
+  "src/bms/contactor_control.c": {
+    "component": "BMS Contactor Control",
+    "requirements": [
+      "BMS-REQ-301"
+    ],
+    "tests": [
+      "BMS-SIL-CONTACTOR-01"
+    ]
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "affected_components": [
+    "BMS Thermal Control"
+  ],
+  "affected_files": [
+    "src/bms/thermal_manager.c"
+  ],
+  "affected_requirements": [
+    {
+      "component": "BMS Thermal Control",
+      "id": "BMS-REQ-112",
+      "metadata": {
+        "domain": "BMS",
+        "file_path": "src/bms/thermal_manager.c",
+        "verification_stage": "fast_charge"
+      },
+      "metric": "max_cell_temp_c",
+      "next_checks": [
+        "BMS-HIL-FASTCHARGE-07"
+      ],
+      "operator": "<=",
+      "requirement": "Maximum cell temperature during fast charging must not exceed 50 C",
+      "safety_level": "high",
+      "threshold": 50.0
+    },
+    {
+      "component": "BMS Thermal Control",
+      "id": "BMS-REQ-118",
+      "metadata": {
+        "domain": "BMS",
+        "file_path": "src/bms/thermal_manager.c",
+        "verification_stage": "fast_charge"
+      },
+      "metric": "cooling_response_ms",
+      "next_checks": [
+        "BMS-HIL-FASTCHARGE-07"
+      ],
+      "operator": "<=",
+      "requirement": "Cooling response delay during fast charging must not exceed 500 ms",
+      "safety_level": "medium",
+      "threshold": 500.0
+    }
+  ],
+  "comparison_summary": {
+    "introduced_failures": 1,
+    "metric_deltas": 2,
+    "missing_baseline": 0,
+    "missing_current": 0,
+    "preexisting_failures": 0,
+    "resolved_failures": 0,
+    "total_tests": 1,
+    "unchanged_passes": 0
+  },
+  "confidence": "high",
+  "confidence_factors": [
+    "+ baseline_current_pair_present",
+    "+ introduced_failure_detected",
+    "+ threshold_crossing_detected",
+    "+ requirement_mapped",
+    "+ affected_file_mapped"
+  ],
+  "confidence_score": 0.95,
+  "evidence_summary": [
+    "Verdict is confirmed regression.",
+    "BMS-SIL-FASTCHARGE-01 failed only in the current run.",
+    "max_cell_temp_c for BMS-REQ-112 was 52.8, outside <= 50.",
+    "cooling_response_ms for BMS-REQ-118 was 612, outside <= 500.",
+    "Mapped affected files: src/bms/thermal_manager.c.",
+    "cooling_response_ms materially worsened from 410.0 to 612.0.",
+    "max_cell_temp_c materially worsened from 47.1 to 52.8."
+  ],
+  "introduced_failures": [
+    {
+      "baseline_metrics": {
+        "cooling_response_ms": 410.0,
+        "max_cell_temp_c": 47.1
+      },
+      "baseline_status": "passed",
+      "classification": "introduced_failure",
+      "component": "BMS Thermal Control",
+      "current_metrics": {
+        "cooling_response_ms": 612.0,
+        "max_cell_temp_c": 52.8
+      },
+      "current_status": "failed",
+      "evidence": [
+        "BMS-SIL-FASTCHARGE-01: introduced failure.",
+        "Fast-charge cooling logic regression raised max cell temperature and delayed cooling response beyond mapped BMS requirements.",
+        "cooling_response_ms increased from 410 to 612.",
+        "max_cell_temp_c increased from 47.1 to 52.8."
+      ],
+      "metric_deltas": [
+        {
+          "baseline": 410.0,
+          "current": 612.0,
+          "delta": 202.0,
+          "metric": "cooling_response_ms",
+          "percent_delta": 49.26829268292683,
+          "test_id": "BMS-SIL-FASTCHARGE-01"
+        },
+        {
+          "baseline": 47.1,
+          "current": 52.8,
+          "delta": 5.699999999999996,
+          "metric": "max_cell_temp_c",
+          "percent_delta": 12.101910828025469,
+          "test_id": "BMS-SIL-FASTCHARGE-01"
+        }
+      ],
+      "test_id": "BMS-SIL-FASTCHARGE-01"
+    }
+  ],
+  "preexisting_failures": [],
+  "recommended_next_checks": [
+    "BMS-HIL-FASTCHARGE-07"
+  ],
+  "risk": "high",
+  "risk_drivers": [
+    "verdict:confirmed_regression",
+    "risk:high",
+    "safety_level:high",
+    "safety_level:medium",
+    "threshold_failed:BMS-REQ-112:max_cell_temp_c",
+    "threshold_failed:BMS-REQ-118:cooling_response_ms"
+  ],
+  "rules_triggered": [
+    "R1_confirmed_threshold_regression",
+    "R2_introduced_test_failure",
+    "signal_baseline_pass_current_threshold_fail",
+    "signal_introduced_failure_present",
+    "signal_material_metric_worsening"
+  ],
+  "schema_version": "avera.assessment.v0.2",
+  "signal_summary": [
+    {
+      "count": 4,
+      "last": 52.8,
+      "max": 52.8,
+      "min": 44.2,
+      "signal": "max_cell_temp_c",
+      "test_id": "BMS-SIL-FASTCHARGE-01",
+      "unit": "C"
+    }
+  ],
+  "signal_trace_points": 4,
+  "threshold_evidence": [
+    {
+      "baseline_passed": true,
+      "baseline_value": 47.1,
+      "current_passed": false,
+      "current_value": 52.8,
+      "metric": "max_cell_temp_c",
+      "operator": "<=",
+      "requirement_id": "BMS-REQ-112",
+      "test_id": "BMS-SIL-FASTCHARGE-01",
+      "threshold": 50.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 410.0,
+      "current_passed": false,
+      "current_value": 612.0,
+      "metric": "cooling_response_ms",
+      "operator": "<=",
+      "requirement_id": "BMS-REQ-118",
+      "test_id": "BMS-SIL-FASTCHARGE-01",
+      "threshold": 500.0
+    }
+  ],
+  "verdict": "confirmed_regression"
+}

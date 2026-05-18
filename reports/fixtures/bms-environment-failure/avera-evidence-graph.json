@@ -1,0 +1,392 @@
+{
+  "edges": [
+    {
+      "relation": "classified_as",
+      "source": "change",
+      "target": "risk"
+    },
+    {
+      "relation": "recommends",
+      "source": "risk",
+      "target": "recommendation:bms-hil-fastcharge-07"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:r5_environment_failure",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_environment_failure_pattern",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_introduced_failure_present",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_affected_file_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_baseline_current_pair_present",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_environment_failure_pattern_matched",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_introduced_failure_detected",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_requirement_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:risk_unknown",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:safety_level_high",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:safety_level_medium",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:verdict_environment_failure",
+      "target": "risk"
+    },
+    {
+      "relation": "affects_component",
+      "source": "change",
+      "target": "component:bms_thermal_control"
+    },
+    {
+      "relation": "contributes_to",
+      "source": "component:bms_thermal_control",
+      "target": "risk"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:bms-req-112",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:bms_thermal_control",
+      "target": "requirement:bms-req-112"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:bms-req-118",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:bms_thermal_control",
+      "target": "requirement:bms-req-118"
+    },
+    {
+      "relation": "touches_file",
+      "source": "change",
+      "target": "file:src_bms_thermal_manager.c"
+    },
+    {
+      "relation": "maps_to_component",
+      "source": "file:src_bms_thermal_manager.c",
+      "target": "component:bms_thermal_control"
+    },
+    {
+      "relation": "observed_in",
+      "source": "change",
+      "target": "test_failure:bms-hil-fastcharge-07"
+    },
+    {
+      "relation": "supports",
+      "source": "test_failure:bms-hil-fastcharge-07",
+      "target": "risk"
+    },
+    {
+      "relation": "occurs_in",
+      "source": "test_failure:bms-hil-fastcharge-07",
+      "target": "component:bms_thermal_control"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:bms-req-112_max_cell_temp_c_bms-hil-fastcharge-07",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:bms-req-112_max_cell_temp_c_bms-hil-fastcharge-07",
+      "target": "requirement:bms-req-112"
+    },
+    {
+      "relation": "contains_metric",
+      "source": "test_failure:bms-hil-fastcharge-07",
+      "target": "threshold_evidence:bms-req-112_max_cell_temp_c_bms-hil-fastcharge-07"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:bms-req-118_cooling_response_ms_bms-hil-fastcharge-07",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:bms-req-118_cooling_response_ms_bms-hil-fastcharge-07",
+      "target": "requirement:bms-req-118"
+    },
+    {
+      "relation": "contains_metric",
+      "source": "test_failure:bms-hil-fastcharge-07",
+      "target": "threshold_evidence:bms-req-118_cooling_response_ms_bms-hil-fastcharge-07"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "change",
+      "label": "Change under assessment",
+      "properties": {
+        "description": "An engineer adjusted logging around fast-charge thermal control in src/bms/thermal_manager.c.\n\nThe current verification did not produce requirement evidence because the HIL bench lost CAN\ncommunication before the scenario started. AVERA should classify this as an environment failure\nwith unknown risk and low confidence, not as an agent-caused regression."
+      },
+      "type": "change"
+    },
+    {
+      "id": "risk",
+      "label": "unknown",
+      "properties": {
+        "confidence": "low",
+        "verdict": "environment_failure"
+      },
+      "type": "risk"
+    },
+    {
+      "id": "recommendation:bms-hil-fastcharge-07",
+      "label": "BMS-HIL-FASTCHARGE-07",
+      "properties": {
+        "check": "BMS-HIL-FASTCHARGE-07"
+      },
+      "type": "recommendation"
+    },
+    {
+      "id": "rule:r5_environment_failure",
+      "label": "R5_environment_failure",
+      "properties": {
+        "value": "R5_environment_failure"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_environment_failure_pattern",
+      "label": "signal_environment_failure_pattern",
+      "properties": {
+        "value": "signal_environment_failure_pattern"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_introduced_failure_present",
+      "label": "signal_introduced_failure_present",
+      "properties": {
+        "value": "signal_introduced_failure_present"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "confidence_factor:+_affected_file_mapped",
+      "label": "+ affected_file_mapped",
+      "properties": {
+        "value": "+ affected_file_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_baseline_current_pair_present",
+      "label": "+ baseline_current_pair_present",
+      "properties": {
+        "value": "+ baseline_current_pair_present"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_environment_failure_pattern_matched",
+      "label": "+ environment_failure_pattern_matched",
+      "properties": {
+        "value": "+ environment_failure_pattern_matched"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_introduced_failure_detected",
+      "label": "+ introduced_failure_detected",
+      "properties": {
+        "value": "+ introduced_failure_detected"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_requirement_mapped",
+      "label": "+ requirement_mapped",
+      "properties": {
+        "value": "+ requirement_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "risk_driver:risk_unknown",
+      "label": "risk:unknown",
+      "properties": {
+        "value": "risk:unknown"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:safety_level_high",
+      "label": "safety_level:high",
+      "properties": {
+        "value": "safety_level:high"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:safety_level_medium",
+      "label": "safety_level:medium",
+      "properties": {
+        "value": "safety_level:medium"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:verdict_environment_failure",
+      "label": "verdict:environment_failure",
+      "properties": {
+        "value": "verdict:environment_failure"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "component:bms_thermal_control",
+      "label": "BMS Thermal Control",
+      "type": "component"
+    },
+    {
+      "id": "requirement:bms-req-112",
+      "label": "BMS-REQ-112",
+      "properties": {
+        "component": "BMS Thermal Control",
+        "metric": "max_cell_temp_c",
+        "operator": "<=",
+        "requirement": "Maximum cell temperature during fast charging must not exceed 50 C",
+        "safety_level": "high",
+        "threshold": 50.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "requirement:bms-req-118",
+      "label": "BMS-REQ-118",
+      "properties": {
+        "component": "BMS Thermal Control",
+        "metric": "cooling_response_ms",
+        "operator": "<=",
+        "requirement": "Cooling response delay during fast charging must not exceed 500 ms",
+        "safety_level": "medium",
+        "threshold": 500.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "file:src_bms_thermal_manager.c",
+      "label": "src/bms/thermal_manager.c",
+      "properties": {
+        "path": "src/bms/thermal_manager.c"
+      },
+      "type": "file"
+    },
+    {
+      "id": "test_failure:bms-hil-fastcharge-07",
+      "label": "BMS-HIL-FASTCHARGE-07",
+      "properties": {
+        "baseline_status": "passed",
+        "category": "introduced_failures",
+        "component": "BMS Thermal Control",
+        "current_status": "error"
+      },
+      "type": "test_failure"
+    },
+    {
+      "id": "threshold_evidence:bms-req-112_max_cell_temp_c_bms-hil-fastcharge-07",
+      "label": "max_cell_temp_c",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 47.5,
+        "operator": "<=",
+        "requirement_id": "BMS-REQ-112",
+        "test_id": "BMS-HIL-FASTCHARGE-07",
+        "threshold": 50.0
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:bms-req-118_cooling_response_ms_bms-hil-fastcharge-07",
+      "label": "cooling_response_ms",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 430.0,
+        "operator": "<=",
+        "requirement_id": "BMS-REQ-118",
+        "test_id": "BMS-HIL-FASTCHARGE-07",
+        "threshold": 500.0
+      },
+      "type": "threshold_evidence"
+    }
+  ],
+  "schema_version": "evidence_graph.v0.3",
+  "summary": {
+    "comparison_summary": {
+      "introduced_failures": 1,
+      "metric_deltas": 0,
+      "missing_baseline": 0,
+      "missing_current": 0,
+      "preexisting_failures": 0,
+      "resolved_failures": 0,
+      "total_tests": 1,
+      "unchanged_passes": 0
+    },
+    "components": 1,
+    "confidence": "low",
+    "confidence_factors": 5,
+    "edge_count": 31,
+    "evidence_summary": [
+      "Verdict is environment failure.",
+      "BMS-HIL-FASTCHARGE-07 failed only in the current run.",
+      "Mapped affected files: src/bms/thermal_manager.c.",
+      "BMS-HIL-FASTCHARGE-07 matched environment failure pattern: unavailable_runner."
+    ],
+    "files": 1,
+    "node_count": 22,
+    "recommendations": 1,
+    "requirements": 2,
+    "risk": "unknown",
+    "risk_drivers": 4,
+    "rules": 3,
+    "signal_summaries": 0,
+    "tests_or_failures": 1,
+    "threshold_evidence": 2,
+    "verdict": "environment_failure"
+  }
+}

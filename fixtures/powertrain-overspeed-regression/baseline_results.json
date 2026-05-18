@@ -1,0 +1,26 @@
+{
+  "runId": "baseline-pt-overspeed-001",
+  "stage": "baseline",
+  "tests": [
+    {
+      "id": "PT-ECU-OS-01",
+      "component": "Engine Control Unit",
+      "status": "passed",
+      "metrics": {
+        "max_engine_rpm": 6850.0,
+        "overspeed_response_ms": 38.0
+      },
+      "evidence": ""
+    },
+    {
+      "id": "PT-ECU-OS-02",
+      "component": "Engine Control Unit",
+      "status": "passed",
+      "metrics": {
+        "max_engine_rpm": 6720.0,
+        "overspeed_response_ms": 41.0
+      },
+      "evidence": ""
+    }
+  ]
+}

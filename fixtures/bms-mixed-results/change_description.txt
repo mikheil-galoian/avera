@@ -1,0 +1,6 @@
+An engineer changed the fast-charge cooling ramp in src/bms/thermal_manager.c.
+
+The mixed verification run contains three outcomes: one mapped fast-charge test that passed in
+baseline and fails after the change, one unrelated balancing test that was already failing, and one
+unchanged passing contactor-control test. AVERA should classify the scenario by the introduced
+high-safety regression, not by the unrelated preexisting failure or unchanged pass.

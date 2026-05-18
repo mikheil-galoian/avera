@@ -1,0 +1,25 @@
+{
+  "runId": "imd-current-2024-11",
+  "stage": "sil",
+  "changedFiles": ["src/pump/dosage/flow_rate_controller.c"],
+  "tests": [
+    {
+      "id": "IMD-SIL-FLOW-01",
+      "component": "Infusion Pump Dosage Control",
+      "status": "failed",
+      "metrics": {
+        "flow_rate_deviation_pct": 7.8,
+        "occlusion_detect_ms": 2190.0
+      },
+      "evidence": "Flow rate deviation rose from 2.3% to 7.8% after PID gain recalibration in flow_rate_controller.c, exceeding the IEC-62304 Class C ceiling of 5.0%."
+    },
+    {
+      "id": "IMD-SIL-ALARM-02",
+      "component": "Infusion Pump Alarm System",
+      "status": "passed",
+      "metrics": {
+        "alarm_trigger_ms": 294.0
+      }
+    }
+  ]
+}

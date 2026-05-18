@@ -1,0 +1,16 @@
+{
+  "runId": "baseline-bms-environment-001",
+  "stage": "baseline",
+  "tests": [
+    {
+      "id": "BMS-HIL-FASTCHARGE-07",
+      "component": "BMS Thermal Control",
+      "status": "passed",
+      "metrics": {
+        "max_cell_temp_c": 47.5,
+        "cooling_response_ms": 430
+      },
+      "evidence": "Baseline HIL bench run completed normally and stayed within mapped BMS requirements."
+    }
+  ]
+}

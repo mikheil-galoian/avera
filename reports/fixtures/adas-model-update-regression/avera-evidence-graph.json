@@ -1,0 +1,674 @@
+{
+  "edges": [
+    {
+      "relation": "classified_as",
+      "source": "change",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:r1_confirmed_threshold_regression",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:r2_introduced_test_failure",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_baseline_pass_current_threshold_fail",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_introduced_failure_present",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_affected_file_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_baseline_current_pair_present",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_introduced_failure_detected",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_requirement_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_threshold_crossing_detected",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:risk_release_blocking",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:safety_level_c",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:safety_level_d",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:safety_level_low",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_failed_req-safety-012_detection_rate",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_passed_req-perf-001_map_score",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_passed_req-perf-003_inference_time_ms",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_passed_req-safety-008_false_positive_rate",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_passed_req-safety-012_detection_rate",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_passed_req-safety-015_latency_p95_ms",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:verdict_confirmed_regression",
+      "target": "risk"
+    },
+    {
+      "relation": "affects_component",
+      "source": "change",
+      "target": "component:adas-perception-module"
+    },
+    {
+      "relation": "contributes_to",
+      "source": "component:adas-perception-module",
+      "target": "risk"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:req-safety-012",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:adas-perception-module",
+      "target": "requirement:req-safety-012"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:req-safety-008",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:adas-perception-module",
+      "target": "requirement:req-safety-008"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:req-safety-015",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:adas-perception-module",
+      "target": "requirement:req-safety-015"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:req-perf-001",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:adas-perception-module",
+      "target": "requirement:req-perf-001"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:req-perf-003",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:adas-perception-module",
+      "target": "requirement:req-perf-003"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:req-integ-001",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:adas-perception-module",
+      "target": "requirement:req-integ-001"
+    },
+    {
+      "relation": "touches_file",
+      "source": "change",
+      "target": "file:model_adas-perception-module"
+    },
+    {
+      "relation": "maps_to_component",
+      "source": "file:model_adas-perception-module",
+      "target": "component:adas-perception-module"
+    },
+    {
+      "relation": "observed_in",
+      "source": "change",
+      "target": "test_failure:sc-safety-012-night-rain"
+    },
+    {
+      "relation": "supports",
+      "source": "test_failure:sc-safety-012-night-rain",
+      "target": "risk"
+    },
+    {
+      "relation": "occurs_in",
+      "source": "test_failure:sc-safety-012-night-rain",
+      "target": "component:adas-perception-module"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:req-perf-001_map_score_sc-perf-001-map",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:req-perf-001_map_score_sc-perf-001-map",
+      "target": "requirement:req-perf-001"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:req-perf-003_inference_time_ms_sc-perf-003-inference",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:req-perf-003_inference_time_ms_sc-perf-003-inference",
+      "target": "requirement:req-perf-003"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:req-safety-008_false_positive_rate_sc-safety-008-highway",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:req-safety-008_false_positive_rate_sc-safety-008-highway",
+      "target": "requirement:req-safety-008"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:req-safety-012_detection_rate_sc-safety-012-night-clear",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:req-safety-012_detection_rate_sc-safety-012-night-clear",
+      "target": "requirement:req-safety-012"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:req-safety-012_detection_rate_sc-safety-012-night-rain",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:req-safety-012_detection_rate_sc-safety-012-night-rain",
+      "target": "requirement:req-safety-012"
+    },
+    {
+      "relation": "contains_metric",
+      "source": "test_failure:sc-safety-012-night-rain",
+      "target": "threshold_evidence:req-safety-012_detection_rate_sc-safety-012-night-rain"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:req-safety-015_latency_p95_ms_sc-safety-015-latency",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:req-safety-015_latency_p95_ms_sc-safety-015-latency",
+      "target": "requirement:req-safety-015"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "change",
+      "label": "Change under assessment",
+      "properties": {
+        "description": "Updated ADAS perception model from v2.4.0 to v2.4.1.\n\nChange: Retrained YOLOv8-based pedestrian detection model on expanded dataset\nincluding additional night and adverse weather scenarios.\n\nMotivation: Improve overall detection accuracy on highway scenarios.\n\nRisk: Retraining on new data distribution may introduce regression on\npreviously validated safety-critical scenarios, particularly low-visibility\npedestrian detection.\n\nAffected component: adas-perception-module\nAffected requirements: REQ-SAFETY-012, REQ-SAFETY-008, REQ-PERF-001"
+      },
+      "type": "change"
+    },
+    {
+      "id": "risk",
+      "label": "release_blocking",
+      "properties": {
+        "confidence": "high",
+        "verdict": "confirmed_regression"
+      },
+      "type": "risk"
+    },
+    {
+      "id": "rule:r1_confirmed_threshold_regression",
+      "label": "R1_confirmed_threshold_regression",
+      "properties": {
+        "value": "R1_confirmed_threshold_regression"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:r2_introduced_test_failure",
+      "label": "R2_introduced_test_failure",
+      "properties": {
+        "value": "R2_introduced_test_failure"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_baseline_pass_current_threshold_fail",
+      "label": "signal_baseline_pass_current_threshold_fail",
+      "properties": {
+        "value": "signal_baseline_pass_current_threshold_fail"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_introduced_failure_present",
+      "label": "signal_introduced_failure_present",
+      "properties": {
+        "value": "signal_introduced_failure_present"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "confidence_factor:+_affected_file_mapped",
+      "label": "+ affected_file_mapped",
+      "properties": {
+        "value": "+ affected_file_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_baseline_current_pair_present",
+      "label": "+ baseline_current_pair_present",
+      "properties": {
+        "value": "+ baseline_current_pair_present"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_introduced_failure_detected",
+      "label": "+ introduced_failure_detected",
+      "properties": {
+        "value": "+ introduced_failure_detected"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_requirement_mapped",
+      "label": "+ requirement_mapped",
+      "properties": {
+        "value": "+ requirement_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_threshold_crossing_detected",
+      "label": "+ threshold_crossing_detected",
+      "properties": {
+        "value": "+ threshold_crossing_detected"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "risk_driver:risk_release_blocking",
+      "label": "risk:release_blocking",
+      "properties": {
+        "value": "risk:release_blocking"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:safety_level_c",
+      "label": "safety_level:c",
+      "properties": {
+        "value": "safety_level:c"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:safety_level_d",
+      "label": "safety_level:d",
+      "properties": {
+        "value": "safety_level:d"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:safety_level_low",
+      "label": "safety_level:low",
+      "properties": {
+        "value": "safety_level:low"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_failed_req-safety-012_detection_rate",
+      "label": "threshold_failed:REQ-SAFETY-012:detection_rate",
+      "properties": {
+        "value": "threshold_failed:REQ-SAFETY-012:detection_rate"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_passed_req-perf-001_map_score",
+      "label": "threshold_passed:REQ-PERF-001:map_score",
+      "properties": {
+        "value": "threshold_passed:REQ-PERF-001:map_score"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_passed_req-perf-003_inference_time_ms",
+      "label": "threshold_passed:REQ-PERF-003:inference_time_ms",
+      "properties": {
+        "value": "threshold_passed:REQ-PERF-003:inference_time_ms"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_passed_req-safety-008_false_positive_rate",
+      "label": "threshold_passed:REQ-SAFETY-008:false_positive_rate",
+      "properties": {
+        "value": "threshold_passed:REQ-SAFETY-008:false_positive_rate"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_passed_req-safety-012_detection_rate",
+      "label": "threshold_passed:REQ-SAFETY-012:detection_rate",
+      "properties": {
+        "value": "threshold_passed:REQ-SAFETY-012:detection_rate"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_passed_req-safety-015_latency_p95_ms",
+      "label": "threshold_passed:REQ-SAFETY-015:latency_p95_ms",
+      "properties": {
+        "value": "threshold_passed:REQ-SAFETY-015:latency_p95_ms"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:verdict_confirmed_regression",
+      "label": "verdict:confirmed_regression",
+      "properties": {
+        "value": "verdict:confirmed_regression"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "component:adas-perception-module",
+      "label": "adas-perception-module",
+      "type": "component"
+    },
+    {
+      "id": "requirement:req-safety-012",
+      "label": "REQ-SAFETY-012",
+      "properties": {
+        "component": "adas-perception-module",
+        "metric": "detection_rate",
+        "operator": ">=",
+        "requirement": "Pedestrian detection rate shall be >= 0.95 in all lighting conditions including night and rain",
+        "safety_level": "d",
+        "threshold": 0.95
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "requirement:req-safety-008",
+      "label": "REQ-SAFETY-008",
+      "properties": {
+        "component": "adas-perception-module",
+        "metric": "false_positive_rate",
+        "operator": "<=",
+        "requirement": "False positive rate for vehicle detection shall be <= 0.05 on highway scenarios",
+        "safety_level": "c",
+        "threshold": 0.05
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "requirement:req-safety-015",
+      "label": "REQ-SAFETY-015",
+      "properties": {
+        "component": "adas-perception-module",
+        "metric": "latency_p95_ms",
+        "operator": "<=",
+        "requirement": "Pedestrian detection latency shall be <= 50ms at 95th percentile",
+        "safety_level": "c",
+        "threshold": 50.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "requirement:req-perf-001",
+      "label": "REQ-PERF-001",
+      "properties": {
+        "component": "adas-perception-module",
+        "metric": "map_score",
+        "operator": ">=",
+        "requirement": "Overall mAP on standard ADAS benchmark shall be >= 0.82",
+        "safety_level": "low",
+        "threshold": 0.82
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "requirement:req-perf-003",
+      "label": "REQ-PERF-003",
+      "properties": {
+        "component": "adas-perception-module",
+        "metric": "inference_time_ms",
+        "operator": "<=",
+        "requirement": "Model inference time shall be <= 25ms on target hardware TDA4VM",
+        "safety_level": "low",
+        "threshold": 25.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "requirement:req-integ-001",
+      "label": "REQ-INTEG-001",
+      "properties": {
+        "component": "adas-perception-module",
+        "metric": "output_schema_version",
+        "operator": "=",
+        "requirement": "Perception module output format shall conform to AveraPerceptionOutput v2 schema",
+        "safety_level": "low",
+        "threshold": 2.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "file:model_adas-perception-module",
+      "label": "model/adas-perception-module",
+      "properties": {
+        "path": "model/adas-perception-module"
+      },
+      "type": "file"
+    },
+    {
+      "id": "test_failure:sc-safety-012-night-rain",
+      "label": "SC-SAFETY-012-night-rain",
+      "properties": {
+        "baseline_status": "passed",
+        "category": "introduced_failures",
+        "component": "adas-perception-module",
+        "current_status": "failed"
+      },
+      "type": "test_failure"
+    },
+    {
+      "id": "threshold_evidence:req-perf-001_map_score_sc-perf-001-map",
+      "label": "map_score",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 0.847,
+        "current_passed": true,
+        "current_value": 0.863,
+        "operator": ">=",
+        "requirement_id": "REQ-PERF-001",
+        "test_id": "SC-PERF-001-map",
+        "threshold": 0.82
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:req-perf-003_inference_time_ms_sc-perf-003-inference",
+      "label": "inference_time_ms",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 21.4,
+        "current_passed": true,
+        "current_value": 22.1,
+        "operator": "<=",
+        "requirement_id": "REQ-PERF-003",
+        "test_id": "SC-PERF-003-inference",
+        "threshold": 25.0
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:req-safety-008_false_positive_rate_sc-safety-008-highway",
+      "label": "false_positive_rate",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 0.02,
+        "current_passed": true,
+        "current_value": 0.02,
+        "operator": "<=",
+        "requirement_id": "REQ-SAFETY-008",
+        "test_id": "SC-SAFETY-008-highway",
+        "threshold": 0.05
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:req-safety-012_detection_rate_sc-safety-012-night-clear",
+      "label": "detection_rate",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 0.99,
+        "current_passed": true,
+        "current_value": 0.98,
+        "operator": ">=",
+        "requirement_id": "REQ-SAFETY-012",
+        "test_id": "SC-SAFETY-012-night-clear",
+        "threshold": 0.95
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:req-safety-012_detection_rate_sc-safety-012-night-rain",
+      "label": "detection_rate",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 0.97,
+        "current_passed": false,
+        "current_value": 0.94,
+        "operator": ">=",
+        "requirement_id": "REQ-SAFETY-012",
+        "test_id": "SC-SAFETY-012-night-rain",
+        "threshold": 0.95
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:req-safety-015_latency_p95_ms_sc-safety-015-latency",
+      "label": "latency_p95_ms",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 38.2,
+        "current_passed": true,
+        "current_value": 41.7,
+        "operator": "<=",
+        "requirement_id": "REQ-SAFETY-015",
+        "test_id": "SC-SAFETY-015-latency",
+        "threshold": 50.0
+      },
+      "type": "threshold_evidence"
+    }
+  ],
+  "schema_version": "evidence_graph.v0.3",
+  "summary": {
+    "comparison_summary": {
+      "introduced_failures": 1,
+      "metric_deltas": 6,
+      "missing_baseline": 0,
+      "missing_current": 0,
+      "preexisting_failures": 0,
+      "resolved_failures": 0,
+      "total_tests": 6,
+      "unchanged_passes": 5
+    },
+    "components": 1,
+    "confidence": "high",
+    "confidence_factors": 5,
+    "edge_count": 53,
+    "evidence_summary": [
+      "Verdict is confirmed regression.",
+      "SC-SAFETY-012-night-rain failed only in the current run.",
+      "detection_rate for REQ-SAFETY-012 was 0.94, outside >= 0.95.",
+      "Mapped affected files: model/adas-perception-module."
+    ],
+    "files": 1,
+    "node_count": 37,
+    "recommendations": 0,
+    "requirements": 6,
+    "risk": "release_blocking",
+    "risk_drivers": 11,
+    "rules": 4,
+    "signal_summaries": 0,
+    "tests_or_failures": 1,
+    "threshold_evidence": 6,
+    "verdict": "confirmed_regression"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "src/ems/emissions_monitor.c": {
+    "component": "Emissions Management System",
+    "requirements": [
+      "PT-REQ-030",
+      "PT-REQ-031"
+    ],
+    "tests": [
+      "PT-EMS-NOX-01"
+    ]
+  }
+}

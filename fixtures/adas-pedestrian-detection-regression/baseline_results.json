@@ -1,0 +1,15 @@
+{
+  "runId": "baseline-adas-vru-001",
+  "stage": "baseline",
+  "tests": [
+    {
+      "id": "ADAS-SIL-VRU-REGRESSION-03",
+      "component": "ADAS Pedestrian Detection",
+      "status": "passed",
+      "metrics": {
+        "pedestrian_recall": 0.972,
+        "brake_trigger_latency_ms": 104.0
+      }
+    }
+  ]
+}

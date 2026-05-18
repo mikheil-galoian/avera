@@ -1,0 +1,12 @@
+{
+  "src/bms/soc_estimator.c": {
+    "component": "BMS State Of Charge Estimation",
+    "requirements": [
+      "BMS-REQ-205",
+      "BMS-REQ-206"
+    ],
+    "tests": [
+      "BMS-SIL-SOC-DRIFT-03"
+    ]
+  }
+}

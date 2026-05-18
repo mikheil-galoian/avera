@@ -1,0 +1,13 @@
+{
+  "src/ecu/overspeed_protection.c": {
+    "component": "Engine Control Unit",
+    "requirements": [
+      "PT-REQ-001",
+      "PT-REQ-002"
+    ],
+    "tests": [
+      "PT-ECU-OS-01",
+      "PT-ECU-OS-02"
+    ]
+  }
+}

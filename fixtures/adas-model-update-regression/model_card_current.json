@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "model_id": "adas-perception-v2.4.1",
+  "model_hash": "sha256:e7d3f9b2c1a8054de69f3c7280e25b83d4f98c02b5e13f67d4c2b9a8e01f35c2",
+  "version": "2.4.1",
+  "release_date": "2026-05-06",
+  "training_date": "2026-05-01",
+  "training_data_version": "adas-dataset-v7.2",
+  "training_data_hash": "sha256:f2e3d4c5b6a7f8e9d0c1b2a3f4e5d6c7b8a9f0e1d2c3b4a5f6e7d8c9b0a1f2e3",
+  "architecture": "YOLOv8-medium-custom",
+  "quantization": "int8",
+  "target_hardware": "TDA4VM",
+  "framework": "PyTorch 2.1",
+  "domain": "adas",
+  "task": "object_detection",
+  "classes": ["pedestrian", "vehicle", "cyclist", "traffic_sign"],
+  "certification_status": "pending_validation",
+  "validation_report": "eval-adas-perception-v2.4.1",
+  "changes_from_baseline": [
+    "Retrained on adas-dataset-v7.2 with 15% additional night/rain scenarios",
+    "Applied int8 post-training quantization for TDA4VM optimization",
+    "Training data distribution shifted toward highway scenarios"
+  ]
+}

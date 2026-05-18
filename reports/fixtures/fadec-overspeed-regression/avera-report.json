@@ -1,0 +1,247 @@
+{
+  "affected_components": [
+    "Full Authority Digital Engine Control"
+  ],
+  "affected_files": [
+    "src/fadec/fuel_control.c",
+    "src/fadec/overspeed_protection.c"
+  ],
+  "affected_requirements": [
+    {
+      "component": "Full Authority Digital Engine Control",
+      "id": "FADEC-REQ-001",
+      "metadata": {},
+      "metric": "overspeed_response_ms",
+      "next_checks": [
+        "FADEC-ENG-HIL-01,FADEC-ENG-HIL-02"
+      ],
+      "operator": "<=",
+      "requirement": "Engine overspeed protection must activate within 50 ms when N1 exceeds 105% of rated speed.",
+      "safety_level": "dal-a",
+      "threshold": 50.0
+    },
+    {
+      "component": "Full Authority Digital Engine Control",
+      "id": "FADEC-REQ-002",
+      "metadata": {},
+      "metric": "fuel_flow_error_pct",
+      "next_checks": [
+        "FADEC-FUEL-SIL-01"
+      ],
+      "operator": "<=",
+      "requirement": "Fuel flow computation error shall not exceed 0.5% of full-scale flow at any operating point.",
+      "safety_level": "dal-b",
+      "threshold": 0.5
+    },
+    {
+      "component": "Full Authority Digital Engine Control",
+      "id": "FADEC-REQ-003",
+      "metadata": {},
+      "metric": "cycle_time_ms",
+      "next_checks": [
+        "FADEC-ENG-HIL-01"
+      ],
+      "operator": "<=",
+      "requirement": "Engine control loop cycle time shall not exceed 10 ms under maximum computational load.",
+      "safety_level": "dal-a",
+      "threshold": 10.0
+    }
+  ],
+  "comparison_summary": {
+    "introduced_failures": 2,
+    "metric_deltas": 5,
+    "missing_baseline": 0,
+    "missing_current": 0,
+    "preexisting_failures": 0,
+    "resolved_failures": 0,
+    "total_tests": 3,
+    "unchanged_passes": 1
+  },
+  "confidence": "high",
+  "confidence_factors": [
+    "+ baseline_current_pair_present",
+    "+ introduced_failure_detected",
+    "+ threshold_crossing_detected",
+    "+ requirement_mapped",
+    "+ affected_file_mapped"
+  ],
+  "confidence_score": 0.95,
+  "evidence_summary": [
+    "Verdict is confirmed regression.",
+    "FADEC-ENG-HIL-01 failed only in the current run.",
+    "FADEC-ENG-HIL-02 failed only in the current run.",
+    "overspeed_response_ms for FADEC-REQ-001 was 63.2, outside <= 50.",
+    "overspeed_response_ms for FADEC-REQ-001 was 61.8, outside <= 50.",
+    "Mapped affected files: src/fadec/fuel_control.c, src/fadec/overspeed_protection.c.",
+    "cycle_time_ms materially worsened from 8.1 to 9.7.",
+    "overspeed_response_ms materially worsened from 42.0 to 63.2.",
+    "cycle_time_ms materially worsened from 8.4 to 9.5.",
+    "overspeed_response_ms materially worsened from 44.5 to 61.8."
+  ],
+  "introduced_failures": [
+    {
+      "baseline_metrics": {
+        "cycle_time_ms": 8.1,
+        "overspeed_response_ms": 42.0
+      },
+      "baseline_status": "passed",
+      "classification": "introduced_failure",
+      "component": "Full Authority Digital Engine Control",
+      "current_metrics": {
+        "cycle_time_ms": 9.7,
+        "overspeed_response_ms": 63.2
+      },
+      "current_status": "failed",
+      "evidence": [
+        "FADEC-ENG-HIL-01: introduced failure.",
+        "HIL bench test: overspeed protection triggered at 42 ms. Within 50 ms DAL-A limit.",
+        "HIL bench test: overspeed protection triggered at 63.2 ms. EXCEEDS 50 ms DAL-A limit. Regression introduced by refactoring of interrupt handler in overspeed_protection.c.",
+        "cycle_time_ms increased from 8.1 to 9.7.",
+        "overspeed_response_ms increased from 42 to 63.2."
+      ],
+      "metric_deltas": [
+        {
+          "baseline": 8.1,
+          "current": 9.7,
+          "delta": 1.5999999999999996,
+          "metric": "cycle_time_ms",
+          "percent_delta": 19.75308641975308,
+          "test_id": "FADEC-ENG-HIL-01"
+        },
+        {
+          "baseline": 42.0,
+          "current": 63.2,
+          "delta": 21.200000000000003,
+          "metric": "overspeed_response_ms",
+          "percent_delta": 50.47619047619049,
+          "test_id": "FADEC-ENG-HIL-01"
+        }
+      ],
+      "test_id": "FADEC-ENG-HIL-01"
+    },
+    {
+      "baseline_metrics": {
+        "cycle_time_ms": 8.4,
+        "overspeed_response_ms": 44.5
+      },
+      "baseline_status": "passed",
+      "classification": "introduced_failure",
+      "component": "Full Authority Digital Engine Control",
+      "current_metrics": {
+        "cycle_time_ms": 9.5,
+        "overspeed_response_ms": 61.8
+      },
+      "current_status": "failed",
+      "evidence": [
+        "FADEC-ENG-HIL-02: introduced failure.",
+        "HIL bench test (repeat run): overspeed protection triggered at 44.5 ms.",
+        "HIL bench test (repeat run): overspeed protection triggered at 61.8 ms. EXCEEDS 50 ms DAL-A limit.",
+        "cycle_time_ms increased from 8.4 to 9.5.",
+        "overspeed_response_ms increased from 44.5 to 61.8."
+      ],
+      "metric_deltas": [
+        {
+          "baseline": 8.4,
+          "current": 9.5,
+          "delta": 1.0999999999999996,
+          "metric": "cycle_time_ms",
+          "percent_delta": 13.09523809523809,
+          "test_id": "FADEC-ENG-HIL-02"
+        },
+        {
+          "baseline": 44.5,
+          "current": 61.8,
+          "delta": 17.299999999999997,
+          "metric": "overspeed_response_ms",
+          "percent_delta": 38.876404494382015,
+          "test_id": "FADEC-ENG-HIL-02"
+        }
+      ],
+      "test_id": "FADEC-ENG-HIL-02"
+    }
+  ],
+  "preexisting_failures": [],
+  "recommended_next_checks": [
+    "FADEC-ENG-HIL-01",
+    "FADEC-ENG-HIL-01,FADEC-ENG-HIL-02",
+    "FADEC-FUEL-SIL-01"
+  ],
+  "risk": "release_blocking",
+  "risk_drivers": [
+    "verdict:confirmed_regression",
+    "risk:release_blocking",
+    "safety_level:dal-a",
+    "safety_level:dal-b",
+    "threshold_failed:FADEC-REQ-001:overspeed_response_ms",
+    "threshold_passed:FADEC-REQ-003:cycle_time_ms",
+    "threshold_failed:FADEC-REQ-001:overspeed_response_ms",
+    "threshold_passed:FADEC-REQ-003:cycle_time_ms",
+    "threshold_passed:FADEC-REQ-002:fuel_flow_error_pct"
+  ],
+  "rules_triggered": [
+    "R1_confirmed_threshold_regression",
+    "R2_introduced_test_failure",
+    "signal_baseline_pass_current_threshold_fail",
+    "signal_introduced_failure_present",
+    "signal_material_metric_worsening"
+  ],
+  "schema_version": "avera.assessment.v0.2",
+  "threshold_evidence": [
+    {
+      "baseline_passed": true,
+      "baseline_value": 42.0,
+      "current_passed": false,
+      "current_value": 63.2,
+      "metric": "overspeed_response_ms",
+      "operator": "<=",
+      "requirement_id": "FADEC-REQ-001",
+      "test_id": "FADEC-ENG-HIL-01",
+      "threshold": 50.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 8.1,
+      "current_passed": true,
+      "current_value": 9.7,
+      "metric": "cycle_time_ms",
+      "operator": "<=",
+      "requirement_id": "FADEC-REQ-003",
+      "test_id": "FADEC-ENG-HIL-01",
+      "threshold": 10.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 44.5,
+      "current_passed": false,
+      "current_value": 61.8,
+      "metric": "overspeed_response_ms",
+      "operator": "<=",
+      "requirement_id": "FADEC-REQ-001",
+      "test_id": "FADEC-ENG-HIL-02",
+      "threshold": 50.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 8.4,
+      "current_passed": true,
+      "current_value": 9.5,
+      "metric": "cycle_time_ms",
+      "operator": "<=",
+      "requirement_id": "FADEC-REQ-003",
+      "test_id": "FADEC-ENG-HIL-02",
+      "threshold": 10.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 0.31,
+      "current_passed": true,
+      "current_value": 0.33,
+      "metric": "fuel_flow_error_pct",
+      "operator": "<=",
+      "requirement_id": "FADEC-REQ-002",
+      "test_id": "FADEC-FUEL-SIL-01",
+      "threshold": 0.5
+    }
+  ],
+  "verdict": "confirmed_regression"
+}

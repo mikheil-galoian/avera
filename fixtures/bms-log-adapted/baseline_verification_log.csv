@@ -1,0 +1,3 @@
+timestamp_utc,test_id,component,status,metric,value,unit,message,environment
+2026-05-01T09:00:00Z,BMS-HIL-FASTCHARGE-07,BMS Thermal Control,passed,max_cell_temp_c,47.1,C,baseline HIL run stayed below temperature threshold,HIL-rig-3
+2026-05-01T09:00:05Z,BMS-HIL-FASTCHARGE-07,BMS Thermal Control,passed,cooling_response_ms,412.0,ms,baseline HIL run kept cooling response within target,HIL-rig-3

@@ -1,0 +1,302 @@
+{
+  "edges": [
+    {
+      "relation": "classified_as",
+      "source": "change",
+      "target": "risk"
+    },
+    {
+      "relation": "recommends",
+      "source": "risk",
+      "target": "recommendation:bms-hil-fastcharge-07"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:r8_insufficient_evidence",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_unrecognized_or_inconclusive_status",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_affected_file_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_baseline_current_pair_present",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_requirement_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:-_incomplete_or_inconclusive_current_evidence",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:risk_unknown",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:safety_level_medium",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_passed_bms-req-118_cooling_response_ms",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:verdict_insufficient_evidence",
+      "target": "risk"
+    },
+    {
+      "relation": "affects_component",
+      "source": "change",
+      "target": "component:bms_thermal_control"
+    },
+    {
+      "relation": "contributes_to",
+      "source": "component:bms_thermal_control",
+      "target": "risk"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:bms-req-118",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:bms_thermal_control",
+      "target": "requirement:bms-req-118"
+    },
+    {
+      "relation": "touches_file",
+      "source": "change",
+      "target": "file:src_bms_thermal_manager.c"
+    },
+    {
+      "relation": "maps_to_component",
+      "source": "file:src_bms_thermal_manager.c",
+      "target": "component:bms_thermal_control"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:bms-req-112_max_cell_temp_c_bms-sil-fastcharge-01",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:bms-req-118_cooling_response_ms_bms-sil-fastcharge-01",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:bms-req-118_cooling_response_ms_bms-sil-fastcharge-01",
+      "target": "requirement:bms-req-118"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "change",
+      "label": "Change under assessment",
+      "properties": {
+        "description": "An engineer changed the BMS fast-charge cooling logic in src/bms/thermal_manager.c.\n\nThe current verification run is inconclusive because the maximum cell temperature metric is missing.\nAVERA should avoid assigning fault without comparable baseline and current evidence, classify the\noutcome as insufficient evidence, and request a rerun of the mapped HIL check."
+      },
+      "type": "change"
+    },
+    {
+      "id": "risk",
+      "label": "unknown",
+      "properties": {
+        "confidence": "low",
+        "verdict": "insufficient_evidence"
+      },
+      "type": "risk"
+    },
+    {
+      "id": "recommendation:bms-hil-fastcharge-07",
+      "label": "BMS-HIL-FASTCHARGE-07",
+      "properties": {
+        "check": "BMS-HIL-FASTCHARGE-07"
+      },
+      "type": "recommendation"
+    },
+    {
+      "id": "rule:r8_insufficient_evidence",
+      "label": "R8_insufficient_evidence",
+      "properties": {
+        "value": "R8_insufficient_evidence"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_unrecognized_or_inconclusive_status",
+      "label": "signal_unrecognized_or_inconclusive_status",
+      "properties": {
+        "value": "signal_unrecognized_or_inconclusive_status"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "confidence_factor:+_affected_file_mapped",
+      "label": "+ affected_file_mapped",
+      "properties": {
+        "value": "+ affected_file_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_baseline_current_pair_present",
+      "label": "+ baseline_current_pair_present",
+      "properties": {
+        "value": "+ baseline_current_pair_present"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_requirement_mapped",
+      "label": "+ requirement_mapped",
+      "properties": {
+        "value": "+ requirement_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:-_incomplete_or_inconclusive_current_evidence",
+      "label": "- incomplete_or_inconclusive_current_evidence",
+      "properties": {
+        "value": "- incomplete_or_inconclusive_current_evidence"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "risk_driver:risk_unknown",
+      "label": "risk:unknown",
+      "properties": {
+        "value": "risk:unknown"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:safety_level_medium",
+      "label": "safety_level:medium",
+      "properties": {
+        "value": "safety_level:medium"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_passed_bms-req-118_cooling_response_ms",
+      "label": "threshold_passed:BMS-REQ-118:cooling_response_ms",
+      "properties": {
+        "value": "threshold_passed:BMS-REQ-118:cooling_response_ms"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:verdict_insufficient_evidence",
+      "label": "verdict:insufficient_evidence",
+      "properties": {
+        "value": "verdict:insufficient_evidence"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "component:bms_thermal_control",
+      "label": "BMS Thermal Control",
+      "type": "component"
+    },
+    {
+      "id": "requirement:bms-req-118",
+      "label": "BMS-REQ-118",
+      "properties": {
+        "component": "BMS Thermal Control",
+        "metric": "cooling_response_ms",
+        "operator": "<=",
+        "requirement": "Cooling response delay during fast charging must not exceed 500 ms",
+        "safety_level": "medium",
+        "threshold": 500.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "file:src_bms_thermal_manager.c",
+      "label": "src/bms/thermal_manager.c",
+      "properties": {
+        "path": "src/bms/thermal_manager.c"
+      },
+      "type": "file"
+    },
+    {
+      "id": "threshold_evidence:bms-req-112_max_cell_temp_c_bms-sil-fastcharge-01",
+      "label": "max_cell_temp_c",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 47.8,
+        "operator": "<=",
+        "requirement_id": "BMS-REQ-112",
+        "test_id": "BMS-SIL-FASTCHARGE-01",
+        "threshold": 50.0
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:bms-req-118_cooling_response_ms_bms-sil-fastcharge-01",
+      "label": "cooling_response_ms",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 440.0,
+        "current_passed": true,
+        "current_value": 472.0,
+        "operator": "<=",
+        "requirement_id": "BMS-REQ-118",
+        "test_id": "BMS-SIL-FASTCHARGE-01",
+        "threshold": 500.0
+      },
+      "type": "threshold_evidence"
+    }
+  ],
+  "schema_version": "evidence_graph.v0.3",
+  "summary": {
+    "comparison_summary": {
+      "introduced_failures": 0,
+      "metric_deltas": 1,
+      "missing_baseline": 0,
+      "missing_current": 0,
+      "preexisting_failures": 0,
+      "resolved_failures": 0,
+      "total_tests": 1,
+      "unchanged_passes": 0
+    },
+    "components": 1,
+    "confidence": "low",
+    "confidence_factors": 4,
+    "edge_count": 21,
+    "evidence_summary": [
+      "Verdict is insufficient evidence.",
+      "Mapped affected files: src/bms/thermal_manager.c."
+    ],
+    "files": 1,
+    "node_count": 18,
+    "recommendations": 1,
+    "requirements": 1,
+    "risk": "unknown",
+    "risk_drivers": 4,
+    "rules": 2,
+    "signal_summaries": 0,
+    "tests_or_failures": 0,
+    "threshold_evidence": 2,
+    "verdict": "insufficient_evidence"
+  }
+}

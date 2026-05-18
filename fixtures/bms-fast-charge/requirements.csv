@@ -1,0 +1,3 @@
+id,component,requirement,metric,operator,threshold,safety_level,next_checks
+BMS-REQ-112,BMS Thermal Control,Maximum cell temperature during fast charging must not exceed 50 C,max_cell_temp_c,<=,50.0,high,BMS-HIL-FASTCHARGE-07
+BMS-REQ-118,BMS Thermal Control,Cooling response delay during fast charging must not exceed 500 ms,cooling_response_ms,<=,500.0,medium,BMS-HIL-FASTCHARGE-07

@@ -1,0 +1,26 @@
+{
+  "runId": "current-pt-overspeed-001",
+  "stage": "current",
+  "tests": [
+    {
+      "id": "PT-ECU-OS-01",
+      "component": "Engine Control Unit",
+      "status": "failed",
+      "metrics": {
+        "max_engine_rpm": 7250.0,
+        "overspeed_response_ms": 42.0
+      },
+      "evidence": "Engine speed reached 7250 RPM during wide-open-throttle ramp. Overspeed limiter threshold raised in ECU calibration; PT-REQ-001 violation confirmed."
+    },
+    {
+      "id": "PT-ECU-OS-02",
+      "component": "Engine Control Unit",
+      "status": "passed",
+      "metrics": {
+        "max_engine_rpm": 6840.0,
+        "overspeed_response_ms": 40.0
+      },
+      "evidence": ""
+    }
+  ]
+}

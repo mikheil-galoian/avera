@@ -1,0 +1,19 @@
+{
+  "runId": "current-adas-vru-001",
+  "stage": "current",
+  "changedFiles": [
+    "src/adas/perception/pedestrian_classifier.cpp"
+  ],
+  "tests": [
+    {
+      "id": "ADAS-SIL-VRU-REGRESSION-03",
+      "component": "ADAS Pedestrian Detection",
+      "status": "failed",
+      "metrics": {
+        "pedestrian_recall": 0.903,
+        "brake_trigger_latency_ms": 146.0
+      },
+      "evidence": "After the pedestrian classifier threshold retune, the urban VRU regression suite lost recall and triggered automatic braking later than the mapped requirement allows."
+    }
+  ]
+}

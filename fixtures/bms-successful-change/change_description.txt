@@ -1,0 +1,6 @@
+An engineer adjusted the BMS fast-charge cooling logic in src/bms/thermal_manager.c.
+
+The intended behavior was to improve cooling ramp timing without increasing thermal risk.
+Both baseline and current verification runs pass the mapped BMS Thermal Control requirements,
+and the current run improves maximum cell temperature and cooling response metrics. AVERA should
+classify the outcome as a successful change with low risk and high confidence.

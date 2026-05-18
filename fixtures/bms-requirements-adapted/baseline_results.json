@@ -1,0 +1,15 @@
+{
+  "runId": "baseline-bms-req-001",
+  "stage": "baseline",
+  "tests": [
+    {
+      "id": "BMS-SIL-FASTCHARGE-01",
+      "component": "BMS Thermal Control",
+      "status": "passed",
+      "metrics": {
+        "max_cell_temp_c": 47.1,
+        "cooling_response_ms": 410.0
+      }
+    }
+  ]
+}

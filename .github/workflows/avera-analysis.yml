@@ -1,0 +1,261 @@
+# AVERA — Automated Change Verification
+#
+# This workflow runs AVERA over every fixture in the repository and verifies
+# that each verdict matches the expected outcome in fixtures/expected_outcomes.json.
+#
+# For AI model update workflows, drop your evaluation artifacts into a fixture
+# directory and add an expected_outcomes.json entry. The workflow will block
+# the PR if a safety-critical regression is detected.
+#
+# Usage in your own repo:
+#
+#   jobs:
+#     avera:
+#       uses: averaeng/avera/.github/workflows/avera-analysis.yml@main
+#       with:
+#         project_path: path/to/your/evidence-pack
+#         expected_verdict: confirmed_regression        # optional, omit to just run
+#         fail_on_release_blocking: true               # default true
+
+name: AVERA Change Verification
+
+on:
+  push:
+    branches: ["main", "develop"]
+    paths:
+      - "fixtures/**"
+      - "src/**"
+      - "tests/**"
+  pull_request:
+    branches: ["main", "develop"]
+    paths:
+      - "fixtures/**"
+      - "src/**"
+      - "tests/**"
+  workflow_dispatch:
+    inputs:
+      fixture:
+        description: "Run a specific fixture (leave blank for full matrix)"
+        required: false
+        default: ""
+
+jobs:
+  # ── 1. Full test suite ────────────────────────────────────────────────────
+  test:
+    name: pytest — full suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install AVERA
+        run: pip install -e ".[api,dev]" --quiet
+
+      - name: Generate required report fixture
+        run: python3 -m avera analyze --project fixtures/bms-fast-charge --out reports/fixtures/bms-fast-charge
+
+      - name: Run tests
+        run: |
+          PYTHONPATH=src python3 -B -m pytest tests/ -v \
+            --tb=short \
+            --junit-xml=reports/junit/test-results.xml
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: reports/junit/test-results.xml
+
+  # ── 2. Fixture matrix ─────────────────────────────────────────────────────
+  fixture-matrix:
+    name: AVERA fixture matrix
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install AVERA
+        run: pip install -e ".[dev]" --quiet
+
+      - name: Run fixture matrix
+        run: |
+          PYTHONPATH=src python3 -B scripts/run_all_fixtures.py
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: avera-reports
+          path: reports/fixtures/
+
+  # ── 3. Single-fixture CI gate (for AI model update PRs) ──────────────────
+  ai-verification-gate:
+    name: AI change verification gate
+    runs-on: ubuntu-latest
+    # Only run when fixture files are changed in a PR
+    if: >
+      github.event_name == 'pull_request' &&
+      (
+        contains(github.event.head_commit.modified, 'fixtures/') ||
+        github.event.inputs.fixture != ''
+      )
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install AVERA
+        run: pip install -e "." --quiet
+
+      - name: Detect changed fixture
+        id: fixture
+        run: |
+          if [ -n "${{ github.event.inputs.fixture }}" ]; then
+            echo "name=${{ github.event.inputs.fixture }}" >> $GITHUB_OUTPUT
+          else
+            CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD \
+              | grep '^fixtures/' \
+              | cut -d'/' -f2 \
+              | sort -u \
+              | head -1)
+            echo "name=$CHANGED" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run AVERA on changed fixture
+        if: steps.fixture.outputs.name != ''
+        run: |
+          FIXTURE="${{ steps.fixture.outputs.name }}"
+          echo "Analyzing fixture: $FIXTURE"
+
+          PYTHONPATH=src python3 -B -m avera analyze \
+            --project "fixtures/$FIXTURE" \
+            --out "reports/ci/$FIXTURE"
+
+      - name: Check verdict
+        if: steps.fixture.outputs.name != ''
+        run: |
+          FIXTURE="${{ steps.fixture.outputs.name }}"
+          REPORT="reports/ci/$FIXTURE/avera-report.json"
+
+          if [ ! -f "$REPORT" ]; then
+            echo "ERROR: AVERA report not generated at $REPORT"
+            exit 1
+          fi
+
+          VERDICT=$(python3 -c "import json; r=json.load(open('$REPORT')); print(r['verdict'])")
+          RISK=$(python3 -c "import json; r=json.load(open('$REPORT')); print(r['risk'])")
+          CONFIDENCE=$(python3 -c "import json; r=json.load(open('$REPORT')); print(r['confidence'])")
+
+          echo "──────────────────────────────────────────"
+          echo "AVERA VERDICT:    $VERDICT"
+          echo "RISK LEVEL:       $RISK"
+          echo "CONFIDENCE:       $CONFIDENCE"
+          echo "──────────────────────────────────────────"
+
+          # Block PR if safety-critical regression detected
+          if [ "$RISK" = "release_blocking" ]; then
+            echo ""
+            echo "❌ RELEASE BLOCKED"
+            echo "AVERA detected a release-blocking safety regression in fixture: $FIXTURE"
+            echo "Verdict: $VERDICT | Risk: $RISK | Confidence: $CONFIDENCE"
+            echo ""
+            echo "A safety-critical requirement was violated. Review the evidence report:"
+            python3 -c "
+          import json
+          r = json.load(open('$REPORT'))
+          print('Affected requirements:', r.get('affected_requirements', []))
+          print('Evidence:', json.dumps(r.get('evidence', {}), indent=2))
+          if 'model_metadata' in r:
+              print('Model version:', r['model_metadata'].get('model_version', ''))
+              print('Cert status:', r['model_metadata'].get('certification_status', ''))
+            "
+            exit 1
+          fi
+
+          if [ "$VERDICT" = "confirmed_regression" ]; then
+            echo ""
+            echo "⚠️  REGRESSION DETECTED (non-blocking)"
+            echo "AVERA detected a regression. Review required before merge."
+            echo "Risk is $RISK — below release_blocking threshold."
+            echo "Proceeding with warning."
+          fi
+
+          echo "✅ AVERA gate passed: $VERDICT / $RISK"
+
+      - name: Upload verification report
+        if: always() && steps.fixture.outputs.name != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: avera-ci-report-${{ steps.fixture.outputs.name }}
+          path: reports/ci/${{ steps.fixture.outputs.name }}/
+
+  # ── 4. Schema contract validation ────────────────────────────────────────
+  schema-contracts:
+    name: Artifact schema contracts
+    runs-on: ubuntu-latest
+    needs: fixture-matrix
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install AVERA
+        run: pip install -e "." --quiet
+
+      - name: Download reports
+        uses: actions/download-artifact@v4
+        with:
+          name: avera-reports
+          path: reports/fixtures/
+
+      - name: Validate artifact schemas
+        run: |
+          python3 -c "
+          import json
+          import sys
+          from pathlib import Path
+          from avera.contracts.validator import validate_artifact
+
+          failures = []
+          reports_dir = Path('reports/fixtures')
+
+          for report_file in sorted(reports_dir.glob('*/avera-report.json')):
+              fixture = report_file.parent.name
+              try:
+                  report = json.loads(report_file.read_text())
+                  result = validate_artifact('report', report)
+                  if not result.ok:
+                      failures.extend(f'{fixture}: {e}' for e in result.errors)
+                  else:
+                      print(f'  ✓ {fixture}')
+              except Exception as exc:
+                  failures.append(f'{fixture}: {exc}')
+
+          if failures:
+              print('Schema validation failures:')
+              for f in failures:
+                  print(f'  ✗ {f}')
+              sys.exit(1)
+
+          print(f'All {len(list(reports_dir.glob(\"*/avera-report.json\")))} reports passed schema validation.')
+          "

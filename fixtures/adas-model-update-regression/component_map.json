@@ -1,0 +1,21 @@
+{
+  "model/adas-perception-module": {
+    "component": "adas-perception-module",
+    "requirements": [
+      "REQ-SAFETY-012",
+      "REQ-SAFETY-008",
+      "REQ-SAFETY-015",
+      "REQ-PERF-001",
+      "REQ-PERF-003",
+      "REQ-INTEG-001"
+    ],
+    "tests": [
+      "SC-SAFETY-012-night-rain",
+      "SC-SAFETY-012-night-clear",
+      "SC-SAFETY-008-highway",
+      "SC-SAFETY-015-latency",
+      "SC-PERF-001-map",
+      "SC-PERF-003-inference"
+    ]
+  }
+}

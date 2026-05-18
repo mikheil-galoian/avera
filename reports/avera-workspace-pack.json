@@ -1,0 +1,262 @@
+{
+  "artifacts": {
+    "decision_json": {
+      "exists": true,
+      "path": "reports/avera-decision.json",
+      "sha256": "b4755cfdc787805dbf49f7c9ef32983391a44d9d3ed95a62ae405084b2e35e61",
+      "size_bytes": 1491
+    },
+    "graph_json": {
+      "exists": true,
+      "path": "reports/fixtures/bms-fast-charge/avera-evidence-graph.json",
+      "sha256": "f6e5cf7fa5b5bc9b9ade3a3701078bc9a23b0106e33bd52b9710642cf2e4faf5",
+      "size_bytes": 14784
+    },
+    "memory_jsonl": {
+      "exists": true,
+      "path": "reports/avera-memory.jsonl",
+      "sha256": "8ca84951a27fb68737ed5cead7ba483d32a5be8abda6f61c643a63c9045d16ac",
+      "size_bytes": 16978
+    },
+    "report_json": {
+      "exists": true,
+      "path": "reports/fixtures/bms-fast-charge/avera-report.json",
+      "sha256": "c66078989f3365e4b682ab0663fa6200d0efe0ef5c5d914d9bd09c1db2ba42c0",
+      "size_bytes": 4840
+    },
+    "report_markdown": {
+      "exists": true,
+      "path": "reports/fixtures/bms-fast-charge/avera-report.md",
+      "sha256": "61ce767131e4b3684be622a133c9e13746f2241121a86c1c6e5f9f0b3b5ecb45",
+      "size_bytes": 2249
+    },
+    "traceability_json": {
+      "exists": true,
+      "path": "reports/avera-traceability-index.json",
+      "sha256": "c3394aa826ef03851aa7d66532b76aef6138558785efca9bf9ec24eb5f18232c",
+      "size_bytes": 52269
+    },
+    "trend_json": {
+      "exists": true,
+      "path": "reports/avera-trend-index.json",
+      "sha256": "76ff5238c80147d6ede2ddfc01e50ee7cf0ee2b43642dd7384d8350e45cee98d",
+      "size_bytes": 11078
+    }
+  },
+  "decision": {
+    "action": "block",
+    "category": "containment_required",
+    "owner": "validation_and_component_owner",
+    "path": "reports/avera-decision.json",
+    "schema_version": "avera.decision.v0.2"
+  },
+  "graph": {
+    "path": "reports/fixtures/bms-fast-charge/avera-evidence-graph.json",
+    "schema_version": "evidence_graph.v0.3",
+    "summary": {
+      "comparison_summary": {
+        "introduced_failures": 1,
+        "metric_deltas": 2,
+        "missing_baseline": 0,
+        "missing_current": 0,
+        "preexisting_failures": 0,
+        "resolved_failures": 0,
+        "total_tests": 1,
+        "unchanged_passes": 0
+      },
+      "components": 1,
+      "confidence": "high",
+      "confidence_factors": 5,
+      "edge_count": 41,
+      "evidence_summary": [
+        "Verdict is confirmed regression.",
+        "BMS-SIL-FASTCHARGE-01 failed only in the current run.",
+        "max_cell_temp_c for BMS-REQ-112 was 52.8, outside <= 50.",
+        "cooling_response_ms for BMS-REQ-118 was 610, outside <= 500.",
+        "Mapped affected files: src/bms/thermal_manager.c.",
+        "cooling_response_ms materially worsened from 420.0 to 610.0.",
+        "max_cell_temp_c materially worsened from 47.1 to 52.8."
+      ],
+      "files": 1,
+      "node_count": 28,
+      "recommendations": 1,
+      "requirements": 2,
+      "risk": "high",
+      "risk_drivers": 6,
+      "rules": 5,
+      "signal_summaries": 2,
+      "tests_or_failures": 1,
+      "threshold_evidence": 2,
+      "verdict": "confirmed_regression"
+    }
+  },
+  "manifest": {
+    "artifact_count": 7,
+    "exported_at_utc": "2026-05-02T10:30:22Z",
+    "missing_artifacts": [],
+    "schema_version": "avera.workspace_pack.v0.1",
+    "source_artifacts": {
+      "decision_json": "reports/avera-decision.json",
+      "graph_json": "reports/fixtures/bms-fast-charge/avera-evidence-graph.json",
+      "memory_jsonl": "reports/avera-memory.jsonl",
+      "report_json": "reports/fixtures/bms-fast-charge/avera-report.json",
+      "report_markdown": "reports/fixtures/bms-fast-charge/avera-report.md",
+      "traceability_json": "reports/avera-traceability-index.json",
+      "trend_json": "reports/avera-trend-index.json"
+    },
+    "workspace_path": "fixtures/bms-fast-charge"
+  },
+  "memory_slice": [
+    {
+      "affected_components": [
+        "BMS Thermal Control"
+      ],
+      "affected_requirements": [
+        "BMS-REQ-112",
+        "BMS-REQ-118"
+      ],
+      "confidence": "high",
+      "confidence_score": 0.95,
+      "evidence_graph_path": "reports/fixtures/bms-fast-charge/avera-evidence-graph.json",
+      "gate_exit_code": null,
+      "gate_status": null,
+      "output_dir": "reports/fixtures/bms-fast-charge",
+      "project_path": "fixtures/bms-fast-charge",
+      "reasons": [],
+      "record_type": "analysis",
+      "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+      "risk": "high",
+      "schema_version": "avera.memory_record.v0.1",
+      "summary": {
+        "introduced_failures": 1,
+        "metric_deltas": 2,
+        "missing_baseline": 0,
+        "missing_current": 0,
+        "preexisting_failures": 0,
+        "resolved_failures": 0,
+        "total_tests": 1,
+        "unchanged_passes": 0
+      },
+      "timestamp_utc": "2026-05-02T10:30:20Z",
+      "verdict": "confirmed_regression"
+    },
+    {
+      "affected_components": [
+        "BMS Thermal Control"
+      ],
+      "affected_requirements": [
+        "BMS-REQ-112",
+        "BMS-REQ-118"
+      ],
+      "confidence": "high",
+      "confidence_score": 0.95,
+      "evidence_graph_path": "reports/fixtures/bms-fast-charge/avera-evidence-graph.json",
+      "gate_exit_code": null,
+      "gate_status": null,
+      "output_dir": "reports/fixtures/bms-fast-charge",
+      "project_path": "fixtures/bms-fast-charge",
+      "reasons": [],
+      "record_type": "analysis",
+      "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+      "risk": "high",
+      "schema_version": "avera.memory_record.v0.1",
+      "summary": {
+        "introduced_failures": 1,
+        "metric_deltas": 2,
+        "missing_baseline": 0,
+        "missing_current": 0,
+        "preexisting_failures": 0,
+        "resolved_failures": 0,
+        "total_tests": 1,
+        "unchanged_passes": 0
+      },
+      "timestamp_utc": "2026-04-29T08:19:28Z",
+      "verdict": "confirmed_regression"
+    },
+    {
+      "affected_components": [
+        "BMS Thermal Control"
+      ],
+      "affected_requirements": [
+        "BMS-REQ-112",
+        "BMS-REQ-118"
+      ],
+      "confidence": "high",
+      "confidence_score": 0.95,
+      "evidence_graph_path": "reports/fixtures/bms-fast-charge/avera-evidence-graph.json",
+      "gate_exit_code": null,
+      "gate_status": null,
+      "output_dir": "reports/fixtures/bms-fast-charge",
+      "project_path": "fixtures/bms-fast-charge",
+      "reasons": [],
+      "record_type": "analysis",
+      "report_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+      "risk": "high",
+      "schema_version": "avera.memory_record.v0.1",
+      "summary": {
+        "introduced_failures": 1,
+        "metric_deltas": 2,
+        "missing_baseline": 0,
+        "missing_current": 0,
+        "preexisting_failures": 0,
+        "resolved_failures": 0,
+        "total_tests": 1,
+        "unchanged_passes": 0
+      },
+      "timestamp_utc": "2026-04-23T06:39:06Z",
+      "verdict": "confirmed_regression"
+    }
+  ],
+  "report": {
+    "json_path": "reports/fixtures/bms-fast-charge/avera-report.json",
+    "markdown_path": "reports/fixtures/bms-fast-charge/avera-report.md",
+    "risk": "high",
+    "schema_version": "avera.assessment.v0.2",
+    "verdict": "confirmed_regression"
+  },
+  "schema_version": "avera.workspace_pack.v0.1",
+  "summary": {
+    "component_count": 1,
+    "confidence": "high",
+    "confidence_score": 0.95,
+    "introduced_failure_count": 1,
+    "memory_slice_count": 3,
+    "missing_artifacts": [],
+    "preexisting_failure_count": 0,
+    "requirement_count": 2,
+    "risk": "high",
+    "verdict": "confirmed_regression"
+  },
+  "traceability": {
+    "path": "reports/avera-traceability-index.json",
+    "schema_version": "avera.traceability_index.v0.1",
+    "summary": {
+      "component_count": 5,
+      "confidence": "high",
+      "confidence_score": 0.95,
+      "failure_count": 1,
+      "memory_analysis_records": 19,
+      "memory_gate_records": 1,
+      "requirement_count": 7,
+      "risk": "high",
+      "test_count": 1,
+      "verdict": "confirmed_regression"
+    }
+  },
+  "trend": {
+    "path": "reports/avera-trend-index.json",
+    "schema_version": "avera.trend_index.v0.1",
+    "summary": {
+      "component_count": 5,
+      "memory_analysis_records": 19,
+      "memory_gate_records": 1,
+      "memory_record_count": 20,
+      "requirement_count": 9,
+      "test_count": 1
+    }
+  },
+  "workspace": {
+    "name": "bms-fast-charge",
+    "path": "fixtures/bms-fast-charge"
+  }
+}

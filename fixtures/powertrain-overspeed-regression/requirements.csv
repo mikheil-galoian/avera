@@ -1,0 +1,3 @@
+id,component,requirement,metric,operator,threshold,safety_level,next_checks
+PT-REQ-001,Engine Control Unit,Maximum engine speed must not exceed 7000 RPM under any operating condition or fault state.,max_engine_rpm,<=,7000.0,release_blocking,"PT-ECU-OS-01,PT-ECU-OS-02"
+PT-REQ-002,Engine Control Unit,ECU overspeed fuel cut-off must engage within 50 ms of detecting an overspeed condition.,overspeed_response_ms,<=,50.0,release_blocking,"PT-ECU-OS-01,PT-ECU-OS-02"

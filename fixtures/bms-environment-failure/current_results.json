@@ -1,0 +1,21 @@
+{
+  "runId": "current-bms-environment-001",
+  "stage": "current",
+  "changedFiles": [
+    "src/bms/thermal_manager.c"
+  ],
+  "environment": {
+    "status": "failed",
+    "failureType": "hil_bench_unavailable",
+    "message": "Fast-charge HIL bench lost CAN communication before stimulus playback."
+  },
+  "tests": [
+    {
+      "id": "BMS-HIL-FASTCHARGE-07",
+      "component": "BMS Thermal Control",
+      "status": "error",
+      "metrics": {},
+      "evidence": "The test harness aborted before collecting requirement metrics because the HIL bench was unavailable."
+    }
+  ]
+}

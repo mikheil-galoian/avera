@@ -1,0 +1,74 @@
+# ── AVERA Demo Shell — Streamlit container ───────────────────────────────────
+#
+# Optimised for Railway / Render / Fly.io one-click deploys.
+#
+# Local build & run:
+#   docker build -f Dockerfile.demo -t avera-demo .
+#   docker run --rm -p 8501:8501 avera-demo
+#
+# Health endpoint (used by Railway health checks):
+#   GET http://localhost:8501/_stcore/health  → "ok"
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Stage 1: install Python deps ─────────────────────────────────────────────
+FROM python:3.11-slim AS builder
+
+WORKDIR /build
+
+RUN pip install --upgrade pip --quiet
+
+# Install Streamlit + AVERA engine into prefix
+COPY src/              ./src/
+COPY pyproject.toml    .
+RUN pip install --prefix=/install --no-cache-dir \
+        "streamlit>=1.44,<2" \
+        "fastapi>=0.110" \
+        "uvicorn[standard]>=0.29" \
+        "pydantic>=2.0" \
+    && pip install --prefix=/install --no-cache-dir -e "." --no-build-isolation
+
+
+# ── Stage 2: runtime ─────────────────────────────────────────────────────────
+FROM python:3.11-slim AS runtime
+
+LABEL org.opencontainers.image.title="AVERA Demo Shell" \
+      org.opencontainers.image.description="AI Change Verification — live Streamlit demo" \
+      org.opencontainers.image.version="0.1.0"
+
+# Minimal system deps (curl for health check only)
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Non-root user
+RUN groupadd -g 1001 avera && useradd -u 1001 -g avera -s /sbin/nologin avera
+
+# Copy installed packages
+COPY --from=builder /install /usr/local
+
+WORKDIR /app
+
+# Copy demo shell + fixtures (read-only at runtime)
+COPY --chown=avera:avera src/        ./src/
+COPY --chown=avera:avera demo/       ./demo/
+COPY --chown=avera:avera fixtures/   ./fixtures/
+COPY --chown=avera:avera reports/    ./reports/
+
+# Streamlit configuration
+RUN mkdir -p /home/avera/.streamlit
+COPY --chown=avera:avera deploy/streamlit_config.toml /home/avera/.streamlit/config.toml
+
+ENV PYTHONPATH=/app/src
+ENV AVERA_DEFAULT_SCENARIO=bms-fast-charge
+ENV HOME=/home/avera
+
+USER avera
+
+EXPOSE 8501
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=20s --retries=3 \
+    CMD curl -sf http://localhost:8501/_stcore/health || exit 1
+
+CMD ["python", "-m", "streamlit", "run", "demo/app.py", \
+     "--server.port=8501", \
+     "--server.address=0.0.0.0", \
+     "--server.headless=true"]

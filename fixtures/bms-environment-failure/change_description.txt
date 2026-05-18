@@ -1,0 +1,5 @@
+An engineer adjusted logging around fast-charge thermal control in src/bms/thermal_manager.c.
+
+The current verification did not produce requirement evidence because the HIL bench lost CAN
+communication before the scenario started. AVERA should classify this as an environment failure
+with unknown risk and low confidence, not as an agent-caused regression.

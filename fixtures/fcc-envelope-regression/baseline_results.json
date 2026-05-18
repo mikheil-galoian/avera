@@ -1,0 +1,36 @@
+{
+  "runId": "fcc-baseline-v3.0.0",
+  "stage": "verification",
+  "changedFiles": [],
+  "tests": [
+    {
+      "id": "FCC-CTRL-HIL-01",
+      "component": "Flight Control Computer",
+      "status": "passed",
+      "metrics": {
+        "actuation_latency_ms": 62.0,
+        "compute_jitter_ms": 1.4
+      },
+      "evidence": "HIL bench: actuation latency 62 ms, jitter 1.4 ms. Both within DAL-A/B limits."
+    },
+    {
+      "id": "FCC-CTRL-HIL-02",
+      "component": "Flight Control Computer",
+      "status": "passed",
+      "metrics": {
+        "actuation_latency_ms": 64.5,
+        "compute_jitter_ms": 1.6
+      },
+      "evidence": "HIL bench (repeat): actuation latency 64.5 ms, jitter 1.6 ms."
+    },
+    {
+      "id": "FCC-ENV-HIL-01",
+      "component": "Flight Control Computer",
+      "status": "passed",
+      "metrics": {
+        "envelope_engage_ms": 148.0
+      },
+      "evidence": "HIL bench: envelope protection engaged at 148 ms. Within 200 ms DAL-A limit."
+    }
+  ]
+}

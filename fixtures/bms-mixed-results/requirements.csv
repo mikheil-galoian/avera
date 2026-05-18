@@ -1,0 +1,5 @@
+id,component,requirement,metric,operator,threshold,safety_level,next_checks
+BMS-REQ-112,BMS Thermal Control,Maximum cell temperature during fast charging must not exceed 50 C,max_cell_temp_c,<=,50.0,high,BMS-HIL-FASTCHARGE-07
+BMS-REQ-118,BMS Thermal Control,Cooling response delay during fast charging must not exceed 500 ms,cooling_response_ms,<=,500.0,medium,BMS-HIL-FASTCHARGE-07
+BMS-REQ-205,BMS Cell Balancing,Cell voltage imbalance after balancing must not exceed 35 mV,cell_delta_mv,<=,35.0,medium,BMS-SIL-BALANCE-02
+BMS-REQ-301,BMS Contactor Control,Main contactor close time must not exceed 120 ms,contactor_close_ms,<=,120.0,low,BMS-SIL-CONTACTOR-01

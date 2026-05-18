@@ -1,0 +1,8 @@
+This workspace demonstrates AVERA running on adapted simulation artifacts rather than only
+hand-authored verification JSON. The pedestrian classifier threshold retune in
+src/adas/perception/pedestrian_classifier.cpp was intended to reduce roadside false positives.
+
+Baseline and current evidence were first captured as simulation CSV outputs, then normalized into
+AVERA verification-results JSON through the simulation adapter. The adapted current run shows
+pedestrian recall dropping below requirement and braking trigger latency rising above requirement
+in the mapped urban crossing scenario.

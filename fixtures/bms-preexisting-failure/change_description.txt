@@ -1,0 +1,5 @@
+An engineer made a small tuning change in src/bms/thermal_manager.c.
+
+The baseline run already failed BMS-REQ-112 and BMS-REQ-118 before this change. The current run
+continues to fail the same requirements with similar or slightly improved metrics. AVERA should
+classify the outcome as a preexisting failure, not a newly introduced agent-caused regression.

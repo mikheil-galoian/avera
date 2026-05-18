@@ -1,0 +1,221 @@
+{
+  "affected_components": [
+    "Transmission Control Unit"
+  ],
+  "affected_files": [
+    "src/tcu/shift_controller.c"
+  ],
+  "affected_requirements": [
+    {
+      "component": "Transmission Control Unit",
+      "id": "PT-REQ-010",
+      "metadata": {},
+      "metric": "torque_hole_ms",
+      "next_checks": [
+        "PT-TCU-SQ-01,PT-TCU-SQ-02"
+      ],
+      "operator": "<=",
+      "requirement": "Torque hole duration during any gear change must not exceed 100 ms to prevent driveline shock.",
+      "safety_level": "medium",
+      "threshold": 100.0
+    },
+    {
+      "component": "Transmission Control Unit",
+      "id": "PT-REQ-011",
+      "metadata": {},
+      "metric": "shift_completion_ms",
+      "next_checks": [
+        "PT-TCU-SQ-01,PT-TCU-SQ-02"
+      ],
+      "operator": "<=",
+      "requirement": "Full gear engagement must complete within 800 ms from shift command initiation.",
+      "safety_level": "medium",
+      "threshold": 800.0
+    },
+    {
+      "component": "Transmission Control Unit",
+      "id": "PT-REQ-012",
+      "metadata": {},
+      "metric": "gear_slip_ratio",
+      "next_checks": [
+        "PT-TCU-SQ-02"
+      ],
+      "operator": "<=",
+      "requirement": "Gear slip ratio during shift must not exceed 0.05 to ensure mechanical integrity.",
+      "safety_level": "medium",
+      "threshold": 0.05
+    }
+  ],
+  "comparison_summary": {
+    "introduced_failures": 1,
+    "metric_deltas": 6,
+    "missing_baseline": 0,
+    "missing_current": 0,
+    "preexisting_failures": 0,
+    "resolved_failures": 0,
+    "total_tests": 2,
+    "unchanged_passes": 1
+  },
+  "confidence": "high",
+  "confidence_factors": [
+    "+ baseline_current_pair_present",
+    "+ introduced_failure_detected",
+    "+ threshold_crossing_detected",
+    "+ requirement_mapped",
+    "+ affected_file_mapped"
+  ],
+  "confidence_score": 0.95,
+  "evidence_summary": [
+    "Verdict is confirmed regression.",
+    "PT-TCU-SQ-01 failed only in the current run.",
+    "torque_hole_ms for PT-REQ-010 was 143, outside <= 100.",
+    "Mapped affected files: src/tcu/shift_controller.c.",
+    "torque_hole_ms materially worsened from 87.0 to 143.0."
+  ],
+  "introduced_failures": [
+    {
+      "baseline_metrics": {
+        "gear_slip_ratio": 0.031,
+        "shift_completion_ms": 720.0,
+        "torque_hole_ms": 87.0
+      },
+      "baseline_status": "passed",
+      "classification": "introduced_failure",
+      "component": "Transmission Control Unit",
+      "current_metrics": {
+        "gear_slip_ratio": 0.033,
+        "shift_completion_ms": 780.0,
+        "torque_hole_ms": 143.0
+      },
+      "current_status": "failed",
+      "evidence": [
+        "PT-TCU-SQ-01: introduced failure.",
+        "Torque hole of 143 ms detected during 3\u21924 upshift at 60 km/h. TCU clutch fill pressure recalibration produced a longer open-clutch window, breaching PT-REQ-010.",
+        "gear_slip_ratio increased from 0.031 to 0.033.",
+        "shift_completion_ms increased from 720 to 780.",
+        "torque_hole_ms increased from 87 to 143."
+      ],
+      "metric_deltas": [
+        {
+          "baseline": 0.031,
+          "current": 0.033,
+          "delta": 0.0020000000000000018,
+          "metric": "gear_slip_ratio",
+          "percent_delta": 6.451612903225811,
+          "test_id": "PT-TCU-SQ-01"
+        },
+        {
+          "baseline": 720.0,
+          "current": 780.0,
+          "delta": 60.0,
+          "metric": "shift_completion_ms",
+          "percent_delta": 8.333333333333332,
+          "test_id": "PT-TCU-SQ-01"
+        },
+        {
+          "baseline": 87.0,
+          "current": 143.0,
+          "delta": 56.0,
+          "metric": "torque_hole_ms",
+          "percent_delta": 64.36781609195403,
+          "test_id": "PT-TCU-SQ-01"
+        }
+      ],
+      "test_id": "PT-TCU-SQ-01"
+    }
+  ],
+  "preexisting_failures": [],
+  "recommended_next_checks": [
+    "PT-TCU-SQ-01,PT-TCU-SQ-02",
+    "PT-TCU-SQ-02"
+  ],
+  "risk": "medium",
+  "risk_drivers": [
+    "verdict:confirmed_regression",
+    "risk:medium",
+    "safety_level:medium",
+    "threshold_failed:PT-REQ-010:torque_hole_ms",
+    "threshold_passed:PT-REQ-011:shift_completion_ms",
+    "threshold_passed:PT-REQ-012:gear_slip_ratio",
+    "threshold_passed:PT-REQ-010:torque_hole_ms",
+    "threshold_passed:PT-REQ-011:shift_completion_ms",
+    "threshold_passed:PT-REQ-012:gear_slip_ratio"
+  ],
+  "rules_triggered": [
+    "R1_confirmed_threshold_regression",
+    "R2_introduced_test_failure",
+    "signal_baseline_pass_current_threshold_fail",
+    "signal_introduced_failure_present",
+    "signal_material_metric_worsening"
+  ],
+  "schema_version": "avera.assessment.v0.2",
+  "threshold_evidence": [
+    {
+      "baseline_passed": true,
+      "baseline_value": 87.0,
+      "current_passed": false,
+      "current_value": 143.0,
+      "metric": "torque_hole_ms",
+      "operator": "<=",
+      "requirement_id": "PT-REQ-010",
+      "test_id": "PT-TCU-SQ-01",
+      "threshold": 100.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 720.0,
+      "current_passed": true,
+      "current_value": 780.0,
+      "metric": "shift_completion_ms",
+      "operator": "<=",
+      "requirement_id": "PT-REQ-011",
+      "test_id": "PT-TCU-SQ-01",
+      "threshold": 800.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 0.031,
+      "current_passed": true,
+      "current_value": 0.033,
+      "metric": "gear_slip_ratio",
+      "operator": "<=",
+      "requirement_id": "PT-REQ-012",
+      "test_id": "PT-TCU-SQ-01",
+      "threshold": 0.05
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 92.0,
+      "current_passed": true,
+      "current_value": 95.0,
+      "metric": "torque_hole_ms",
+      "operator": "<=",
+      "requirement_id": "PT-REQ-010",
+      "test_id": "PT-TCU-SQ-02",
+      "threshold": 100.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 755.0,
+      "current_passed": true,
+      "current_value": 762.0,
+      "metric": "shift_completion_ms",
+      "operator": "<=",
+      "requirement_id": "PT-REQ-011",
+      "test_id": "PT-TCU-SQ-02",
+      "threshold": 800.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 0.028,
+      "current_passed": true,
+      "current_value": 0.03,
+      "metric": "gear_slip_ratio",
+      "operator": "<=",
+      "requirement_id": "PT-REQ-012",
+      "test_id": "PT-TCU-SQ-02",
+      "threshold": 0.05
+    }
+  ],
+  "verdict": "confirmed_regression"
+}

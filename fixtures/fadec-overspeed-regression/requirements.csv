@@ -1,0 +1,4 @@
+id,component,requirement,metric,operator,threshold,safety_level,next_checks
+FADEC-REQ-001,Full Authority Digital Engine Control,Engine overspeed protection must activate within 50 ms when N1 exceeds 105% of rated speed.,overspeed_response_ms,<=,50.0,dal-a,"FADEC-ENG-HIL-01,FADEC-ENG-HIL-02"
+FADEC-REQ-002,Full Authority Digital Engine Control,Fuel flow computation error shall not exceed 0.5% of full-scale flow at any operating point.,fuel_flow_error_pct,<=,0.5,dal-b,FADEC-FUEL-SIL-01
+FADEC-REQ-003,Full Authority Digital Engine Control,Engine control loop cycle time shall not exceed 10 ms under maximum computational load.,cycle_time_ms,<=,10.0,dal-a,FADEC-ENG-HIL-01

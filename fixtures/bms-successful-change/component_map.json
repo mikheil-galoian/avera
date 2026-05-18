@@ -1,0 +1,12 @@
+{
+  "src/bms/thermal_manager.c": {
+    "component": "BMS Thermal Control",
+    "requirements": [
+      "BMS-REQ-112",
+      "BMS-REQ-118"
+    ],
+    "tests": [
+      "BMS-SIL-FASTCHARGE-01"
+    ]
+  }
+}

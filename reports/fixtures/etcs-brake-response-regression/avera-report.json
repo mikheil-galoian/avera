@@ -1,0 +1,179 @@
+{
+  "affected_components": [
+    "ETCS Cab Signalling",
+    "ETCS Emergency Braking"
+  ],
+  "affected_files": [
+    "src/etcs/braking/emergency_brake_controller.c",
+    "src/etcs/signalling/cab_signal_processor.c"
+  ],
+  "affected_requirements": [
+    {
+      "component": "ETCS Emergency Braking",
+      "id": "ETCS-REQ-001",
+      "metadata": {},
+      "metric": "brake_application_ms",
+      "next_checks": [
+        "ETCS-HIL-BRAKE-01"
+      ],
+      "operator": "<=",
+      "requirement": "Emergency brake application time must not exceed 1200 ms under SIL 4 conditions",
+      "safety_level": "sil4",
+      "threshold": 1200.0
+    },
+    {
+      "component": "ETCS Emergency Braking",
+      "id": "ETCS-REQ-002",
+      "metadata": {},
+      "metric": "brake_confirm_ms",
+      "next_checks": [
+        "ETCS-HIL-BRAKE-01"
+      ],
+      "operator": "<=",
+      "requirement": "Brake confirmation signal must be received within 400 ms of command",
+      "safety_level": "sil4",
+      "threshold": 400.0
+    },
+    {
+      "component": "ETCS Cab Signalling",
+      "id": "ETCS-REQ-003",
+      "metadata": {},
+      "metric": "supervision_cycle_ms",
+      "next_checks": [
+        "ETCS-HIL-SIGNAL-03"
+      ],
+      "operator": "<=",
+      "requirement": "Speed supervision update cycle must not exceed 100 ms",
+      "safety_level": "sil3",
+      "threshold": 100.0
+    }
+  ],
+  "comparison_summary": {
+    "introduced_failures": 1,
+    "metric_deltas": 3,
+    "missing_baseline": 0,
+    "missing_current": 0,
+    "preexisting_failures": 0,
+    "resolved_failures": 0,
+    "total_tests": 2,
+    "unchanged_passes": 1
+  },
+  "confidence": "high",
+  "confidence_factors": [
+    "+ baseline_current_pair_present",
+    "+ introduced_failure_detected",
+    "+ threshold_crossing_detected",
+    "+ requirement_mapped",
+    "+ affected_file_mapped"
+  ],
+  "confidence_score": 0.95,
+  "evidence_summary": [
+    "Verdict is confirmed regression.",
+    "ETCS-HIL-BRAKE-01 failed only in the current run.",
+    "brake_application_ms for ETCS-REQ-001 was 1387, outside <= 1200.",
+    "brake_confirm_ms for ETCS-REQ-002 was 451, outside <= 400.",
+    "Mapped affected files: src/etcs/braking/emergency_brake_controller.c, src/etcs/signalling/cab_signal_processor.c.",
+    "brake_application_ms materially worsened from 1047.0 to 1387.0.",
+    "brake_confirm_ms materially worsened from 312.0 to 451.0."
+  ],
+  "introduced_failures": [
+    {
+      "baseline_metrics": {
+        "brake_application_ms": 1047.0,
+        "brake_confirm_ms": 312.0
+      },
+      "baseline_status": "passed",
+      "classification": "introduced_failure",
+      "component": "ETCS Emergency Braking",
+      "current_metrics": {
+        "brake_application_ms": 1387.0,
+        "brake_confirm_ms": 451.0
+      },
+      "current_status": "failed",
+      "evidence": [
+        "ETCS-HIL-BRAKE-01: introduced failure.",
+        "Emergency brake application and confirmation times both exceeded SIL 4 thresholds after priority queue refactor in brake controller.",
+        "brake_application_ms increased from 1047 to 1387.",
+        "brake_confirm_ms increased from 312 to 451."
+      ],
+      "metric_deltas": [
+        {
+          "baseline": 1047.0,
+          "current": 1387.0,
+          "delta": 340.0,
+          "metric": "brake_application_ms",
+          "percent_delta": 32.473734479465136,
+          "test_id": "ETCS-HIL-BRAKE-01"
+        },
+        {
+          "baseline": 312.0,
+          "current": 451.0,
+          "delta": 139.0,
+          "metric": "brake_confirm_ms",
+          "percent_delta": 44.55128205128205,
+          "test_id": "ETCS-HIL-BRAKE-01"
+        }
+      ],
+      "test_id": "ETCS-HIL-BRAKE-01"
+    }
+  ],
+  "preexisting_failures": [],
+  "recommended_next_checks": [
+    "ETCS-HIL-BRAKE-01",
+    "ETCS-HIL-SIGNAL-03"
+  ],
+  "risk": "release_blocking",
+  "risk_drivers": [
+    "verdict:confirmed_regression",
+    "risk:release_blocking",
+    "safety_level:sil3",
+    "safety_level:sil4",
+    "threshold_failed:ETCS-REQ-001:brake_application_ms",
+    "threshold_failed:ETCS-REQ-002:brake_confirm_ms",
+    "threshold_passed:ETCS-REQ-003:supervision_cycle_ms"
+  ],
+  "rules_triggered": [
+    "R1_confirmed_threshold_regression",
+    "R2_introduced_test_failure",
+    "signal_baseline_pass_current_threshold_fail",
+    "signal_introduced_failure_present",
+    "signal_material_metric_worsening"
+  ],
+  "schema_version": "avera.assessment.v0.2",
+  "threshold_evidence": [
+    {
+      "baseline_passed": true,
+      "baseline_value": 1047.0,
+      "current_passed": false,
+      "current_value": 1387.0,
+      "metric": "brake_application_ms",
+      "operator": "<=",
+      "requirement_id": "ETCS-REQ-001",
+      "test_id": "ETCS-HIL-BRAKE-01",
+      "threshold": 1200.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 312.0,
+      "current_passed": false,
+      "current_value": 451.0,
+      "metric": "brake_confirm_ms",
+      "operator": "<=",
+      "requirement_id": "ETCS-REQ-002",
+      "test_id": "ETCS-HIL-BRAKE-01",
+      "threshold": 400.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 82.0,
+      "current_passed": true,
+      "current_value": 86.0,
+      "metric": "supervision_cycle_ms",
+      "operator": "<=",
+      "requirement_id": "ETCS-REQ-003",
+      "test_id": "ETCS-HIL-SIGNAL-03",
+      "threshold": 100.0
+    }
+  ],
+  "verdict": "confirmed_regression"
+}

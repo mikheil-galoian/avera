@@ -1,0 +1,24 @@
+{
+  "runId": "imd-baseline-2024-10",
+  "stage": "sil",
+  "changedFiles": [],
+  "tests": [
+    {
+      "id": "IMD-SIL-FLOW-01",
+      "component": "Infusion Pump Dosage Control",
+      "status": "passed",
+      "metrics": {
+        "flow_rate_deviation_pct": 2.3,
+        "occlusion_detect_ms": 1840.0
+      }
+    },
+    {
+      "id": "IMD-SIL-ALARM-02",
+      "component": "Infusion Pump Alarm System",
+      "status": "passed",
+      "metrics": {
+        "alarm_trigger_ms": 287.0
+      }
+    }
+  ]
+}

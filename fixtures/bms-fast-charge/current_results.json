@@ -1,0 +1,19 @@
+{
+  "runId": "current-bms-001",
+  "stage": "current",
+  "changedFiles": [
+    "src/bms/thermal_manager.c"
+  ],
+  "tests": [
+    {
+      "id": "BMS-SIL-FASTCHARGE-01",
+      "component": "BMS Thermal Control",
+      "status": "failed",
+      "metrics": {
+        "max_cell_temp_c": 52.8,
+        "cooling_response_ms": 610
+      },
+      "evidence": "Maximum cell temperature exceeded fast-charge threshold after the cooling logic change."
+    }
+  ]
+}

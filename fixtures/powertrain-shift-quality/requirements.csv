@@ -1,0 +1,4 @@
+id,component,requirement,metric,operator,threshold,safety_level,next_checks
+PT-REQ-010,Transmission Control Unit,Torque hole duration during any gear change must not exceed 100 ms to prevent driveline shock.,torque_hole_ms,<=,100.0,medium,"PT-TCU-SQ-01,PT-TCU-SQ-02"
+PT-REQ-011,Transmission Control Unit,Full gear engagement must complete within 800 ms from shift command initiation.,shift_completion_ms,<=,800.0,medium,"PT-TCU-SQ-01,PT-TCU-SQ-02"
+PT-REQ-012,Transmission Control Unit,Gear slip ratio during shift must not exceed 0.05 to ensure mechanical integrity.,gear_slip_ratio,<=,0.05,medium,PT-TCU-SQ-02

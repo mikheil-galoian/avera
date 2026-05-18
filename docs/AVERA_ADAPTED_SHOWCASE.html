@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AVERA Adapted Pilot Showcase</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f4f6f8;
+        --surface: #ffffff;
+        --surface-2: #eef3f8;
+        --text: #14212b;
+        --muted: #516170;
+        --line: #d6dde5;
+        --accent: #0f6fff;
+        --accent-2: #153a70;
+        --success: #13795b;
+        --warn: #8a5c00;
+        --danger: #b42318;
+        --shadow: 0 18px 40px rgba(20, 33, 43, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .page {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 40px 28px 56px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.6fr) minmax(320px, 0.9fr);
+        gap: 24px;
+        align-items: stretch;
+        margin-bottom: 28px;
+      }
+
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+
+      .hero-copy {
+        padding: 28px;
+      }
+
+      .eyebrow {
+        color: var(--accent);
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      h1, h2, h3 {
+        margin: 0;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        font-size: 34px;
+        line-height: 1.1;
+        margin-bottom: 14px;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .lede {
+        color: var(--muted);
+        font-size: 17px;
+        max-width: 760px;
+      }
+
+      .hero-stats {
+        padding: 24px;
+        display: grid;
+        gap: 14px;
+        background: linear-gradient(180deg, #f7fbff 0%, #eef4ff 100%);
+      }
+
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .stat {
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid #dbe7ff;
+        border-radius: 8px;
+        padding: 14px;
+      }
+
+      .stat-value {
+        display: block;
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--accent-2);
+      }
+
+      .stat-label {
+        display: block;
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 4px;
+      }
+
+      .section {
+        margin-top: 24px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 14px;
+      }
+
+      .section-subtitle {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .scenario-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .scenario-card {
+        padding: 20px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .pill {
+        border-radius: 999px;
+        padding: 5px 10px;
+        font-size: 12px;
+        font-weight: 600;
+        border: 1px solid transparent;
+      }
+
+      .pill-domain {
+        background: #edf5ff;
+        border-color: #cfe1ff;
+        color: var(--accent-2);
+      }
+
+      .pill-adapted {
+        background: #f2f8f1;
+        border-color: #cce4c8;
+        color: var(--success);
+      }
+
+      .status-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .status {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px 12px;
+        background: var(--surface-2);
+      }
+
+      .status-label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 3px;
+      }
+
+      .status-value {
+        font-weight: 700;
+      }
+
+      .status-danger {
+        color: var(--danger);
+      }
+
+      .status-warn {
+        color: var(--warn);
+      }
+
+      .status-success {
+        color: var(--success);
+      }
+
+      .artifact-list,
+      .flow-list,
+      .talk-track {
+        margin: 0;
+        padding-left: 18px;
+        color: var(--muted);
+      }
+
+      .artifact-list li,
+      .flow-list li,
+      .talk-track li {
+        margin: 4px 0;
+      }
+
+      .journey {
+        padding: 22px 24px;
+      }
+
+      .journey-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 16px;
+      }
+
+      .step {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--surface-2);
+        padding: 14px;
+      }
+
+      .step-number {
+        display: inline-flex;
+        width: 28px;
+        height: 28px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        background: var(--accent);
+        color: white;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+
+      .footer-note {
+        margin-top: 24px;
+        padding: 18px 20px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: #f8fbff;
+        color: var(--muted);
+      }
+
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 13px;
+        background: #eef2f7;
+        border: 1px solid #d8e0e8;
+        border-radius: 6px;
+        padding: 2px 6px;
+      }
+
+      @media (max-width: 1120px) {
+        .hero,
+        .scenario-grid,
+        .journey-grid,
+        .stat-grid,
+        .status-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <div class="panel hero-copy">
+          <div class="eyebrow">AVERA • Adapted Evidence Pilot Set</div>
+          <h1>Показываем не только demo-fixtures, а реальный путь адаптации внешних артефактов</h1>
+          <p class="lede">
+            Этот пакет объединяет три pilot-ready сценария, в которых AVERA берет внешний инженерный
+            артефакт, нормализует его в рабочий workspace и прогоняет через одно и то же evidence-first
+            ядро: report, traceability, decision, trend и workspace pack.
+          </p>
+        </div>
+        <aside class="panel hero-stats">
+          <div>
+            <h2>Сводка набора</h2>
+            <p class="section-subtitle">Подходит для первого design-partner показа и narrow pilot разговора.</p>
+          </div>
+          <div class="stat-grid">
+            <div class="stat">
+              <span class="stat-value">3</span>
+              <span class="stat-label">adapted pilot scenarios</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value">4</span>
+              <span class="stat-label">adapter paths в проекте</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value">7</span>
+              <span class="stat-label">artifacts в итоговом workspace pack</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value">0</span>
+              <span class="stat-label">missing artifacts в canonical flow</span>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Adapted scenarios</h2>
+          <div class="section-subtitle">Все три сценария уже проходят через обычное ядро AVERA.</div>
+        </div>
+        <div class="scenario-grid">
+          <article class="panel scenario-card">
+            <div class="pill-row">
+              <span class="pill pill-domain">ADAS</span>
+              <span class="pill pill-adapted">Simulation adapted</span>
+            </div>
+            <div>
+              <h3>adas-simulation-adapted</h3>
+              <p class="section-subtitle">
+                Внешний simulation CSV -> normalized verification results -> обычный AVERA review path.
+              </p>
+            </div>
+            <div class="status-grid">
+              <div class="status">
+                <span class="status-label">Verdict</span>
+                <span class="status-value status-danger">confirmed_regression</span>
+              </div>
+              <div class="status">
+                <span class="status-label">Risk</span>
+                <span class="status-value status-danger">high</span>
+              </div>
+              <div class="status">
+                <span class="status-label">Confidence</span>
+                <span class="status-value status-warn">high</span>
+              </div>
+            </div>
+            <ul class="artifact-list">
+              <li>Raw sources: <code>baseline_simulation_results.csv</code>, <code>current_simulation_results.csv</code></li>
+              <li>Normalized targets: <code>baseline_results.json</code>, <code>current_results.json</code></li>
+              <li>Use value: ADAS path показывает, что AVERA не BMS-only.</li>
+            </ul>
+          </article>
+
+          <article class="panel scenario-card">
+            <div class="pill-row">
+              <span class="pill pill-domain">BMS</span>
+              <span class="pill pill-adapted">Requirements adapted</span>
+            </div>
+            <div>
+              <h3>bms-requirements-adapted</h3>
+              <p class="section-subtitle">
+                Более широкий requirements export -> stable requirements.csv -> обычный AVERA review path.
+              </p>
+            </div>
+            <div class="status-grid">
+              <div class="status">
+                <span class="status-label">Verdict</span>
+                <span class="status-value status-danger">confirmed_regression</span>
+              </div>
+              <div class="status">
+                <span class="status-label">Risk</span>
+                <span class="status-value status-danger">high</span>
+              </div>
+              <div class="status">
+                <span class="status-label">Confidence</span>
+                <span class="status-value status-warn">high</span>
+              </div>
+            </div>
+            <ul class="artifact-list">
+              <li>Raw source: <code>requirements_export_variant.csv</code></li>
+              <li>Normalized target: <code>requirements.csv</code></li>
+              <li>Use value: хорошо показывает intake path из requirements tooling.</li>
+            </ul>
+          </article>
+
+          <article class="panel scenario-card">
+            <div class="pill-row">
+              <span class="pill pill-domain">BMS</span>
+              <span class="pill pill-adapted">Log adapted</span>
+            </div>
+            <div>
+              <h3>bms-log-adapted</h3>
+              <p class="section-subtitle">
+                Rich verification log CSV -> normalized verification results -> обычный AVERA review path.
+              </p>
+            </div>
+            <div class="status-grid">
+              <div class="status">
+                <span class="status-label">Verdict</span>
+                <span class="status-value status-danger">confirmed_regression</span>
+              </div>
+              <div class="status">
+                <span class="status-label">Risk</span>
+                <span class="status-value status-danger">high</span>
+              </div>
+              <div class="status">
+                <span class="status-label">Confidence</span>
+                <span class="status-value status-warn">high</span>
+              </div>
+            </div>
+            <ul class="artifact-list">
+              <li>Raw sources: <code>baseline_verification_log.csv</code>, <code>current_verification_log.csv</code></li>
+              <li>Normalized targets: <code>baseline_results.json</code>, <code>current_results.json</code></li>
+              <li>Use value: ближе к реальному validation/log ingestion потоку.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section panel journey">
+        <div class="section-head">
+          <h2>Общий adapted-evidence путь</h2>
+          <div class="section-subtitle">Одна и та же логика работает поверх разных upstream artifact форматов.</div>
+        </div>
+        <div class="journey-grid">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3>Raw intake</h3>
+            <ul class="flow-list">
+              <li>CSV logs</li>
+              <li>Simulation exports</li>
+              <li>Requirements variants</li>
+            </ul>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3>Normalize</h3>
+            <ul class="flow-list">
+              <li><code>adapt-simulation</code></li>
+              <li><code>adapt-requirements</code></li>
+              <li><code>adapt-logs</code></li>
+            </ul>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3>Analyze</h3>
+            <ul class="flow-list">
+              <li>report</li>
+              <li>traceability</li>
+              <li>decision</li>
+              <li>trend</li>
+            </ul>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <h3>Handoff</h3>
+            <ul class="flow-list">
+              <li>workspace pack</li>
+              <li>human release review</li>
+              <li>pilot-ready evidence story</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Как это показывать</h2>
+          <div class="section-subtitle">Короткий сценарий для первого design-partner разговора.</div>
+        </div>
+        <div class="scenario-grid">
+          <article class="panel scenario-card">
+            <h3>Порядок показа</h3>
+            <ol class="talk-track">
+              <li>Сначала BMS case как знакомый change-review пример.</li>
+              <li>Потом adapted ADAS simulation path как доказательство domain generality.</li>
+              <li>Затем BMS requirements/log paths как доказательство intake flexibility.</li>
+            </ol>
+          </article>
+          <article class="panel scenario-card">
+            <h3>Ключевая фраза</h3>
+            <p class="section-subtitle">
+              AVERA не просит идеальный новый workflow. Она берет уже существующие инженерные
+              артефакты, нормализует их и строит объяснимый risk-review контур поверх них.
+            </p>
+          </article>
+          <article class="panel scenario-card">
+            <h3>Команды запуска</h3>
+            <ul class="artifact-list">
+              <li><code>DEMO_SCENARIO=adas-simulation-adapted ./start_demo.sh</code></li>
+              <li><code>DEMO_SCENARIO=bms-requirements-adapted ./start_demo.sh</code></li>
+              <li><code>DEMO_SCENARIO=bms-log-adapted ./start_demo.sh</code></li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <div class="footer-note">
+        Рекомендованный комплект для первого внешнего показа: этот showcase, adapted one-pager,
+        adapted pilot script, adapted outreach packet и live shell там, где Streamlit runtime ведет
+        себя стабильно. Если live shell не просыпается быстро, этот HTML остается чистым fallback
+        asset без потери product message.
+      </div>
+    </main>
+  </body>
+</html>

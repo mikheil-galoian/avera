@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "adapter": "simulation_csv.v0",
+    "row_count": 2,
+    "source_format": "simulation_csv",
+    "source_path": "fixtures/adas-simulation-adapted/current_simulation_results.csv",
+    "test_count": 1
+  },
+  "runId": "current-adas-sim-001",
+  "stage": "current",
+  "tests": [
+    {
+      "component": "ADAS Pedestrian Detection",
+      "evidence": "pedestrian recall fell below mapped requirement after threshold retune\nbrake trigger latency exceeded mapped requirement after threshold retune",
+      "id": "ADAS-SIL-VRU-REGRESSION-03",
+      "metadata": {
+        "adapter": "simulation_csv.v0",
+        "metric_units": {
+          "brake_trigger_latency_ms": "ms",
+          "pedestrian_recall": "ratio"
+        },
+        "scenarios": [
+          "ADAS-VRU-URBAN-CROSSING",
+          "ADAS-VRU-URBAN-CROSSING"
+        ],
+        "source_rows": [
+          1,
+          2
+        ]
+      },
+      "metrics": {
+        "brake_trigger_latency_ms": 146.0,
+        "pedestrian_recall": 0.903
+      },
+      "status": "failed"
+    }
+  ]
+}

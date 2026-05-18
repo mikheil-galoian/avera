@@ -1,0 +1,480 @@
+{
+  "edges": [
+    {
+      "relation": "classified_as",
+      "source": "change",
+      "target": "risk"
+    },
+    {
+      "relation": "recommends",
+      "source": "risk",
+      "target": "recommendation:bms-hil-fastcharge-07"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:r1_confirmed_threshold_regression",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:r2_introduced_test_failure",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_baseline_pass_current_threshold_fail",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_introduced_failure_present",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_material_metric_worsening",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_affected_file_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_baseline_current_pair_present",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_introduced_failure_detected",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_requirement_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_threshold_crossing_detected",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:risk_high",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:safety_level_high",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:safety_level_medium",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_failed_bms-req-112_max_cell_temp_c",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_failed_bms-req-118_cooling_response_ms",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:verdict_confirmed_regression",
+      "target": "risk"
+    },
+    {
+      "relation": "affects_component",
+      "source": "change",
+      "target": "component:bms_thermal_control"
+    },
+    {
+      "relation": "contributes_to",
+      "source": "component:bms_thermal_control",
+      "target": "risk"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:bms-req-112",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:bms_thermal_control",
+      "target": "requirement:bms-req-112"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:bms-req-118",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:bms_thermal_control",
+      "target": "requirement:bms-req-118"
+    },
+    {
+      "relation": "touches_file",
+      "source": "change",
+      "target": "file:src_bms_thermal_manager.c"
+    },
+    {
+      "relation": "maps_to_component",
+      "source": "file:src_bms_thermal_manager.c",
+      "target": "component:bms_thermal_control"
+    },
+    {
+      "relation": "observed_in",
+      "source": "change",
+      "target": "test_failure:bms-hil-fastcharge-07"
+    },
+    {
+      "relation": "supports",
+      "source": "test_failure:bms-hil-fastcharge-07",
+      "target": "risk"
+    },
+    {
+      "relation": "occurs_in",
+      "source": "test_failure:bms-hil-fastcharge-07",
+      "target": "component:bms_thermal_control"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:bms-req-112_max_cell_temp_c_bms-hil-fastcharge-07",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:bms-req-112_max_cell_temp_c_bms-hil-fastcharge-07",
+      "target": "requirement:bms-req-112"
+    },
+    {
+      "relation": "contains_metric",
+      "source": "test_failure:bms-hil-fastcharge-07",
+      "target": "threshold_evidence:bms-req-112_max_cell_temp_c_bms-hil-fastcharge-07"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:bms-req-118_cooling_response_ms_bms-hil-fastcharge-07",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:bms-req-118_cooling_response_ms_bms-hil-fastcharge-07",
+      "target": "requirement:bms-req-118"
+    },
+    {
+      "relation": "contains_metric",
+      "source": "test_failure:bms-hil-fastcharge-07",
+      "target": "threshold_evidence:bms-req-118_cooling_response_ms_bms-hil-fastcharge-07"
+    },
+    {
+      "relation": "supports",
+      "source": "signal_summary:bms-hil-fastcharge-07_max_cell_temp_c",
+      "target": "risk"
+    },
+    {
+      "relation": "summarizes_test",
+      "source": "signal_summary:bms-hil-fastcharge-07_max_cell_temp_c",
+      "target": "test_failure:bms-hil-fastcharge-07"
+    },
+    {
+      "relation": "supports_threshold",
+      "source": "signal_summary:bms-hil-fastcharge-07_max_cell_temp_c",
+      "target": "threshold_evidence:bms-req-112_max_cell_temp_c_bms-hil-fastcharge-07"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "change",
+      "label": "Change under assessment",
+      "properties": {
+        "description": "This workspace demonstrates AVERA running on adapted verification log artifacts. The cooling\nlogic update in src/bms/thermal_manager.c was meant to reduce early pump usage during fast\ncharging, but the HIL verification log now records thermal breach and slower cooling response.\n\nThe baseline and current evidence were first captured as richer verification log CSV files, then\nadapted into standard AVERA verification-results JSON before analysis."
+      },
+      "type": "change"
+    },
+    {
+      "id": "risk",
+      "label": "high",
+      "properties": {
+        "confidence": "high",
+        "verdict": "confirmed_regression"
+      },
+      "type": "risk"
+    },
+    {
+      "id": "recommendation:bms-hil-fastcharge-07",
+      "label": "BMS-HIL-FASTCHARGE-07",
+      "properties": {
+        "check": "BMS-HIL-FASTCHARGE-07"
+      },
+      "type": "recommendation"
+    },
+    {
+      "id": "rule:r1_confirmed_threshold_regression",
+      "label": "R1_confirmed_threshold_regression",
+      "properties": {
+        "value": "R1_confirmed_threshold_regression"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:r2_introduced_test_failure",
+      "label": "R2_introduced_test_failure",
+      "properties": {
+        "value": "R2_introduced_test_failure"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_baseline_pass_current_threshold_fail",
+      "label": "signal_baseline_pass_current_threshold_fail",
+      "properties": {
+        "value": "signal_baseline_pass_current_threshold_fail"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_introduced_failure_present",
+      "label": "signal_introduced_failure_present",
+      "properties": {
+        "value": "signal_introduced_failure_present"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_material_metric_worsening",
+      "label": "signal_material_metric_worsening",
+      "properties": {
+        "value": "signal_material_metric_worsening"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "confidence_factor:+_affected_file_mapped",
+      "label": "+ affected_file_mapped",
+      "properties": {
+        "value": "+ affected_file_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_baseline_current_pair_present",
+      "label": "+ baseline_current_pair_present",
+      "properties": {
+        "value": "+ baseline_current_pair_present"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_introduced_failure_detected",
+      "label": "+ introduced_failure_detected",
+      "properties": {
+        "value": "+ introduced_failure_detected"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_requirement_mapped",
+      "label": "+ requirement_mapped",
+      "properties": {
+        "value": "+ requirement_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_threshold_crossing_detected",
+      "label": "+ threshold_crossing_detected",
+      "properties": {
+        "value": "+ threshold_crossing_detected"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "risk_driver:risk_high",
+      "label": "risk:high",
+      "properties": {
+        "value": "risk:high"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:safety_level_high",
+      "label": "safety_level:high",
+      "properties": {
+        "value": "safety_level:high"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:safety_level_medium",
+      "label": "safety_level:medium",
+      "properties": {
+        "value": "safety_level:medium"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_failed_bms-req-112_max_cell_temp_c",
+      "label": "threshold_failed:BMS-REQ-112:max_cell_temp_c",
+      "properties": {
+        "value": "threshold_failed:BMS-REQ-112:max_cell_temp_c"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_failed_bms-req-118_cooling_response_ms",
+      "label": "threshold_failed:BMS-REQ-118:cooling_response_ms",
+      "properties": {
+        "value": "threshold_failed:BMS-REQ-118:cooling_response_ms"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:verdict_confirmed_regression",
+      "label": "verdict:confirmed_regression",
+      "properties": {
+        "value": "verdict:confirmed_regression"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "component:bms_thermal_control",
+      "label": "BMS Thermal Control",
+      "type": "component"
+    },
+    {
+      "id": "requirement:bms-req-112",
+      "label": "BMS-REQ-112",
+      "properties": {
+        "component": "BMS Thermal Control",
+        "metric": "max_cell_temp_c",
+        "operator": "<=",
+        "requirement": "Maximum cell temperature during fast charging must not exceed 50 C",
+        "safety_level": "high",
+        "threshold": 50.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "requirement:bms-req-118",
+      "label": "BMS-REQ-118",
+      "properties": {
+        "component": "BMS Thermal Control",
+        "metric": "cooling_response_ms",
+        "operator": "<=",
+        "requirement": "Cooling response delay during fast charging must not exceed 500 ms",
+        "safety_level": "medium",
+        "threshold": 500.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "file:src_bms_thermal_manager.c",
+      "label": "src/bms/thermal_manager.c",
+      "properties": {
+        "path": "src/bms/thermal_manager.c"
+      },
+      "type": "file"
+    },
+    {
+      "id": "test_failure:bms-hil-fastcharge-07",
+      "label": "BMS-HIL-FASTCHARGE-07",
+      "properties": {
+        "baseline_status": "passed",
+        "category": "introduced_failures",
+        "component": "BMS Thermal Control",
+        "current_status": "failed"
+      },
+      "type": "test_failure"
+    },
+    {
+      "id": "threshold_evidence:bms-req-112_max_cell_temp_c_bms-hil-fastcharge-07",
+      "label": "max_cell_temp_c",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 47.1,
+        "current_passed": false,
+        "current_value": 52.8,
+        "operator": "<=",
+        "requirement_id": "BMS-REQ-112",
+        "test_id": "BMS-HIL-FASTCHARGE-07",
+        "threshold": 50.0
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:bms-req-118_cooling_response_ms_bms-hil-fastcharge-07",
+      "label": "cooling_response_ms",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 412.0,
+        "current_passed": false,
+        "current_value": 638.0,
+        "operator": "<=",
+        "requirement_id": "BMS-REQ-118",
+        "test_id": "BMS-HIL-FASTCHARGE-07",
+        "threshold": 500.0
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "signal_summary:bms-hil-fastcharge-07_max_cell_temp_c",
+      "label": "max_cell_temp_c",
+      "properties": {
+        "count": 4,
+        "last": 52.8,
+        "max": 52.8,
+        "min": 44.1,
+        "signal": "max_cell_temp_c",
+        "test_id": "BMS-HIL-FASTCHARGE-07",
+        "unit": "C"
+      },
+      "type": "signal_summary"
+    }
+  ],
+  "schema_version": "evidence_graph.v0.3",
+  "summary": {
+    "comparison_summary": {
+      "introduced_failures": 1,
+      "metric_deltas": 2,
+      "missing_baseline": 0,
+      "missing_current": 0,
+      "preexisting_failures": 0,
+      "resolved_failures": 0,
+      "total_tests": 1,
+      "unchanged_passes": 0
+    },
+    "components": 1,
+    "confidence": "high",
+    "confidence_factors": 5,
+    "edge_count": 38,
+    "evidence_summary": [
+      "Verdict is confirmed regression.",
+      "BMS-HIL-FASTCHARGE-07 failed only in the current run.",
+      "max_cell_temp_c for BMS-REQ-112 was 52.8, outside <= 50.",
+      "cooling_response_ms for BMS-REQ-118 was 638, outside <= 500.",
+      "Mapped affected files: src/bms/thermal_manager.c.",
+      "cooling_response_ms materially worsened from 412.0 to 638.0.",
+      "max_cell_temp_c materially worsened from 47.1 to 52.8."
+    ],
+    "files": 1,
+    "node_count": 27,
+    "recommendations": 1,
+    "requirements": 2,
+    "risk": "high",
+    "risk_drivers": 6,
+    "rules": 5,
+    "signal_summaries": 1,
+    "tests_or_failures": 1,
+    "threshold_evidence": 2,
+    "verdict": "confirmed_regression"
+  }
+}

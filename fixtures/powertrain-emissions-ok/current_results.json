@@ -1,0 +1,16 @@
+{
+  "runId": "current-pt-emissions-001",
+  "stage": "current",
+  "tests": [
+    {
+      "id": "PT-EMS-NOX-01",
+      "component": "Emissions Management System",
+      "status": "passed",
+      "metrics": {
+        "nox_mg_per_km": 49.0,
+        "co2_g_per_km": 88.0
+      },
+      "evidence": ""
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "src/pump/dosage/flow_rate_controller.c": {
+    "component": "Infusion Pump Dosage Control",
+    "requirements": ["IMD-REQ-001", "IMD-REQ-002"],
+    "tests": ["IMD-SIL-FLOW-01"]
+  },
+  "src/pump/alarm/over_infusion_detector.c": {
+    "component": "Infusion Pump Alarm System",
+    "requirements": ["IMD-REQ-003"],
+    "tests": ["IMD-SIL-ALARM-02"]
+  }
+}

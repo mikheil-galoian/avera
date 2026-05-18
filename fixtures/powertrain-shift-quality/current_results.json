@@ -1,0 +1,28 @@
+{
+  "runId": "current-pt-shift-001",
+  "stage": "current",
+  "tests": [
+    {
+      "id": "PT-TCU-SQ-01",
+      "component": "Transmission Control Unit",
+      "status": "failed",
+      "metrics": {
+        "torque_hole_ms": 143.0,
+        "shift_completion_ms": 780.0,
+        "gear_slip_ratio": 0.033
+      },
+      "evidence": "Torque hole of 143 ms detected during 3\u21924 upshift at 60 km/h. TCU clutch fill pressure recalibration produced a longer open-clutch window, breaching PT-REQ-010."
+    },
+    {
+      "id": "PT-TCU-SQ-02",
+      "component": "Transmission Control Unit",
+      "status": "passed",
+      "metrics": {
+        "torque_hole_ms": 95.0,
+        "shift_completion_ms": 762.0,
+        "gear_slip_ratio": 0.03
+      },
+      "evidence": ""
+    }
+  ]
+}

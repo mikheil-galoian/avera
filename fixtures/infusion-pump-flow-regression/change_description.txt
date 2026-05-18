@@ -1,0 +1,1 @@
+Recalibrated PID control gains in flow_rate_controller.c to improve response speed during bolus delivery. The gain adjustment introduced steady-state oscillation in continuous infusion mode, causing flow rate deviation to exceed the IEC-62304 Class C safety threshold of 5.0%.

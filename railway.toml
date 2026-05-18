@@ -1,0 +1,29 @@
+# ── AVERA on Railway ─────────────────────────────────────────────────────────
+# Deploys the Streamlit demo shell.
+#
+# Steps:
+#   1. Install Railway CLI:  npm i -g @railway/cli
+#   2. Login:                railway login
+#   3. Link or create:       railway link   OR   railway init
+#   4. Deploy:               railway up
+#
+# The app will be available at the Railway-generated URL within ~2 minutes.
+# Set AVERA_DEFAULT_SCENARIO env var in Railway dashboard to change the
+# default scenario shown on load (e.g. "bms-fast-charge", "fadec-overspeed-regression").
+# ─────────────────────────────────────────────────────────────────────────────
+
+[build]
+# Use the Streamlit-specific Dockerfile
+dockerfilePath = "Dockerfile.demo"
+
+[deploy]
+# Internal port that Streamlit listens on
+startCommand = "python -m streamlit run demo/app.py --server.port=$PORT --server.address=0.0.0.0 --server.headless=true"
+healthcheckPath     = "/_stcore/health"
+healthcheckTimeout  = 30
+restartPolicyType   = "on-failure"
+restartPolicyMaxRetries = 3
+
+[environments.production.variables]
+AVERA_DEFAULT_SCENARIO = "bms-fast-charge"
+PYTHONPATH = "/app/src"

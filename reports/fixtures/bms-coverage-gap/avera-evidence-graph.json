@@ -1,0 +1,243 @@
+{
+  "edges": [
+    {
+      "relation": "classified_as",
+      "source": "change",
+      "target": "risk"
+    },
+    {
+      "relation": "recommends",
+      "source": "risk",
+      "target": "recommendation:bms-sil-soc-drift-03"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:r6_requirements_coverage_gap",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_affected_file_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_requirement_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:-_no_metric_requirement_coverage",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:risk_medium",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:safety_level_medium",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:verdict_requirements_coverage_gap",
+      "target": "risk"
+    },
+    {
+      "relation": "affects_component",
+      "source": "change",
+      "target": "component:bms_state_of_charge_estimation"
+    },
+    {
+      "relation": "contributes_to",
+      "source": "component:bms_state_of_charge_estimation",
+      "target": "risk"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:bms-req-205",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:bms_state_of_charge_estimation",
+      "target": "requirement:bms-req-205"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:bms-req-206",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:bms_state_of_charge_estimation",
+      "target": "requirement:bms-req-206"
+    },
+    {
+      "relation": "touches_file",
+      "source": "change",
+      "target": "file:src_bms_soc_estimator.c"
+    },
+    {
+      "relation": "maps_to_component",
+      "source": "file:src_bms_soc_estimator.c",
+      "target": "component:bms_state_of_charge_estimation"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "change",
+      "label": "Change under assessment",
+      "properties": {
+        "description": "An engineer changed SOC filtering logic in src/bms/soc_estimator.c.\n\nThe changed file maps to SOC drift requirements, but neither baseline nor current verification\ncontains BMS-SIL-SOC-DRIFT-03 or the required SOC metrics. AVERA should classify this as a\nrequirements coverage gap with medium risk and low confidence."
+      },
+      "type": "change"
+    },
+    {
+      "id": "risk",
+      "label": "medium",
+      "properties": {
+        "confidence": "low",
+        "verdict": "requirements_coverage_gap"
+      },
+      "type": "risk"
+    },
+    {
+      "id": "recommendation:bms-sil-soc-drift-03",
+      "label": "BMS-SIL-SOC-DRIFT-03",
+      "properties": {
+        "check": "BMS-SIL-SOC-DRIFT-03"
+      },
+      "type": "recommendation"
+    },
+    {
+      "id": "rule:r6_requirements_coverage_gap",
+      "label": "R6_requirements_coverage_gap",
+      "properties": {
+        "value": "R6_requirements_coverage_gap"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "confidence_factor:+_affected_file_mapped",
+      "label": "+ affected_file_mapped",
+      "properties": {
+        "value": "+ affected_file_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_requirement_mapped",
+      "label": "+ requirement_mapped",
+      "properties": {
+        "value": "+ requirement_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:-_no_metric_requirement_coverage",
+      "label": "- no_metric_requirement_coverage",
+      "properties": {
+        "value": "- no_metric_requirement_coverage"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "risk_driver:risk_medium",
+      "label": "risk:medium",
+      "properties": {
+        "value": "risk:medium"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:safety_level_medium",
+      "label": "safety_level:medium",
+      "properties": {
+        "value": "safety_level:medium"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:verdict_requirements_coverage_gap",
+      "label": "verdict:requirements_coverage_gap",
+      "properties": {
+        "value": "verdict:requirements_coverage_gap"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "component:bms_state_of_charge_estimation",
+      "label": "BMS State Of Charge Estimation",
+      "type": "component"
+    },
+    {
+      "id": "requirement:bms-req-205",
+      "label": "BMS-REQ-205",
+      "properties": {
+        "component": "BMS State Of Charge Estimation",
+        "metric": "soc_drift_pct",
+        "operator": "<=",
+        "requirement": "State of charge estimate drift over a 30 minute drive cycle must not exceed 2 percent",
+        "safety_level": "medium",
+        "threshold": 2.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "requirement:bms-req-206",
+      "label": "BMS-REQ-206",
+      "properties": {
+        "component": "BMS State Of Charge Estimation",
+        "metric": "current_integration_error_pct",
+        "operator": "<=",
+        "requirement": "Pack current integration error must not exceed 1.5 percent",
+        "safety_level": "medium",
+        "threshold": 1.5
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "file:src_bms_soc_estimator.c",
+      "label": "src/bms/soc_estimator.c",
+      "properties": {
+        "path": "src/bms/soc_estimator.c"
+      },
+      "type": "file"
+    }
+  ],
+  "schema_version": "evidence_graph.v0.3",
+  "summary": {
+    "comparison_summary": {
+      "introduced_failures": 0,
+      "metric_deltas": 2,
+      "missing_baseline": 0,
+      "missing_current": 0,
+      "preexisting_failures": 0,
+      "resolved_failures": 0,
+      "total_tests": 1,
+      "unchanged_passes": 1
+    },
+    "components": 1,
+    "confidence": "low",
+    "confidence_factors": 3,
+    "edge_count": 17,
+    "evidence_summary": [
+      "Verdict is requirements coverage gap.",
+      "Mapped affected files: src/bms/soc_estimator.c."
+    ],
+    "files": 1,
+    "node_count": 14,
+    "recommendations": 1,
+    "requirements": 2,
+    "risk": "medium",
+    "risk_drivers": 3,
+    "rules": 1,
+    "signal_summaries": 0,
+    "tests_or_failures": 0,
+    "threshold_evidence": 0,
+    "verdict": "requirements_coverage_gap"
+  }
+}

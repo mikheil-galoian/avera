@@ -1,0 +1,3 @@
+id,component,requirement,metric,operator,threshold,safety_level,next_checks
+PT-REQ-030,Emissions Management System,NOₓ emissions must not exceed 60 mg/km (Euro 6d type-approval limit).,nox_mg_per_km,<=,60.0,low,PT-EMS-NOX-01
+PT-REQ-031,Emissions Management System,Fleet-average CO₂ emissions must not exceed 95 g/km (EU fleet CO₂ regulation target).,co2_g_per_km,<=,95.0,low,PT-EMS-NOX-01

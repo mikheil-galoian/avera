@@ -1,0 +1,567 @@
+{
+  "edges": [
+    {
+      "relation": "classified_as",
+      "source": "change",
+      "target": "risk"
+    },
+    {
+      "relation": "recommends",
+      "source": "risk",
+      "target": "recommendation:imd-sil-alarm-02"
+    },
+    {
+      "relation": "recommends",
+      "source": "risk",
+      "target": "recommendation:imd-sil-flow-01"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:r1_confirmed_threshold_regression",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:r2_introduced_test_failure",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_baseline_pass_current_threshold_fail",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_introduced_failure_present",
+      "target": "risk"
+    },
+    {
+      "relation": "supports",
+      "source": "rule:signal_material_metric_worsening",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_affected_file_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_baseline_current_pair_present",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_introduced_failure_detected",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_requirement_mapped",
+      "target": "risk"
+    },
+    {
+      "relation": "informs_confidence",
+      "source": "confidence_factor:+_threshold_crossing_detected",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:risk_high",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:safety_level_class-b",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:safety_level_class-c",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_failed_imd-req-001_flow_rate_deviation_pct",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_passed_imd-req-002_occlusion_detect_ms",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:threshold_passed_imd-req-003_alarm_trigger_ms",
+      "target": "risk"
+    },
+    {
+      "relation": "drives_risk",
+      "source": "risk_driver:verdict_confirmed_regression",
+      "target": "risk"
+    },
+    {
+      "relation": "affects_component",
+      "source": "change",
+      "target": "component:infusion_pump_alarm_system"
+    },
+    {
+      "relation": "contributes_to",
+      "source": "component:infusion_pump_alarm_system",
+      "target": "risk"
+    },
+    {
+      "relation": "affects_component",
+      "source": "change",
+      "target": "component:infusion_pump_dosage_control"
+    },
+    {
+      "relation": "contributes_to",
+      "source": "component:infusion_pump_dosage_control",
+      "target": "risk"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:imd-req-001",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:infusion_pump_dosage_control",
+      "target": "requirement:imd-req-001"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:imd-req-002",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:infusion_pump_dosage_control",
+      "target": "requirement:imd-req-002"
+    },
+    {
+      "relation": "informs",
+      "source": "requirement:imd-req-003",
+      "target": "risk"
+    },
+    {
+      "relation": "governed_by",
+      "source": "component:infusion_pump_alarm_system",
+      "target": "requirement:imd-req-003"
+    },
+    {
+      "relation": "touches_file",
+      "source": "change",
+      "target": "file:src_pump_alarm_over_infusion_detector.c"
+    },
+    {
+      "relation": "maps_to_component",
+      "source": "file:src_pump_alarm_over_infusion_detector.c",
+      "target": "component:infusion_pump_alarm_system"
+    },
+    {
+      "relation": "maps_to_component",
+      "source": "file:src_pump_alarm_over_infusion_detector.c",
+      "target": "component:infusion_pump_dosage_control"
+    },
+    {
+      "relation": "touches_file",
+      "source": "change",
+      "target": "file:src_pump_dosage_flow_rate_controller.c"
+    },
+    {
+      "relation": "maps_to_component",
+      "source": "file:src_pump_dosage_flow_rate_controller.c",
+      "target": "component:infusion_pump_alarm_system"
+    },
+    {
+      "relation": "maps_to_component",
+      "source": "file:src_pump_dosage_flow_rate_controller.c",
+      "target": "component:infusion_pump_dosage_control"
+    },
+    {
+      "relation": "observed_in",
+      "source": "change",
+      "target": "test_failure:imd-sil-flow-01"
+    },
+    {
+      "relation": "supports",
+      "source": "test_failure:imd-sil-flow-01",
+      "target": "risk"
+    },
+    {
+      "relation": "occurs_in",
+      "source": "test_failure:imd-sil-flow-01",
+      "target": "component:infusion_pump_dosage_control"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:imd-req-003_alarm_trigger_ms_imd-sil-alarm-02",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:imd-req-003_alarm_trigger_ms_imd-sil-alarm-02",
+      "target": "requirement:imd-req-003"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:imd-req-001_flow_rate_deviation_pct_imd-sil-flow-01",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:imd-req-001_flow_rate_deviation_pct_imd-sil-flow-01",
+      "target": "requirement:imd-req-001"
+    },
+    {
+      "relation": "contains_metric",
+      "source": "test_failure:imd-sil-flow-01",
+      "target": "threshold_evidence:imd-req-001_flow_rate_deviation_pct_imd-sil-flow-01"
+    },
+    {
+      "relation": "supports",
+      "source": "threshold_evidence:imd-req-002_occlusion_detect_ms_imd-sil-flow-01",
+      "target": "risk"
+    },
+    {
+      "relation": "evaluates",
+      "source": "threshold_evidence:imd-req-002_occlusion_detect_ms_imd-sil-flow-01",
+      "target": "requirement:imd-req-002"
+    },
+    {
+      "relation": "contains_metric",
+      "source": "test_failure:imd-sil-flow-01",
+      "target": "threshold_evidence:imd-req-002_occlusion_detect_ms_imd-sil-flow-01"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "change",
+      "label": "Change under assessment",
+      "properties": {
+        "description": "Recalibrated PID control gains in flow_rate_controller.c to improve response speed during bolus delivery. The gain adjustment introduced steady-state oscillation in continuous infusion mode, causing flow rate deviation to exceed the IEC-62304 Class C safety threshold of 5.0%."
+      },
+      "type": "change"
+    },
+    {
+      "id": "risk",
+      "label": "high",
+      "properties": {
+        "confidence": "high",
+        "verdict": "confirmed_regression"
+      },
+      "type": "risk"
+    },
+    {
+      "id": "recommendation:imd-sil-alarm-02",
+      "label": "IMD-SIL-ALARM-02",
+      "properties": {
+        "check": "IMD-SIL-ALARM-02"
+      },
+      "type": "recommendation"
+    },
+    {
+      "id": "recommendation:imd-sil-flow-01",
+      "label": "IMD-SIL-FLOW-01",
+      "properties": {
+        "check": "IMD-SIL-FLOW-01"
+      },
+      "type": "recommendation"
+    },
+    {
+      "id": "rule:r1_confirmed_threshold_regression",
+      "label": "R1_confirmed_threshold_regression",
+      "properties": {
+        "value": "R1_confirmed_threshold_regression"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:r2_introduced_test_failure",
+      "label": "R2_introduced_test_failure",
+      "properties": {
+        "value": "R2_introduced_test_failure"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_baseline_pass_current_threshold_fail",
+      "label": "signal_baseline_pass_current_threshold_fail",
+      "properties": {
+        "value": "signal_baseline_pass_current_threshold_fail"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_introduced_failure_present",
+      "label": "signal_introduced_failure_present",
+      "properties": {
+        "value": "signal_introduced_failure_present"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "rule:signal_material_metric_worsening",
+      "label": "signal_material_metric_worsening",
+      "properties": {
+        "value": "signal_material_metric_worsening"
+      },
+      "type": "rule"
+    },
+    {
+      "id": "confidence_factor:+_affected_file_mapped",
+      "label": "+ affected_file_mapped",
+      "properties": {
+        "value": "+ affected_file_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_baseline_current_pair_present",
+      "label": "+ baseline_current_pair_present",
+      "properties": {
+        "value": "+ baseline_current_pair_present"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_introduced_failure_detected",
+      "label": "+ introduced_failure_detected",
+      "properties": {
+        "value": "+ introduced_failure_detected"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_requirement_mapped",
+      "label": "+ requirement_mapped",
+      "properties": {
+        "value": "+ requirement_mapped"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "confidence_factor:+_threshold_crossing_detected",
+      "label": "+ threshold_crossing_detected",
+      "properties": {
+        "value": "+ threshold_crossing_detected"
+      },
+      "type": "confidence_factor"
+    },
+    {
+      "id": "risk_driver:risk_high",
+      "label": "risk:high",
+      "properties": {
+        "value": "risk:high"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:safety_level_class-b",
+      "label": "safety_level:class-b",
+      "properties": {
+        "value": "safety_level:class-b"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:safety_level_class-c",
+      "label": "safety_level:class-c",
+      "properties": {
+        "value": "safety_level:class-c"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_failed_imd-req-001_flow_rate_deviation_pct",
+      "label": "threshold_failed:IMD-REQ-001:flow_rate_deviation_pct",
+      "properties": {
+        "value": "threshold_failed:IMD-REQ-001:flow_rate_deviation_pct"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_passed_imd-req-002_occlusion_detect_ms",
+      "label": "threshold_passed:IMD-REQ-002:occlusion_detect_ms",
+      "properties": {
+        "value": "threshold_passed:IMD-REQ-002:occlusion_detect_ms"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:threshold_passed_imd-req-003_alarm_trigger_ms",
+      "label": "threshold_passed:IMD-REQ-003:alarm_trigger_ms",
+      "properties": {
+        "value": "threshold_passed:IMD-REQ-003:alarm_trigger_ms"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "risk_driver:verdict_confirmed_regression",
+      "label": "verdict:confirmed_regression",
+      "properties": {
+        "value": "verdict:confirmed_regression"
+      },
+      "type": "risk_driver"
+    },
+    {
+      "id": "component:infusion_pump_alarm_system",
+      "label": "Infusion Pump Alarm System",
+      "type": "component"
+    },
+    {
+      "id": "component:infusion_pump_dosage_control",
+      "label": "Infusion Pump Dosage Control",
+      "type": "component"
+    },
+    {
+      "id": "requirement:imd-req-001",
+      "label": "IMD-REQ-001",
+      "properties": {
+        "component": "Infusion Pump Dosage Control",
+        "metric": "flow_rate_deviation_pct",
+        "operator": "<=",
+        "requirement": "Flow rate deviation from programmed dose must not exceed 5.0 percent under IEC-62304 Class C",
+        "safety_level": "class-c",
+        "threshold": 5.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "requirement:imd-req-002",
+      "label": "IMD-REQ-002",
+      "properties": {
+        "component": "Infusion Pump Dosage Control",
+        "metric": "occlusion_detect_ms",
+        "operator": "<=",
+        "requirement": "Occlusion detection response time must not exceed 3000 ms",
+        "safety_level": "class-c",
+        "threshold": 3000.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "requirement:imd-req-003",
+      "label": "IMD-REQ-003",
+      "properties": {
+        "component": "Infusion Pump Alarm System",
+        "metric": "alarm_trigger_ms",
+        "operator": "<=",
+        "requirement": "Over-infusion alarm must trigger within 500 ms of threshold breach",
+        "safety_level": "class-b",
+        "threshold": 500.0
+      },
+      "type": "requirement"
+    },
+    {
+      "id": "file:src_pump_alarm_over_infusion_detector.c",
+      "label": "src/pump/alarm/over_infusion_detector.c",
+      "properties": {
+        "path": "src/pump/alarm/over_infusion_detector.c"
+      },
+      "type": "file"
+    },
+    {
+      "id": "file:src_pump_dosage_flow_rate_controller.c",
+      "label": "src/pump/dosage/flow_rate_controller.c",
+      "properties": {
+        "path": "src/pump/dosage/flow_rate_controller.c"
+      },
+      "type": "file"
+    },
+    {
+      "id": "test_failure:imd-sil-flow-01",
+      "label": "IMD-SIL-FLOW-01",
+      "properties": {
+        "baseline_status": "passed",
+        "category": "introduced_failures",
+        "component": "Infusion Pump Dosage Control",
+        "current_status": "failed"
+      },
+      "type": "test_failure"
+    },
+    {
+      "id": "threshold_evidence:imd-req-003_alarm_trigger_ms_imd-sil-alarm-02",
+      "label": "alarm_trigger_ms",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 287.0,
+        "current_passed": true,
+        "current_value": 294.0,
+        "operator": "<=",
+        "requirement_id": "IMD-REQ-003",
+        "test_id": "IMD-SIL-ALARM-02",
+        "threshold": 500.0
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:imd-req-001_flow_rate_deviation_pct_imd-sil-flow-01",
+      "label": "flow_rate_deviation_pct",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 2.3,
+        "current_passed": false,
+        "current_value": 7.8,
+        "operator": "<=",
+        "requirement_id": "IMD-REQ-001",
+        "test_id": "IMD-SIL-FLOW-01",
+        "threshold": 5.0
+      },
+      "type": "threshold_evidence"
+    },
+    {
+      "id": "threshold_evidence:imd-req-002_occlusion_detect_ms_imd-sil-flow-01",
+      "label": "occlusion_detect_ms",
+      "properties": {
+        "baseline_passed": true,
+        "baseline_value": 1840.0,
+        "current_passed": true,
+        "current_value": 2190.0,
+        "operator": "<=",
+        "requirement_id": "IMD-REQ-002",
+        "test_id": "IMD-SIL-FLOW-01",
+        "threshold": 3000.0
+      },
+      "type": "threshold_evidence"
+    }
+  ],
+  "schema_version": "evidence_graph.v0.3",
+  "summary": {
+    "comparison_summary": {
+      "introduced_failures": 1,
+      "metric_deltas": 3,
+      "missing_baseline": 0,
+      "missing_current": 0,
+      "preexisting_failures": 0,
+      "resolved_failures": 0,
+      "total_tests": 2,
+      "unchanged_passes": 1
+    },
+    "components": 2,
+    "confidence": "high",
+    "confidence_factors": 5,
+    "edge_count": 47,
+    "evidence_summary": [
+      "Verdict is confirmed regression.",
+      "IMD-SIL-FLOW-01 failed only in the current run.",
+      "flow_rate_deviation_pct for IMD-REQ-001 was 7.8, outside <= 5.",
+      "Mapped affected files: src/pump/alarm/over_infusion_detector.c, src/pump/dosage/flow_rate_controller.c.",
+      "flow_rate_deviation_pct materially worsened from 2.3 to 7.8.",
+      "occlusion_detect_ms materially worsened from 1840.0 to 2190.0."
+    ],
+    "files": 2,
+    "node_count": 32,
+    "recommendations": 2,
+    "requirements": 3,
+    "risk": "high",
+    "risk_drivers": 7,
+    "rules": 5,
+    "signal_summaries": 0,
+    "tests_or_failures": 1,
+    "threshold_evidence": 3,
+    "verdict": "confirmed_regression"
+  }
+}

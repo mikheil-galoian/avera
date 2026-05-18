@@ -1,0 +1,67 @@
+{
+  "adas-pedestrian-detection-regression": {
+    "verdict": "confirmed_regression",
+    "risk": "high",
+    "confidence": "high"
+  },
+  "adas-simulation-adapted": {
+    "verdict": "confirmed_regression",
+    "risk": "high",
+    "confidence": "high"
+  },
+  "bms-fast-charge": {
+    "verdict": "confirmed_regression",
+    "risk": "high",
+    "confidence": "high"
+  },
+  "bms-log-adapted": {
+    "verdict": "confirmed_regression",
+    "risk": "high",
+    "confidence": "high"
+  },
+  "bms-requirements-adapted": {
+    "verdict": "confirmed_regression",
+    "risk": "high",
+    "confidence": "high"
+  },
+  "bms-successful-change": {
+    "verdict": "successful_change",
+    "risk": "low",
+    "confidence": "high"
+  },
+  "bms-preexisting-failure": {
+    "verdict": "preexisting_failure",
+    "risk": "medium",
+    "confidence": "high"
+  },
+  "bms-insufficient-evidence": {
+    "verdict": "insufficient_evidence",
+    "risk": "unknown",
+    "confidence": "low"
+  },
+  "bms-worsened-preexisting": {
+    "verdict": "worsened_preexisting_failure",
+    "risk": "high",
+    "confidence": "high"
+  },
+  "bms-environment-failure": {
+    "verdict": "environment_failure",
+    "risk": "unknown",
+    "confidence": "low"
+  },
+  "bms-coverage-gap": {
+    "verdict": "requirements_coverage_gap",
+    "risk": "medium",
+    "confidence": "low"
+  },
+  "bms-mixed-results": {
+    "verdict": "confirmed_regression",
+    "risk": "high",
+    "confidence": "high"
+  },
+  "adas-model-update-regression": {
+    "verdict": "confirmed_regression",
+    "risk": "release_blocking",
+    "confidence": "high"
+  }
+}

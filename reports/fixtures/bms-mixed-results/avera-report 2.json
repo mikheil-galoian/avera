@@ -1,0 +1,238 @@
+{
+  "affected_components": [
+    "BMS Cell Balancing",
+    "BMS Contactor Control",
+    "BMS Thermal Control"
+  ],
+  "affected_files": [
+    "src/bms/cell_balancer.c",
+    "src/bms/contactor_control.c",
+    "src/bms/thermal_manager.c"
+  ],
+  "affected_requirements": [
+    {
+      "component": "BMS Thermal Control",
+      "id": "BMS-REQ-112",
+      "metadata": {},
+      "metric": "max_cell_temp_c",
+      "next_checks": [
+        "BMS-HIL-FASTCHARGE-07"
+      ],
+      "operator": "<=",
+      "requirement": "Maximum cell temperature during fast charging must not exceed 50 C",
+      "safety_level": "high",
+      "threshold": 50.0
+    },
+    {
+      "component": "BMS Thermal Control",
+      "id": "BMS-REQ-118",
+      "metadata": {},
+      "metric": "cooling_response_ms",
+      "next_checks": [
+        "BMS-HIL-FASTCHARGE-07"
+      ],
+      "operator": "<=",
+      "requirement": "Cooling response delay during fast charging must not exceed 500 ms",
+      "safety_level": "medium",
+      "threshold": 500.0
+    },
+    {
+      "component": "BMS Cell Balancing",
+      "id": "BMS-REQ-205",
+      "metadata": {},
+      "metric": "cell_delta_mv",
+      "next_checks": [
+        "BMS-SIL-BALANCE-02"
+      ],
+      "operator": "<=",
+      "requirement": "Cell voltage imbalance after balancing must not exceed 35 mV",
+      "safety_level": "medium",
+      "threshold": 35.0
+    },
+    {
+      "component": "BMS Contactor Control",
+      "id": "BMS-REQ-301",
+      "metadata": {},
+      "metric": "contactor_close_ms",
+      "next_checks": [
+        "BMS-SIL-CONTACTOR-01"
+      ],
+      "operator": "<=",
+      "requirement": "Main contactor close time must not exceed 120 ms",
+      "safety_level": "low",
+      "threshold": 120.0
+    }
+  ],
+  "comparison_summary": {
+    "introduced_failures": 1,
+    "metric_deltas": 4,
+    "missing_baseline": 0,
+    "missing_current": 0,
+    "preexisting_failures": 1,
+    "resolved_failures": 0,
+    "total_tests": 3,
+    "unchanged_passes": 1
+  },
+  "confidence": "high",
+  "confidence_factors": [
+    "+ baseline_current_pair_present",
+    "+ introduced_failure_detected",
+    "+ preexisting_failure_detected",
+    "+ threshold_crossing_detected",
+    "+ requirement_mapped",
+    "+ affected_file_mapped"
+  ],
+  "evidence_summary": [
+    "Verdict is confirmed regression.",
+    "BMS-SIL-FASTCHARGE-01 failed only in the current run.",
+    "BMS-SIL-BALANCE-02 failed in both baseline and current runs.",
+    "cell_delta_mv for BMS-REQ-205 was 41, outside <= 35.",
+    "max_cell_temp_c for BMS-REQ-112 was 53.4, outside <= 50.",
+    "cooling_response_ms for BMS-REQ-118 was 640, outside <= 500.",
+    "Mapped affected files: src/bms/cell_balancer.c, src/bms/contactor_control.c, src/bms/thermal_manager.c."
+  ],
+  "introduced_failures": [
+    {
+      "baseline_metrics": {
+        "cooling_response_ms": 430,
+        "max_cell_temp_c": 47.3
+      },
+      "baseline_status": "passed",
+      "classification": "introduced_failure",
+      "component": "BMS Thermal Control",
+      "current_metrics": {
+        "cooling_response_ms": 640,
+        "max_cell_temp_c": 53.4
+      },
+      "current_status": "failed",
+      "evidence": [
+        "BMS-SIL-FASTCHARGE-01: introduced failure.",
+        "Fast-charge thermal control passed in baseline but violates mapped high-safety requirements after the thermal manager change.",
+        "cooling_response_ms increased from 430 to 640.",
+        "max_cell_temp_c increased from 47.3 to 53.4."
+      ],
+      "metric_deltas": [
+        {
+          "baseline": 430.0,
+          "current": 640.0,
+          "delta": 210.0,
+          "metric": "cooling_response_ms",
+          "percent_delta": 48.837209302325576,
+          "test_id": "BMS-SIL-FASTCHARGE-01"
+        },
+        {
+          "baseline": 47.3,
+          "current": 53.4,
+          "delta": 6.100000000000001,
+          "metric": "max_cell_temp_c",
+          "percent_delta": 12.896405919661738,
+          "test_id": "BMS-SIL-FASTCHARGE-01"
+        }
+      ],
+      "test_id": "BMS-SIL-FASTCHARGE-01"
+    }
+  ],
+  "preexisting_failures": [
+    {
+      "baseline_metrics": {
+        "cell_delta_mv": 42.0
+      },
+      "baseline_status": "failed",
+      "classification": "preexisting_failure",
+      "component": "BMS Cell Balancing",
+      "current_metrics": {
+        "cell_delta_mv": 41.0
+      },
+      "current_status": "failed",
+      "evidence": [
+        "BMS-SIL-BALANCE-02: preexisting failure.",
+        "Baseline already exceeded the balancing threshold before the current change.",
+        "Balancing remains above threshold, but it was already failing in baseline and is not mapped to the changed file.",
+        "cell_delta_mv decreased from 42 to 41."
+      ],
+      "metric_deltas": [
+        {
+          "baseline": 42.0,
+          "current": 41.0,
+          "delta": -1.0,
+          "metric": "cell_delta_mv",
+          "percent_delta": -2.380952380952381,
+          "test_id": "BMS-SIL-BALANCE-02"
+        }
+      ],
+      "test_id": "BMS-SIL-BALANCE-02"
+    }
+  ],
+  "recommended_next_checks": [
+    "BMS-HIL-FASTCHARGE-07",
+    "BMS-SIL-BALANCE-02",
+    "BMS-SIL-CONTACTOR-01"
+  ],
+  "risk": "high",
+  "risk_drivers": [
+    "verdict:confirmed_regression",
+    "risk:high",
+    "safety_level:high",
+    "safety_level:low",
+    "safety_level:medium",
+    "threshold_failed:BMS-REQ-205:cell_delta_mv",
+    "threshold_passed:BMS-REQ-301:contactor_close_ms",
+    "threshold_failed:BMS-REQ-112:max_cell_temp_c",
+    "threshold_failed:BMS-REQ-118:cooling_response_ms"
+  ],
+  "rules_triggered": [
+    "R1_confirmed_threshold_regression",
+    "R2_introduced_test_failure",
+    "signal_baseline_pass_current_threshold_fail",
+    "signal_introduced_failure_present",
+    "signal_preexisting_failure_present"
+  ],
+  "schema_version": "avera.assessment.v0.2",
+  "threshold_evidence": [
+    {
+      "baseline_passed": false,
+      "baseline_value": 42.0,
+      "current_passed": false,
+      "current_value": 41.0,
+      "metric": "cell_delta_mv",
+      "operator": "<=",
+      "requirement_id": "BMS-REQ-205",
+      "test_id": "BMS-SIL-BALANCE-02",
+      "threshold": 35.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 94.0,
+      "current_passed": true,
+      "current_value": 92.0,
+      "metric": "contactor_close_ms",
+      "operator": "<=",
+      "requirement_id": "BMS-REQ-301",
+      "test_id": "BMS-SIL-CONTACTOR-01",
+      "threshold": 120.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 47.3,
+      "current_passed": false,
+      "current_value": 53.4,
+      "metric": "max_cell_temp_c",
+      "operator": "<=",
+      "requirement_id": "BMS-REQ-112",
+      "test_id": "BMS-SIL-FASTCHARGE-01",
+      "threshold": 50.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 430.0,
+      "current_passed": false,
+      "current_value": 640.0,
+      "metric": "cooling_response_ms",
+      "operator": "<=",
+      "requirement_id": "BMS-REQ-118",
+      "test_id": "BMS-SIL-FASTCHARGE-01",
+      "threshold": 500.0
+    }
+  ],
+  "verdict": "confirmed_regression"
+}

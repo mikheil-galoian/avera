@@ -1,0 +1,7 @@
+This workspace demonstrates AVERA operating on an adapted requirements export rather than only on
+the canonical fixture requirements.csv source. The upstream export uses a wider ALM-style schema
+with fields like `requirement_id`, `title`, `module`, `threshold_signal`, and `threshold_value`.
+
+The export is normalized into the stable AVERA requirements.csv contract before analysis. The
+underlying BMS regression remains the same: a fast-charge cooling logic change in
+src/bms/thermal_manager.c causes the maximum cell temperature to exceed the allowed threshold.

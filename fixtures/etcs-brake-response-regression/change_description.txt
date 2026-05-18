@@ -1,0 +1,1 @@
+Refactored priority scheduling in emergency_brake_controller.c to reduce CPU load during simultaneous speed supervision and brake command processing. The change introduced additional mutex contention that increased brake application latency beyond the SIL 4 ceiling of 1200 ms.

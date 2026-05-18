@@ -1,0 +1,3 @@
+id,component,requirement,metric,operator,threshold,safety_level,next_checks
+ADAS-REQ-204,ADAS Pedestrian Detection,Pedestrian recall in urban daylight regression suite must not fall below 0.95,pedestrian_recall,>=,0.95,high,ADAS-HIL-VRU-12
+ADAS-REQ-219,ADAS Pedestrian Detection,Maximum emergency braking trigger latency for pedestrian crossing scenarios must not exceed 120 ms,brake_trigger_latency_ms,<=,120.0,high,ADAS-HIL-VRU-12

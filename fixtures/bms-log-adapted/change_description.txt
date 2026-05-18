@@ -1,0 +1,6 @@
+This workspace demonstrates AVERA running on adapted verification log artifacts. The cooling
+logic update in src/bms/thermal_manager.c was meant to reduce early pump usage during fast
+charging, but the HIL verification log now records thermal breach and slower cooling response.
+
+The baseline and current evidence were first captured as richer verification log CSV files, then
+adapted into standard AVERA verification-results JSON before analysis.

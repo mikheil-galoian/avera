@@ -1,0 +1,12 @@
+{
+  "src/fcc/control_laws.c": {
+    "component": "Flight Control Computer",
+    "requirements": ["FCC-REQ-001", "FCC-REQ-003"],
+    "tests": ["FCC-CTRL-HIL-01", "FCC-CTRL-HIL-02"]
+  },
+  "src/fcc/envelope_protection.c": {
+    "component": "Flight Control Computer",
+    "requirements": ["FCC-REQ-002"],
+    "tests": ["FCC-ENV-HIL-01"]
+  }
+}

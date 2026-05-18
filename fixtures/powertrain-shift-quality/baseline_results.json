@@ -1,0 +1,28 @@
+{
+  "runId": "baseline-pt-shift-001",
+  "stage": "baseline",
+  "tests": [
+    {
+      "id": "PT-TCU-SQ-01",
+      "component": "Transmission Control Unit",
+      "status": "passed",
+      "metrics": {
+        "torque_hole_ms": 87.0,
+        "shift_completion_ms": 720.0,
+        "gear_slip_ratio": 0.031
+      },
+      "evidence": ""
+    },
+    {
+      "id": "PT-TCU-SQ-02",
+      "component": "Transmission Control Unit",
+      "status": "passed",
+      "metrics": {
+        "torque_hole_ms": 92.0,
+        "shift_completion_ms": 755.0,
+        "gear_slip_ratio": 0.028
+      },
+      "evidence": ""
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+Updated ADAS perception model from v2.4.0 to v2.4.1.
+
+Change: Retrained YOLOv8-based pedestrian detection model on expanded dataset
+including additional night and adverse weather scenarios.
+
+Motivation: Improve overall detection accuracy on highway scenarios.
+
+Risk: Retraining on new data distribution may introduce regression on
+previously validated safety-critical scenarios, particularly low-visibility
+pedestrian detection.
+
+Affected component: adas-perception-module
+Affected requirements: REQ-SAFETY-012, REQ-SAFETY-008, REQ-PERF-001

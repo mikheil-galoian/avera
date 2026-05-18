@@ -1,0 +1,7 @@
+Updated priority scheduling in envelope_protection.c to handle concurrent
+FCC-CTRL and FCC-ENV interrupt contexts. The scheduler change introduced
+a 99 ms additional delay in the envelope protection engagement path,
+causing FCC-REQ-002 (<=200 ms) to be violated at 247 ms.
+
+DAL-A requirement. Release blocking. MC/DC coverage re-verification
+required per DO-178C Table A-7 before resubmission.

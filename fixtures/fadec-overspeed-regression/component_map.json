@@ -1,0 +1,12 @@
+{
+  "src/fadec/overspeed_protection.c": {
+    "component": "Full Authority Digital Engine Control",
+    "requirements": ["FADEC-REQ-001", "FADEC-REQ-003"],
+    "tests": ["FADEC-ENG-HIL-01", "FADEC-ENG-HIL-02"]
+  },
+  "src/fadec/fuel_control.c": {
+    "component": "Full Authority Digital Engine Control",
+    "requirements": ["FADEC-REQ-002"],
+    "tests": ["FADEC-FUEL-SIL-01"]
+  }
+}

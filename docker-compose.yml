@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  avera-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    image: avera:latest
+    container_name: avera-api
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      # Set AVERA_API_KEY to enable authentication.
+      # Leave unset for local development (open mode — not for production).
+      # Supply via .env file or CI secret: AVERA_API_KEY=your-secret-token
+      - AVERA_API_KEY=${AVERA_API_KEY:-}
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp

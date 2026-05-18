@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "model_id": "adas-perception-v2.4.0",
+  "model_hash": "sha256:b2c8f3a1d9e4071bc56f2a8390d14e72c3f87b91a4d02e56f3c1b8a7d90e24f1",
+  "version": "2.4.0",
+  "release_date": "2026-04-01",
+  "training_date": "2026-03-28",
+  "training_data_version": "adas-dataset-v7.1",
+  "training_data_hash": "sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2",
+  "architecture": "YOLOv8-medium-custom",
+  "quantization": "float32",
+  "target_hardware": "TDA4VM",
+  "framework": "PyTorch 2.1",
+  "domain": "adas",
+  "task": "object_detection",
+  "classes": ["pedestrian", "vehicle", "cyclist", "traffic_sign"],
+  "certification_status": "validated",
+  "validation_report": "eval-adas-perception-v2.4.0"
+}

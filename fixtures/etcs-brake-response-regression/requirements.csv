@@ -1,0 +1,4 @@
+id,component,requirement,metric,operator,threshold,safety_level,next_checks
+ETCS-REQ-001,ETCS Emergency Braking,Emergency brake application time must not exceed 1200 ms under SIL 4 conditions,brake_application_ms,<=,1200.0,sil4,ETCS-HIL-BRAKE-01
+ETCS-REQ-002,ETCS Emergency Braking,Brake confirmation signal must be received within 400 ms of command,brake_confirm_ms,<=,400.0,sil4,ETCS-HIL-BRAKE-01
+ETCS-REQ-003,ETCS Cab Signalling,Speed supervision update cycle must not exceed 100 ms,supervision_cycle_ms,<=,100.0,sil3,ETCS-HIL-SIGNAL-03

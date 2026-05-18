@@ -1,0 +1,5 @@
+An engineer changed SOC filtering logic in src/bms/soc_estimator.c.
+
+The changed file maps to SOC drift requirements, but neither baseline nor current verification
+contains BMS-SIL-SOC-DRIFT-03 or the required SOC metrics. AVERA should classify this as a
+requirements coverage gap with medium risk and low confidence.

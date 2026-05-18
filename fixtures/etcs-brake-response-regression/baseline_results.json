@@ -1,0 +1,24 @@
+{
+  "runId": "etcs-baseline-2024-11",
+  "stage": "hil",
+  "changedFiles": [],
+  "tests": [
+    {
+      "id": "ETCS-HIL-BRAKE-01",
+      "component": "ETCS Emergency Braking",
+      "status": "passed",
+      "metrics": {
+        "brake_application_ms": 1047.0,
+        "brake_confirm_ms": 312.0
+      }
+    },
+    {
+      "id": "ETCS-HIL-SIGNAL-03",
+      "component": "ETCS Cab Signalling",
+      "status": "passed",
+      "metrics": {
+        "supervision_cycle_ms": 82.0
+      }
+    }
+  ]
+}

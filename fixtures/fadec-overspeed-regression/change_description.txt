@@ -1,0 +1,7 @@
+Refactored interrupt handler in overspeed_protection.c to reduce CPU load during
+high-frequency engine monitoring cycles. The interrupt latency optimization
+introduced a 19 ms delay in the overspeed protection response path, causing
+FADEC-REQ-001 (<=50 ms) to be violated at 63.2 ms.
+
+DAL-A requirement. Release blocking. Requires immediate root cause analysis
+and re-verification before any further integration.

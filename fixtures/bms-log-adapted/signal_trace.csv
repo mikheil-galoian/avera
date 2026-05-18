@@ -1,0 +1,5 @@
+timestamp_ms,scenario_id,test_id,signal,value,unit
+0,BMS-FASTCHARGE-HIL,BMS-HIL-FASTCHARGE-07,max_cell_temp_c,44.1,C
+5000,BMS-FASTCHARGE-HIL,BMS-HIL-FASTCHARGE-07,max_cell_temp_c,47.8,C
+10000,BMS-FASTCHARGE-HIL,BMS-HIL-FASTCHARGE-07,max_cell_temp_c,50.9,C
+15000,BMS-FASTCHARGE-HIL,BMS-HIL-FASTCHARGE-07,max_cell_temp_c,52.8,C

@@ -1,0 +1,9 @@
+An engineer retuned pedestrian classification confidence thresholds in
+src/adas/perception/pedestrian_classifier.cpp to reduce false positives from roadside objects in
+the urban daylight pedestrian-crossing scenario.
+
+The baseline mapped regression test passed before the change. The current run shows pedestrian
+recall falling from 0.972 to 0.903 and brake trigger latency increasing from 104 ms to 146 ms in
+the same scenario. AVERA should map the changed file to ADAS Pedestrian Detection, compare
+baseline and current evidence, and classify the outcome as a high-confidence confirmed regression
+rather than a BMS-specific result.

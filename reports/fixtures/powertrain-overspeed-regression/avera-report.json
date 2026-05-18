@@ -1,0 +1,172 @@
+{
+  "affected_components": [
+    "Engine Control Unit"
+  ],
+  "affected_files": [
+    "src/ecu/overspeed_protection.c"
+  ],
+  "affected_requirements": [
+    {
+      "component": "Engine Control Unit",
+      "id": "PT-REQ-001",
+      "metadata": {},
+      "metric": "max_engine_rpm",
+      "next_checks": [
+        "PT-ECU-OS-01,PT-ECU-OS-02"
+      ],
+      "operator": "<=",
+      "requirement": "Maximum engine speed must not exceed 7000 RPM under any operating condition or fault state.",
+      "safety_level": "release_blocking",
+      "threshold": 7000.0
+    },
+    {
+      "component": "Engine Control Unit",
+      "id": "PT-REQ-002",
+      "metadata": {},
+      "metric": "overspeed_response_ms",
+      "next_checks": [
+        "PT-ECU-OS-01,PT-ECU-OS-02"
+      ],
+      "operator": "<=",
+      "requirement": "ECU overspeed fuel cut-off must engage within 50 ms of detecting an overspeed condition.",
+      "safety_level": "release_blocking",
+      "threshold": 50.0
+    }
+  ],
+  "comparison_summary": {
+    "introduced_failures": 1,
+    "metric_deltas": 4,
+    "missing_baseline": 0,
+    "missing_current": 0,
+    "preexisting_failures": 0,
+    "resolved_failures": 0,
+    "total_tests": 2,
+    "unchanged_passes": 1
+  },
+  "confidence": "high",
+  "confidence_factors": [
+    "+ baseline_current_pair_present",
+    "+ introduced_failure_detected",
+    "+ threshold_crossing_detected",
+    "+ requirement_mapped",
+    "+ affected_file_mapped"
+  ],
+  "confidence_score": 0.95,
+  "evidence_summary": [
+    "Verdict is confirmed regression.",
+    "PT-ECU-OS-01 failed only in the current run.",
+    "max_engine_rpm for PT-REQ-001 was 7250, outside <= 7000.",
+    "Mapped affected files: src/ecu/overspeed_protection.c.",
+    "overspeed_response_ms materially worsened from 38.0 to 42.0."
+  ],
+  "introduced_failures": [
+    {
+      "baseline_metrics": {
+        "max_engine_rpm": 6850.0,
+        "overspeed_response_ms": 38.0
+      },
+      "baseline_status": "passed",
+      "classification": "introduced_failure",
+      "component": "Engine Control Unit",
+      "current_metrics": {
+        "max_engine_rpm": 7250.0,
+        "overspeed_response_ms": 42.0
+      },
+      "current_status": "failed",
+      "evidence": [
+        "PT-ECU-OS-01: introduced failure.",
+        "Engine speed reached 7250 RPM during wide-open-throttle ramp. Overspeed limiter threshold raised in ECU calibration; PT-REQ-001 violation confirmed.",
+        "max_engine_rpm increased from 6850 to 7250.",
+        "overspeed_response_ms increased from 38 to 42."
+      ],
+      "metric_deltas": [
+        {
+          "baseline": 6850.0,
+          "current": 7250.0,
+          "delta": 400.0,
+          "metric": "max_engine_rpm",
+          "percent_delta": 5.839416058394161,
+          "test_id": "PT-ECU-OS-01"
+        },
+        {
+          "baseline": 38.0,
+          "current": 42.0,
+          "delta": 4.0,
+          "metric": "overspeed_response_ms",
+          "percent_delta": 10.526315789473683,
+          "test_id": "PT-ECU-OS-01"
+        }
+      ],
+      "test_id": "PT-ECU-OS-01"
+    }
+  ],
+  "preexisting_failures": [],
+  "recommended_next_checks": [
+    "PT-ECU-OS-01,PT-ECU-OS-02"
+  ],
+  "risk": "release_blocking",
+  "risk_drivers": [
+    "verdict:confirmed_regression",
+    "risk:release_blocking",
+    "safety_level:release_blocking",
+    "threshold_failed:PT-REQ-001:max_engine_rpm",
+    "threshold_passed:PT-REQ-002:overspeed_response_ms",
+    "threshold_passed:PT-REQ-001:max_engine_rpm",
+    "threshold_passed:PT-REQ-002:overspeed_response_ms"
+  ],
+  "rules_triggered": [
+    "R1_confirmed_threshold_regression",
+    "R2_introduced_test_failure",
+    "signal_baseline_pass_current_threshold_fail",
+    "signal_introduced_failure_present",
+    "signal_material_metric_worsening"
+  ],
+  "schema_version": "avera.assessment.v0.2",
+  "threshold_evidence": [
+    {
+      "baseline_passed": true,
+      "baseline_value": 6850.0,
+      "current_passed": false,
+      "current_value": 7250.0,
+      "metric": "max_engine_rpm",
+      "operator": "<=",
+      "requirement_id": "PT-REQ-001",
+      "test_id": "PT-ECU-OS-01",
+      "threshold": 7000.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 38.0,
+      "current_passed": true,
+      "current_value": 42.0,
+      "metric": "overspeed_response_ms",
+      "operator": "<=",
+      "requirement_id": "PT-REQ-002",
+      "test_id": "PT-ECU-OS-01",
+      "threshold": 50.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 6720.0,
+      "current_passed": true,
+      "current_value": 6840.0,
+      "metric": "max_engine_rpm",
+      "operator": "<=",
+      "requirement_id": "PT-REQ-001",
+      "test_id": "PT-ECU-OS-02",
+      "threshold": 7000.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 41.0,
+      "current_passed": true,
+      "current_value": 40.0,
+      "metric": "overspeed_response_ms",
+      "operator": "<=",
+      "requirement_id": "PT-REQ-002",
+      "test_id": "PT-ECU-OS-02",
+      "threshold": 50.0
+    }
+  ],
+  "verdict": "confirmed_regression"
+}

@@ -1,0 +1,178 @@
+{
+  "affected_components": [
+    "Infusion Pump Alarm System",
+    "Infusion Pump Dosage Control"
+  ],
+  "affected_files": [
+    "src/pump/alarm/over_infusion_detector.c",
+    "src/pump/dosage/flow_rate_controller.c"
+  ],
+  "affected_requirements": [
+    {
+      "component": "Infusion Pump Dosage Control",
+      "id": "IMD-REQ-001",
+      "metadata": {},
+      "metric": "flow_rate_deviation_pct",
+      "next_checks": [
+        "IMD-SIL-FLOW-01"
+      ],
+      "operator": "<=",
+      "requirement": "Flow rate deviation from programmed dose must not exceed 5.0 percent under IEC-62304 Class C",
+      "safety_level": "class-c",
+      "threshold": 5.0
+    },
+    {
+      "component": "Infusion Pump Dosage Control",
+      "id": "IMD-REQ-002",
+      "metadata": {},
+      "metric": "occlusion_detect_ms",
+      "next_checks": [
+        "IMD-SIL-FLOW-01"
+      ],
+      "operator": "<=",
+      "requirement": "Occlusion detection response time must not exceed 3000 ms",
+      "safety_level": "class-c",
+      "threshold": 3000.0
+    },
+    {
+      "component": "Infusion Pump Alarm System",
+      "id": "IMD-REQ-003",
+      "metadata": {},
+      "metric": "alarm_trigger_ms",
+      "next_checks": [
+        "IMD-SIL-ALARM-02"
+      ],
+      "operator": "<=",
+      "requirement": "Over-infusion alarm must trigger within 500 ms of threshold breach",
+      "safety_level": "class-b",
+      "threshold": 500.0
+    }
+  ],
+  "comparison_summary": {
+    "introduced_failures": 1,
+    "metric_deltas": 3,
+    "missing_baseline": 0,
+    "missing_current": 0,
+    "preexisting_failures": 0,
+    "resolved_failures": 0,
+    "total_tests": 2,
+    "unchanged_passes": 1
+  },
+  "confidence": "high",
+  "confidence_factors": [
+    "+ baseline_current_pair_present",
+    "+ introduced_failure_detected",
+    "+ threshold_crossing_detected",
+    "+ requirement_mapped",
+    "+ affected_file_mapped"
+  ],
+  "confidence_score": 0.95,
+  "evidence_summary": [
+    "Verdict is confirmed regression.",
+    "IMD-SIL-FLOW-01 failed only in the current run.",
+    "flow_rate_deviation_pct for IMD-REQ-001 was 7.8, outside <= 5.",
+    "Mapped affected files: src/pump/alarm/over_infusion_detector.c, src/pump/dosage/flow_rate_controller.c.",
+    "flow_rate_deviation_pct materially worsened from 2.3 to 7.8.",
+    "occlusion_detect_ms materially worsened from 1840.0 to 2190.0."
+  ],
+  "introduced_failures": [
+    {
+      "baseline_metrics": {
+        "flow_rate_deviation_pct": 2.3,
+        "occlusion_detect_ms": 1840.0
+      },
+      "baseline_status": "passed",
+      "classification": "introduced_failure",
+      "component": "Infusion Pump Dosage Control",
+      "current_metrics": {
+        "flow_rate_deviation_pct": 7.8,
+        "occlusion_detect_ms": 2190.0
+      },
+      "current_status": "failed",
+      "evidence": [
+        "IMD-SIL-FLOW-01: introduced failure.",
+        "Flow rate deviation rose from 2.3% to 7.8% after PID gain recalibration in flow_rate_controller.c, exceeding the IEC-62304 Class C ceiling of 5.0%.",
+        "flow_rate_deviation_pct increased from 2.3 to 7.8.",
+        "occlusion_detect_ms increased from 1840 to 2190."
+      ],
+      "metric_deltas": [
+        {
+          "baseline": 2.3,
+          "current": 7.8,
+          "delta": 5.5,
+          "metric": "flow_rate_deviation_pct",
+          "percent_delta": 239.13043478260875,
+          "test_id": "IMD-SIL-FLOW-01"
+        },
+        {
+          "baseline": 1840.0,
+          "current": 2190.0,
+          "delta": 350.0,
+          "metric": "occlusion_detect_ms",
+          "percent_delta": 19.021739130434785,
+          "test_id": "IMD-SIL-FLOW-01"
+        }
+      ],
+      "test_id": "IMD-SIL-FLOW-01"
+    }
+  ],
+  "preexisting_failures": [],
+  "recommended_next_checks": [
+    "IMD-SIL-ALARM-02",
+    "IMD-SIL-FLOW-01"
+  ],
+  "risk": "high",
+  "risk_drivers": [
+    "verdict:confirmed_regression",
+    "risk:high",
+    "safety_level:class-b",
+    "safety_level:class-c",
+    "threshold_passed:IMD-REQ-003:alarm_trigger_ms",
+    "threshold_failed:IMD-REQ-001:flow_rate_deviation_pct",
+    "threshold_passed:IMD-REQ-002:occlusion_detect_ms"
+  ],
+  "rules_triggered": [
+    "R1_confirmed_threshold_regression",
+    "R2_introduced_test_failure",
+    "signal_baseline_pass_current_threshold_fail",
+    "signal_introduced_failure_present",
+    "signal_material_metric_worsening"
+  ],
+  "schema_version": "avera.assessment.v0.2",
+  "threshold_evidence": [
+    {
+      "baseline_passed": true,
+      "baseline_value": 287.0,
+      "current_passed": true,
+      "current_value": 294.0,
+      "metric": "alarm_trigger_ms",
+      "operator": "<=",
+      "requirement_id": "IMD-REQ-003",
+      "test_id": "IMD-SIL-ALARM-02",
+      "threshold": 500.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 2.3,
+      "current_passed": false,
+      "current_value": 7.8,
+      "metric": "flow_rate_deviation_pct",
+      "operator": "<=",
+      "requirement_id": "IMD-REQ-001",
+      "test_id": "IMD-SIL-FLOW-01",
+      "threshold": 5.0
+    },
+    {
+      "baseline_passed": true,
+      "baseline_value": 1840.0,
+      "current_passed": true,
+      "current_value": 2190.0,
+      "metric": "occlusion_detect_ms",
+      "operator": "<=",
+      "requirement_id": "IMD-REQ-002",
+      "test_id": "IMD-SIL-FLOW-01",
+      "threshold": 3000.0
+    }
+  ],
+  "verdict": "confirmed_regression"
+}
