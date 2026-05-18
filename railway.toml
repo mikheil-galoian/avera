@@ -20,6 +20,6 @@ startCommand = "python -m streamlit run demo/app.py --server.port=$PORT --server
 healthcheckPath = "/_stcore/health"
 healthcheckTimeout = 30
 
-[environments.production.variables]
+[variables]
 AVERA_DEFAULT_SCENARIO = "bms-fast-charge"
 PYTHONPATH = "/app/src"

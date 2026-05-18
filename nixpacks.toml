@@ -1,7 +1,7 @@
 [phases.install]
 cmds = [
-  "pip install --no-cache-dir streamlit>=1.44 pydantic>=2.0",
-  "pip install --no-cache-dir -e . --no-build-isolation"
+  "pip install streamlit pydantic",
+  "pip install -e . --no-build-isolation"
 ]
 
 [start]
