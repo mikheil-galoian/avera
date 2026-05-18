@@ -35,10 +35,6 @@ LABEL org.opencontainers.image.title="AVERA Demo Shell" \
       org.opencontainers.image.description="AI Change Verification — live Streamlit demo" \
       org.opencontainers.image.version="0.1.0"
 
-# Minimal system deps (curl for health check only)
-RUN apt-get update && apt-get install -y --no-install-recommends curl \
-    && rm -rf /var/lib/apt/lists/*
-
 # Non-root user
 RUN groupadd -g 1001 avera && useradd -u 1001 -g avera -s /sbin/nologin avera
 
@@ -64,9 +60,6 @@ ENV HOME=/home/avera
 USER avera
 
 EXPOSE 8501
-
-HEALTHCHECK --interval=30s --timeout=10s --start-period=20s --retries=3 \
-    CMD curl -sf http://localhost:8501/_stcore/health || exit 1
 
 CMD ["python", "-m", "streamlit", "run", "demo/app.py", \
      "--server.port=8501", \
