@@ -1,0 +1,8 @@
+[phases.install]
+cmds = [
+  "python3 -m pip install streamlit pydantic setuptools",
+  "python3 -m pip install -e . --no-build-isolation"
+]
+
+[start]
+cmd = "python3 -m streamlit run demo/app.py --server.port=$PORT --server.address=0.0.0.0 --server.headless=true"
