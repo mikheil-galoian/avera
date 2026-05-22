@@ -1,0 +1,75 @@
+# ─────────────────────────────────────────────────────────────
+# Example: using AVERA in your own GitHub repository.
+#
+# Save this as .github/workflows/avera-verify.yml in your repo.
+# AVERA will analyse your evidence pack on every PR and block
+# merges when a safety-critical regression is detected.
+#
+# Replace `<owner>` with the AVERA action owner once the action
+# is published to the Marketplace (e.g. tc7kxsszs5-cloud/avera).
+# ─────────────────────────────────────────────────────────────
+
+name: AVERA Change Verification
+
+on:
+  pull_request:
+    paths:
+      - 'evidence/**'
+      - 'fixtures/**'
+      - 'tests/**'
+  push:
+    branches: [main]
+
+jobs:
+  verify:
+    name: AVERA Change Verification
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run AVERA against the evidence pack
+        id: avera
+        uses: tc7kxsszs5-cloud/avera@v1
+        with:
+          project_path: evidence/current-change
+          output_path: avera-reports
+          fail_on_release_blocking: 'true'
+          fail_on_regression: 'false'
+
+      - name: Surface verdict in PR body
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const verdict    = '${{ steps.avera.outputs.verdict }}';
+            const risk       = '${{ steps.avera.outputs.risk }}';
+            const confidence = '${{ steps.avera.outputs.confidence }}';
+
+            const icon = risk === 'release_blocking' ? '🛑'
+                        : verdict === 'confirmed_regression' ? '⚠️'
+                        : '✅';
+
+            const body =
+              `## ${icon} AVERA Change Verification\n\n` +
+              `| Field      | Value             |\n` +
+              `|------------|-------------------|\n` +
+              `| Verdict    | \`${verdict}\`    |\n` +
+              `| Risk       | \`${risk}\`       |\n` +
+              `| Confidence | \`${confidence}\` |\n`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body,
+            });
+
+      - name: Upload evidence pack
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: avera-evidence-pack
+          path: avera-reports/

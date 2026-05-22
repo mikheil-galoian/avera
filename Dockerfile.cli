@@ -1,0 +1,61 @@
+# ─────────────────────────────────────────────────────────────
+# AVERA — CLI Docker image
+#
+# A minimal image that ships just the `avera` command-line
+# entry point. Used for two things:
+#
+# 1. End-user "try it without installing Python" path:
+#
+#      docker run --rm \
+#        -v "$PWD/fixtures/bms-fast-charge:/workspace:ro" \
+#        ghcr.io/tc7kxsszs5-cloud/avera-cli:latest \
+#        analyze --project /workspace --out /tmp/reports
+#
+# 2. Runtime base for the AVERA GitHub Marketplace Action
+#    (see ../action.yml at repo root). The action.yml overrides
+#    the entrypoint to the `avera-action` wrapper so the same
+#    image works for both interactive Docker users and CI.
+# ─────────────────────────────────────────────────────────────
+
+# ── Stage 1: builder ──────────────────────────────────────────
+FROM python:3.12-slim AS builder
+
+WORKDIR /build
+
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+
+# Copy packaging metadata + source (better layer caching)
+COPY pyproject.toml ./
+COPY src/ ./src/
+
+# Install AVERA core into an isolated venv
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+RUN pip install --no-cache-dir "."
+
+
+# ── Stage 2: runtime ─────────────────────────────────────────
+FROM python:3.12-slim AS runtime
+
+LABEL org.opencontainers.image.title="AVERA CLI" \
+      org.opencontainers.image.description="AI Change Verification CLI for Safety-Critical Systems (ISO 26262, DO-178C, IEC 62304, EN 50128)" \
+      org.opencontainers.image.version="0.1.0" \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opencontainers.image.source="https://github.com/tc7kxsszs5-cloud/avera" \
+      org.opencontainers.image.documentation="https://github.com/tc7kxsszs5-cloud/avera/blob/main/README.md"
+
+# Copy venv from builder
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Install the GitHub Action wrapper script. The default ENTRYPOINT
+# is `avera` for interactive Docker use; action.yml overrides the
+# entrypoint to /usr/local/bin/avera-action when the image is
+# invoked as a Marketplace Action.
+COPY scripts/avera-action-entrypoint.sh /usr/local/bin/avera-action
+RUN chmod +x /usr/local/bin/avera-action
+
+WORKDIR /workspace
+
+ENTRYPOINT ["avera"]
+CMD ["--help"]
