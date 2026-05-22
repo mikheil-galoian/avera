@@ -1,0 +1,17 @@
+# ─────────────────────────────────────────────────────────────
+# Minimal AVERA usage — verify on every PR, block on safety
+# regressions. No comments, no artifact upload, two steps total.
+# ─────────────────────────────────────────────────────────────
+
+name: AVERA
+
+on: [pull_request]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: tc7kxsszs5-cloud/avera@v1
+        with:
+          project_path: evidence/my-change

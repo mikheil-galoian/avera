@@ -1,0 +1,48 @@
+name: 'AVERA Change Verification'
+description: 'Turn engineering change artifacts into a structured, traceable evidence pack — ready for release review (ISO 26262, DO-178C, IEC 62304, EN 50128).'
+author: 'AVERA Engineering'
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  project_path:
+    description: 'Path to the evidence pack directory. Must contain baseline + current verification results, requirements.csv, component_map.json, and change_description.txt. See the AVERA README for the full evidence pack contract.'
+    required: true
+  output_path:
+    description: 'Directory where the evidence report (avera-report.json, avera-report.md, avera-evidence-graph.json) will be written.'
+    required: false
+    default: 'avera-reports'
+  fail_on_release_blocking:
+    description: 'Fail the workflow when AVERA classifies risk as release_blocking. Default true — recommended for safety-critical CI gates.'
+    required: false
+    default: 'true'
+  fail_on_regression:
+    description: 'Fail the workflow on any confirmed_regression verdict, regardless of risk level. Default false.'
+    required: false
+    default: 'false'
+  expected_verdict:
+    description: 'Optional. When set, assert that AVERA produces this specific verdict (e.g. confirmed_regression, successful_change). Useful for fixture-based regression tests of the evidence pack itself.'
+    required: false
+    default: ''
+
+outputs:
+  verdict:
+    description: 'AVERA verdict: confirmed_regression / successful_change / preexisting_failure / worsened_preexisting_failure / environment_failure / insufficient_evidence / requirements_coverage_gap.'
+  risk:
+    description: 'AVERA risk classification: release_blocking / high / medium / low / unknown.'
+  confidence:
+    description: 'AVERA confidence: high / medium / low.'
+  report_path:
+    description: 'Filesystem path to the generated avera-report.json artifact.'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile.cli'
+  entrypoint: '/usr/local/bin/avera-action'
+  args:
+    - ${{ inputs.project_path }}
+    - ${{ inputs.output_path }}
+    - ${{ inputs.fail_on_release_blocking }}
+    - ${{ inputs.fail_on_regression }}
+    - ${{ inputs.expected_verdict }}

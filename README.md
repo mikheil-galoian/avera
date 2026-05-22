@@ -134,6 +134,29 @@ pip install -e ".[demo,api,dev]"
 
 ---
 
+## Docker
+
+Run AVERA without installing Python:
+
+```bash
+# Pull the latest CLI image
+docker pull ghcr.io/tc7kxsszs5-cloud/avera-cli:latest
+
+# Analyze an evidence pack
+docker run --rm \
+  -v "$PWD/fixtures/bms-fast-charge:/workspace" \
+  -v "$PWD/reports:/reports" \
+  ghcr.io/tc7kxsszs5-cloud/avera-cli:latest \
+  analyze --project /workspace --out /reports \
+  --memory /reports/avera-memory.jsonl
+```
+
+Multi-arch image (`linux/amd64`, `linux/arm64`). Pinned tags: `latest`, `vX.Y.Z`, `sha-<short>`.
+
+> The evidence pack mount can be read-only (`:ro`) if you also pass `--memory /reports/avera-memory.jsonl` so the engineering-memory ledger lands in the writable reports volume.
+
+---
+
 ## REST API
 
 ```bash
@@ -145,6 +168,33 @@ curl -X POST http://localhost:8000/analyze \
   -H "Content-Type: application/json" \
   -d '{"project_path": "fixtures/bms-fast-charge"}'
 ```
+
+---
+
+## GitHub Action
+
+AVERA ships as a reusable GitHub Action. Add one step to your workflow and AVERA will run on every PR, generate a structured evidence pack, and block merges when a safety-critical regression is detected.
+
+```yaml
+# .github/workflows/avera-verify.yml
+name: AVERA
+on: [pull_request]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: tc7kxsszs5-cloud/avera@v1
+        with:
+          project_path: evidence/my-change
+          fail_on_release_blocking: 'true'
+```
+
+**Inputs:** `project_path` (required), `output_path`, `fail_on_release_blocking`, `fail_on_regression`, `expected_verdict`.
+**Outputs:** `verdict`, `risk`, `confidence`, `report_path`.
+
+Full example with PR comments and artifact upload: [`examples/github-action-usage.yml`](examples/github-action-usage.yml). Minimal two-step variant: [`examples/github-action-minimal.yml`](examples/github-action-minimal.yml).
 
 ---
 
