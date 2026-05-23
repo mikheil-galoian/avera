@@ -1,0 +1,134 @@
+# ─────────────────────────────────────────────────────────────
+# AVERA Action Dogfood
+#
+# Consumes the published Marketplace Action against our own
+# fixture matrix. If the published action breaks for an
+# external consumer, it breaks here first.
+#
+# Pin to v0.1.0 (the current published release). Bump on every
+# new tagged release as part of the release checklist.
+# ─────────────────────────────────────────────────────────────
+
+name: AVERA Action Dogfood
+
+on:
+  pull_request:
+    paths:
+      - 'action.yml'
+      - 'Dockerfile.cli'
+      - 'scripts/avera-action-entrypoint.sh'
+      - 'fixtures/**'
+      - '.github/workflows/avera-action-dogfood.yml'
+  schedule:
+    - cron: '0 6 * * 1'   # Mon 06:00 UTC — weekly drift catch
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  successful-change:
+    name: successful_change (low risk)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: avera
+        uses: tc7kxsszs5-cloud/avera@v0.1.0
+        with:
+          project_path: fixtures/bms-successful-change
+          output_path: dogfood-out
+          expected_verdict: successful_change
+          fail_on_release_blocking: 'true'
+
+      - name: Verify outputs
+        run: |
+          test "${{ steps.avera.outputs.verdict }}"    = "successful_change"
+          test "${{ steps.avera.outputs.risk }}"       = "low"
+          test "${{ steps.avera.outputs.confidence }}" = "high"
+
+  confirmed-regression-high:
+    name: confirmed_regression (high — non-blocking)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: avera
+        uses: tc7kxsszs5-cloud/avera@v0.1.0
+        with:
+          project_path: fixtures/bms-fast-charge
+          output_path: dogfood-out
+          expected_verdict: confirmed_regression
+          # risk=high, NOT release_blocking — so policy=true still passes
+          fail_on_release_blocking: 'true'
+
+      - name: Verify outputs
+        run: |
+          test "${{ steps.avera.outputs.verdict }}" = "confirmed_regression"
+          test "${{ steps.avera.outputs.risk }}"    = "high"
+
+  release-blocking-must-fail:
+    name: release_blocking MUST fail with default policy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: avera
+        uses: tc7kxsszs5-cloud/avera@v0.1.0
+        continue-on-error: true
+        with:
+          project_path: fixtures/adas-model-update-regression
+          output_path: dogfood-out
+          fail_on_release_blocking: 'true'
+
+      - name: Assert action failed as expected
+        run: |
+          if [ "${{ steps.avera.outcome }}" != "failure" ]; then
+            echo "::error::expected action to FAIL on release_blocking risk with fail_on_release_blocking=true, but outcome=${{ steps.avera.outcome }}"
+            exit 1
+          fi
+          echo "Action correctly blocked the workflow on release_blocking risk."
+
+  release-blocking-passes-when-disabled:
+    name: release_blocking passes when policy disabled
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: avera
+        uses: tc7kxsszs5-cloud/avera@v0.1.0
+        with:
+          project_path: fixtures/adas-model-update-regression
+          output_path: dogfood-out
+          expected_verdict: confirmed_regression
+          fail_on_release_blocking: 'false'
+
+      - name: Verify outputs
+        run: |
+          test "${{ steps.avera.outputs.verdict }}" = "confirmed_regression"
+          test "${{ steps.avera.outputs.risk }}"    = "release_blocking"
+
+  preexisting-failure:
+    name: preexisting_failure (medium risk)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: avera
+        uses: tc7kxsszs5-cloud/avera@v0.1.0
+        with:
+          project_path: fixtures/bms-preexisting-failure
+          output_path: dogfood-out
+          expected_verdict: preexisting_failure
+          fail_on_release_blocking: 'true'
+
+      - name: Verify outputs
+        run: |
+          test "${{ steps.avera.outputs.verdict }}" = "preexisting_failure"
+          test "${{ steps.avera.outputs.risk }}"    = "medium"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: avera-action-dogfood-evidence-pack
+          path: dogfood-out/
