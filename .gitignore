@@ -36,3 +36,4 @@ demo_output/
 
 # Railway / Deploy cache
 .railway/
+.venv311/
