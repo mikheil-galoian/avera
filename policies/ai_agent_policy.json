@@ -1,0 +1,18 @@
+{
+  "schema_version": "avera.gate_policy.v1",
+  "policy_id": "ai_agent.v1",
+  "domain": "ai_agent",
+  "description": "AI-agent / infrastructure workflow gate. More permissive iteration tier: high risk may pass and confidence threshold is 0.4, but confirmed and worsened regressions still block. Intended for fast pre-production agent change loops, not safety-critical release sign-off.",
+  "max_allowed_risk": "high",
+  "min_confidence_score": 0.4,
+  "blocking_verdicts": [
+    "confirmed_regression",
+    "worsened_preexisting_failure"
+  ],
+  "review_verdicts": [
+    "environment_failure",
+    "insufficient_evidence",
+    "possible_regression",
+    "requirements_coverage_gap"
+  ]
+}

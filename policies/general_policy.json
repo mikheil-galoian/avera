@@ -1,0 +1,18 @@
+{
+  "schema_version": "avera.gate_policy.v1",
+  "policy_id": "general.v1",
+  "domain": "general",
+  "description": "Default conservative gate. Reproduces AVERA's original built-in behaviour: block on confirmed/worsened regressions or risk above medium; review on weak-evidence verdicts or confidence below 0.5.",
+  "max_allowed_risk": "medium",
+  "min_confidence_score": 0.5,
+  "blocking_verdicts": [
+    "confirmed_regression",
+    "worsened_preexisting_failure"
+  ],
+  "review_verdicts": [
+    "environment_failure",
+    "insufficient_evidence",
+    "possible_regression",
+    "requirements_coverage_gap"
+  ]
+}

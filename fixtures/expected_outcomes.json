@@ -63,5 +63,40 @@
     "verdict": "confirmed_regression",
     "risk": "release_blocking",
     "confidence": "high"
+  },
+  "etcs-brake-response-regression": {
+    "verdict": "confirmed_regression",
+    "risk": "release_blocking",
+    "confidence": "high"
+  },
+  "fadec-overspeed-regression": {
+    "verdict": "confirmed_regression",
+    "risk": "release_blocking",
+    "confidence": "high"
+  },
+  "fcc-envelope-regression": {
+    "verdict": "confirmed_regression",
+    "risk": "release_blocking",
+    "confidence": "high"
+  },
+  "infusion-pump-flow-regression": {
+    "verdict": "confirmed_regression",
+    "risk": "high",
+    "confidence": "high"
+  },
+  "powertrain-emissions-ok": {
+    "verdict": "successful_change",
+    "risk": "low",
+    "confidence": "high"
+  },
+  "powertrain-overspeed-regression": {
+    "verdict": "confirmed_regression",
+    "risk": "release_blocking",
+    "confidence": "high"
+  },
+  "powertrain-shift-quality": {
+    "verdict": "confirmed_regression",
+    "risk": "medium",
+    "confidence": "high"
   }
 }

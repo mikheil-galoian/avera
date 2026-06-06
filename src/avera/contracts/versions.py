@@ -32,15 +32,21 @@ from typing import Final
 # ---------------------------------------------------------------------------
 
 CURRENT_VERSIONS: Final[dict[str, str]] = {
-    "report": "1.0",
-    "graph": "evidence_graph.0.3",
-    "decision": "1.0",
-    "trend": "1.0",
-    "workspace_pack": "1.0",
-    "traceability": "1.0",
-    "memory_record": "1.0",
+    # These strings are reconciled with the schema_version values actually emitted
+    # by the code (see avera.classify.risk_classifier, avera.graph.builder,
+    # avera.decisions.engine, avera.trends.index, avera.traceability.index,
+    # avera.pack.export, avera.memory.ledger). The registry is the single source
+    # of truth, so it must match reality.
+    "report": "avera.assessment.v0.2",
+    "graph": "evidence_graph.v0.3",
+    "decision": "avera.decision.v0.2",
+    "trend": "avera.trend_index.v0.1",
+    "workspace_pack": "avera.workspace_pack.v0.1",
+    "traceability": "avera.traceability_index.v0.1",
+    "memory_record": "avera.memory_record.v0.1",
     "model_card": "1.0",
     "ai_evaluation": "1.0",
+    "evidence_manifest": "avera.evidence_manifest.v0.1",
 }
 
 
@@ -50,15 +56,23 @@ CURRENT_VERSIONS: Final[dict[str, str]] = {
 # ---------------------------------------------------------------------------
 
 SUPPORTED_VERSIONS: Final[dict[str, frozenset[str]]] = {
-    "report": frozenset({"1.0"}),
-    "graph": frozenset({"evidence_graph.0.3", "evidence_graph.0.2", "evidence_graph.0.1"}),
-    "decision": frozenset({"1.0"}),
-    "trend": frozenset({"1.0"}),
-    "workspace_pack": frozenset({"1.0"}),
-    "traceability": frozenset({"1.0"}),
-    "memory_record": frozenset({"1.0"}),
+    "report": frozenset({"avera.assessment.v0.2"}),
+    "graph": frozenset(
+        {
+            "evidence_graph.v0.3",
+            "evidence_graph.0.3",
+            "evidence_graph.0.2",
+            "evidence_graph.0.1",
+        }
+    ),
+    "decision": frozenset({"avera.decision.v0.2"}),
+    "trend": frozenset({"avera.trend_index.v0.1"}),
+    "workspace_pack": frozenset({"avera.workspace_pack.v0.1"}),
+    "traceability": frozenset({"avera.traceability_index.v0.1"}),
+    "memory_record": frozenset({"avera.memory_record.v0.1"}),
     "model_card": frozenset({"1.0"}),
     "ai_evaluation": frozenset({"1.0"}),
+    "evidence_manifest": frozenset({"avera.evidence_manifest.v0.1"}),
 }
 
 

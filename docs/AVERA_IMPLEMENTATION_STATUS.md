@@ -1,7 +1,35 @@
 # AVERA Implementation Status
 
-**Date:** 8 May 2026  
-**Status:** AI Change Verification Infrastructure — proof of concept complete
+**Date:** 6 June 2026  
+**Status:** Evidence-control layer — serious-program slices landed
+
+## Serious-Program Layer (6 June 2026)
+
+Six regression-proof slices strengthening AVERA as an evidence-control layer:
+
+1. **Fixture matrix completeness** — all 20 fixtures now have enforced expected
+   outcomes (was 13); the 7 new outcomes (ETCS, FADEC, FCC, infusion pump, 3×
+   powertrain) were inferred from fixture change descriptions and confirmed by the
+   real analyzer. Guard test: `tests/test_fixture_matrix_completeness.py`.
+2. **Policy-as-data** — gate thresholds and verdict sets moved into versioned JSON
+   policies under `policies/` (general, automotive, aviation, medical, railway,
+   ai_agent). Default behaviour preserved; same report can diverge across policies.
+   `src/avera/gates/policy_loader.py`, `tests/test_gate_policy_data.py`.
+3. **Sign-off workflow** — `draft → reviewed → approved/rejected`, bound to the
+   evidence manifest `integrity_root`, with audit-chain binding and tamper
+   detection. `src/avera/signoff/`, `docs/AVERA_SIGNOFF_WORKFLOW.md`.
+4. **Demo readiness** — live manifest re-verification + audit-chain verification in
+   the demo, plus a minimal, safe JUnit/JSON upload *preview*.
+   `demo/avera_demo/integrity.py`, `demo/avera_demo/upload.py`.
+5. **AI Review Copilot boundary** — deterministic, evidence-grounded stub that
+   answers only from the evidence pack and returns "insufficient evidence"
+   otherwise; no-hallucination tests. `src/avera/copilot/`.
+6. **Git/deploy sanity** — repository confirmed (`main`); changes are local and
+   uncommitted pending review.
+
+Rules held: gate stays deterministic, AI never decides release, evidence /
+manifest / audit / sign-off remain inspectable, existing CLI/API behaviour
+preserved.
 
 ## Current Milestone
 

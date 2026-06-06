@@ -1,0 +1,18 @@
+{
+  "schema_version": "avera.gate_policy.v1",
+  "policy_id": "medical.v1",
+  "domain": "medical",
+  "description": "Medical device (IEC 62304-oriented) gate. Strict tier: only low risk passes, confidence must reach 0.8, and possible regressions and coverage gaps are blocking.",
+  "max_allowed_risk": "low",
+  "min_confidence_score": 0.8,
+  "blocking_verdicts": [
+    "confirmed_regression",
+    "worsened_preexisting_failure",
+    "possible_regression",
+    "requirements_coverage_gap"
+  ],
+  "review_verdicts": [
+    "environment_failure",
+    "insufficient_evidence"
+  ]
+}

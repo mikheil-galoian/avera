@@ -173,6 +173,8 @@ def scenario_paths(name: str) -> ScenarioPaths:
         decision_path=REPORTS_ROOT / "avera-decision.json",
         trend_path=REPORTS_ROOT / "avera-trend-index.json",
         pack_path=REPORTS_ROOT / "avera-workspace-pack.json",
+        manifest_path=REPORTS_ROOT / "avera-evidence-manifest.json",
+        audit_log_path=REPORTS_ROOT / "avera-audit.jsonl",
         memory_path=REPORTS_ROOT / "avera-memory.jsonl",
     )
 
@@ -192,6 +194,8 @@ def artifact_catalog(scenario: ScenarioPaths) -> list[ArtifactEntry]:
         ArtifactEntry("decision", "Decision", scenario.decision_path, "json"),
         ArtifactEntry("trend", "Trend Index", scenario.trend_path, "json"),
         ArtifactEntry("workspace_pack", "Workspace Pack", scenario.pack_path, "json"),
+        ArtifactEntry("evidence_manifest", "Evidence Manifest", scenario.manifest_path, "json"),
+        ArtifactEntry("audit_log", "Audit Log", scenario.audit_log_path, "text"),
         ArtifactEntry("memory", "Memory Log", scenario.memory_path, "text"),
     ]
     raw_sources = [
@@ -242,6 +246,8 @@ def load_snapshot(scenario: ScenarioPaths) -> ShellSnapshot:
         traceability=read_json(scenario.traceability_path),
         trend=read_json(scenario.trend_path),
         workspace_pack=read_json(scenario.pack_path),
+        evidence_manifest=read_json(scenario.manifest_path),
+        audit_log=read_text(scenario.audit_log_path),
         baseline_rows=flatten_results(baseline),
         current_rows=flatten_results(current),
         signal_rows=read_csv_rows(scenario.fixture_dir / "signal_trace.csv"),

@@ -67,6 +67,38 @@ PYTHONPATH=src python3 -B -m avera analyze \
   --out reports
 ```
 
+## Evidence-Control Layer
+
+Above the analysis pipeline, AVERA adds a deterministic evidence-control layer.
+Each part is small, inspectable, and contract-bound:
+
+```text
+report + graph + traceability + decision + trend
+  ↓  bind
+Evidence Manifest  (integrity_root)        src/avera/evidence/
+  ↓  anchor
+Hash-chained Audit Log (append-only)       src/avera/audit/
+  ↓  reference
+Sign-off (draft→reviewed→approved/rejected) src/avera/signoff/
+```
+
+Supporting subsystems:
+
+- **Gate policy (policy-as-data)** — `src/avera/gates/`, `policies/*.json`.
+  Deterministic gate parametrised by versioned policy files per domain.
+- **AI Review Copilot (bounded)** — `src/avera/copilot/`. Deterministic,
+  evidence-grounded interpretation only; returns "insufficient evidence" when the
+  pack lacks support. Never decides a release.
+
+Boundaries:
+
+- The **gate is deterministic**; policies only parametrise it.
+- The **manifest** binds artifacts with one content-addressed `integrity_root`.
+- The **audit log** is append-only and SHA-256 hash-chained.
+- A **sign-off** binds a human decision to one `integrity_root`; changed evidence
+  invalidates it.
+- The **copilot** assists interpretation; it cannot generate unsupported claims.
+
 ## Subsystems
 
 ### 1. Artifact Ingestion

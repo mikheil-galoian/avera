@@ -8,12 +8,17 @@ from pathlib import Path
 
 from avera.adapters import adapt_junit_xml, adapt_log_csv, adapt_requirements_csv, adapt_simulation_csv
 from avera.adapters.requirements import write_adapted_requirements
-from avera.gates import evaluate_gate
+from avera.gates import evaluate_gate, list_builtin_policies, load_builtin_policy, load_policy
 from avera.graph import build_evidence_graph
 from avera.classify.risk_classifier import classify_risk
 from avera.compare.baseline_comparator import compare_runs
 from avera.contracts import validate_artifact, validate_bundle
 from avera.decisions import evaluate_decision
+from avera.evidence import (
+    build_evidence_manifest,
+    record_manifest_in_audit_log,
+    write_evidence_manifest,
+)
 from avera.ingestion.component_map import load_component_map
 from avera.ingestion.requirements import load_requirements
 from avera.ingestion.verification_results import load_verification_results
@@ -212,15 +217,33 @@ def build_parser() -> argparse.ArgumentParser:
     )
     gate.add_argument(
         "--max-risk",
-        default="medium",
+        default=None,
         choices=("unknown", "low", "medium", "high", "release_blocking", "safety_critical"),
-        help="Highest risk level allowed before the gate blocks.",
+        help=(
+            "Highest risk level allowed before the gate blocks. "
+            "Overrides the policy when set. Default: policy value (general = medium)."
+        ),
     )
     gate.add_argument(
         "--min-confidence-score",
         type=float,
-        default=0.5,
-        help="Minimum confidence score before the gate requires review.",
+        default=None,
+        help=(
+            "Minimum confidence score before the gate requires review. "
+            "Overrides the policy when set. Default: policy value (general = 0.5)."
+        ),
+    )
+    gate.add_argument(
+        "--policy",
+        default=None,
+        choices=tuple(list_builtin_policies()),
+        help="Built-in domain gate policy to apply (e.g. automotive, aviation, medical).",
+    )
+    gate.add_argument(
+        "--policy-file",
+        type=Path,
+        default=None,
+        help="Path to a custom gate policy JSON file. Takes precedence over --policy.",
     )
     gate.add_argument(
         "--memory",
@@ -362,6 +385,25 @@ def build_parser() -> argparse.ArgumentParser:
         default=Path("reports/avera-workspace-pack.json"),
         help="Output path for the workspace pack JSON.",
     )
+    pack.add_argument(
+        "--manifest-out",
+        type=Path,
+        default=None,
+        help=(
+            "Output path for the evidence manifest JSON. "
+            "Defaults to avera-evidence-manifest.json next to --out."
+        ),
+    )
+    pack.add_argument(
+        "--audit-log",
+        type=Path,
+        default=None,
+        help=(
+            "Path to the append-only, hash-chained audit log (JSONL). "
+            "The manifest integrity root is recorded here. "
+            "Defaults to avera-audit.jsonl next to --out."
+        ),
+    )
 
     query = subparsers.add_parser(
         "query",
@@ -421,7 +463,7 @@ def build_parser() -> argparse.ArgumentParser:
     contract.add_argument(
         "--artifact",
         required=True,
-        choices=("report", "graph", "decision", "trend", "workspace_pack"),
+        choices=("report", "graph", "decision", "trend", "workspace_pack", "evidence_manifest"),
         help="Artifact contract to validate.",
     )
     contract.add_argument(
@@ -661,18 +703,29 @@ def run_fixtures(fixtures: Path, out: Path, memory: Path | None = None) -> int:
 
 def run_gate(
     report: Path,
-    max_risk: str,
-    min_confidence_score: float,
+    max_risk: str | None = None,
+    min_confidence_score: float | None = None,
     memory: Path | None = None,
+    policy_name: str | None = None,
+    policy_file: Path | None = None,
 ) -> int:
     payload = json.loads(report.read_text(encoding="utf-8"))
+
+    policy = None
+    if policy_file is not None:
+        policy = load_policy(policy_file)
+    elif policy_name is not None:
+        policy = load_builtin_policy(policy_name)
+
     decision = evaluate_gate(
         payload,
         max_allowed_risk=max_risk,
         min_confidence_score=min_confidence_score,
+        policy=policy,
     )
 
     print("AVERA Gate Decision")
+    print(f"Policy: {decision.report_summary['policy_id']}")
     print(f"Status: {decision.status}")
     print(f"Verdict: {decision.report_summary['verdict']}")
     print(f"Risk: {decision.report_summary['risk']}")
@@ -767,6 +820,8 @@ def run_pack(
     decision: Path | None,
     trend: Path | None,
     out: Path,
+    manifest_out: Path | None = None,
+    audit_log: Path | None = None,
 ) -> int:
     report_payload = json.loads(report.read_text(encoding="utf-8"))
     graph_payload = json.loads(graph.read_text(encoding="utf-8")) if graph and graph.exists() else None
@@ -805,11 +860,42 @@ def run_pack(
     )
     write_workspace_pack(pack, out)
 
+    # Emit the formal Evidence Manifest binding the run's artifacts (including the
+    # workspace pack just written) under one content-addressed integrity root.
+    manifest_path = manifest_out or (out.parent / "avera-evidence-manifest.json")
+    manifest = build_evidence_manifest(
+        workspace=workspace,
+        artifacts={
+            "report": (report_payload, report),
+            "graph": (graph_payload, graph),
+            "traceability": (traceability_payload, traceability),
+            "decision": (decision_payload, decision),
+            "trend": (trend_payload, trend),
+            "workspace_pack": (pack, out),
+        },
+    )
+    write_evidence_manifest(manifest, manifest_path)
+
+    # Bind the manifest's integrity root into the immutable, hash-chained audit
+    # log. This is the anchor a regulated sign-off later references.
+    audit_log_path = audit_log or (out.parent / "avera-audit.jsonl")
+    audit_record = record_manifest_in_audit_log(
+        manifest, audit_log_path, manifest_path=manifest_path
+    )
+
     print("AVERA Workspace Pack")
     print(f"Workspace: {workspace}")
     print(f"Output: {out}")
     print(f"Artifacts: {pack['manifest']['artifact_count']}")
     print(f"Missing: {pack['manifest']['missing_artifacts']}")
+    print("AVERA Evidence Manifest")
+    print(f"Manifest: {manifest_path}")
+    print(f"Integrity root: {manifest.integrity_root}")
+    print(f"Complete: {manifest.completeness['complete']}")
+    print("AVERA Audit Log")
+    print(f"Audit log: {audit_log_path}")
+    print(f"Audit event: {audit_record.event} (seq {audit_record.seq})")
+    print(f"Audit record hash: {audit_record.self_hash}")
     return 0
 
 
@@ -897,6 +983,9 @@ def run_demo_refresh(
     if pack_code != 0:
         return pack_code
 
+    manifest_out = pack_out.parent / "avera-evidence-manifest.json"
+    audit_log_out = pack_out.parent / "avera-audit.jsonl"
+
     print("AVERA Demo Refresh")
     print(f"Project: {project}")
     print(f"Report dir: {report_out}")
@@ -904,6 +993,8 @@ def run_demo_refresh(
     print(f"Decision: {decision_out}")
     print(f"Trend: {trend_out}")
     print(f"Workspace pack: {pack_out}")
+    print(f"Evidence manifest: {manifest_out}")
+    print(f"Audit log: {audit_log_out}")
     return 0
 
 
@@ -970,6 +1061,8 @@ def main() -> None:
                 args.max_risk,
                 args.min_confidence_score,
                 args.memory,
+                args.policy,
+                args.policy_file,
             )
         )
     if args.command == "memory":
@@ -1004,6 +1097,8 @@ def main() -> None:
                 args.decision,
                 args.trend,
                 args.out,
+                args.manifest_out,
+                args.audit_log,
             )
         )
     if args.command == "query":

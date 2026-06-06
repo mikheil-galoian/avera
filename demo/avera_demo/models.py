@@ -14,6 +14,8 @@ class ScenarioPaths:
     decision_path: Path
     trend_path: Path
     pack_path: Path
+    manifest_path: Path
+    audit_log_path: Path
     memory_path: Path
 
 
@@ -46,6 +48,8 @@ class ShellSnapshot:
     traceability: dict[str, Any] | list[Any] | None
     trend: dict[str, Any] | list[Any] | None
     workspace_pack: dict[str, Any] | list[Any] | None
+    evidence_manifest: dict[str, Any] | list[Any] | None
+    audit_log: str | None
     baseline_rows: list[dict[str, Any]]
     current_rows: list[dict[str, Any]]
     signal_rows: list[dict[str, Any]]

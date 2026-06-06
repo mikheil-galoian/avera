@@ -1,7 +1,10 @@
 # AVERA Evidence Model
 
 **Date:** 22 April 2026  
-**Status:** Draft contract v0
+**Status:** Draft contract v0  
+**Binding layer:** see `docs/AVERA_EVIDENCE_MANIFEST.md` for the formal,
+content-addressed Evidence Manifest that binds a run's artifacts with an
+integrity root.
 
 ## Purpose
 

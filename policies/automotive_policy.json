@@ -1,0 +1,18 @@
+{
+  "schema_version": "avera.gate_policy.v1",
+  "policy_id": "automotive.v1",
+  "domain": "automotive",
+  "description": "Automotive (ISO 26262-oriented) gate. Stricter than general: no risk above low is allowed to pass, and confidence must reach 0.7. Possible regressions are blocking, not just review.",
+  "max_allowed_risk": "low",
+  "min_confidence_score": 0.7,
+  "blocking_verdicts": [
+    "confirmed_regression",
+    "worsened_preexisting_failure",
+    "possible_regression"
+  ],
+  "review_verdicts": [
+    "environment_failure",
+    "insufficient_evidence",
+    "requirements_coverage_gap"
+  ]
+}

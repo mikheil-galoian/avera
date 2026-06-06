@@ -5,8 +5,10 @@ from typing import Any
 
 import streamlit as st
 
-from .artifacts import build_summary, read_artifact
+from .artifacts import PROJECT_ROOT, build_summary, read_artifact
+from .integrity import integrity_panel
 from .models import ArtifactEntry, ScenarioPaths, ShellSnapshot
+from .upload import preview_uploaded_evidence
 
 
 def render_sidebar(snapshot: ShellSnapshot) -> tuple[bool, bool]:
@@ -25,8 +27,8 @@ def render_shell(snapshot: ShellSnapshot) -> None:
     render_operator_strip(snapshot)
     render_artifact_strip(snapshot)
 
-    overview_tab, evidence_tab, traceability_tab, workspace_tab, artifacts_tab = st.tabs(
-        ["Overview", "Evidence", "Traceability", "Workspace", "Artifacts"]
+    overview_tab, evidence_tab, traceability_tab, workspace_tab, integrity_tab, artifacts_tab = st.tabs(
+        ["Overview", "Evidence", "Traceability", "Workspace", "Integrity", "Artifacts"]
     )
     with overview_tab:
         render_overview(snapshot)
@@ -36,6 +38,8 @@ def render_shell(snapshot: ShellSnapshot) -> None:
         render_traceability(snapshot)
     with workspace_tab:
         render_workspace(snapshot)
+    with integrity_tab:
+        render_integrity(snapshot)
     with artifacts_tab:
         render_artifacts(snapshot)
 
@@ -309,6 +313,123 @@ def render_workspace(snapshot: ShellSnapshot) -> None:
             st.caption("Trend artifact not found.")
 
 
+def render_integrity(snapshot: ShellSnapshot) -> None:
+    manifest = snapshot.evidence_manifest if isinstance(snapshot.evidence_manifest, dict) else None
+    audit_log = snapshot.audit_log or ""
+
+    st.markdown("#### Evidence Integrity")
+    st.write(
+        "This view shows whether the demo run produced a bound evidence set. "
+        "The Evidence Manifest gives the artifact bundle an integrity root, and the audit log records that root in a hash-chained event."
+    )
+
+    if manifest:
+        summary = manifest.get("summary") if isinstance(manifest.get("summary"), dict) else {}
+        artifacts = manifest.get("artifacts") if isinstance(manifest.get("artifacts"), list) else []
+        integrity_root = str(manifest.get("integrity_root") or "-")
+
+        metric_a, metric_b, metric_c, metric_d = st.columns(4)
+        metric_a.metric("Manifest", "ready")
+        metric_b.metric("Schema", str(manifest.get("schema_version") or "-"))
+        metric_c.metric("Artifact Rows", len(artifacts))
+        metric_d.metric("Verdict", str(summary.get("verdict") or "-"))
+
+        st.markdown("##### Integrity Root")
+        st.code(integrity_root, language="text")
+
+        st.markdown("##### Bound Artifacts")
+        st.dataframe(build_manifest_artifact_rows(artifacts), use_container_width=True, hide_index=True)
+
+        st.download_button(
+            "Download evidence manifest JSON",
+            data=json.dumps(manifest, indent=2, sort_keys=True),
+            file_name="avera-evidence-manifest.json",
+            mime="application/json",
+        )
+    else:
+        st.warning("Evidence Manifest is missing. Run Analyze to regenerate the full demo artifact chain.")
+
+    # Truthful, live verification of the bound evidence set.
+    panel = integrity_panel(
+        manifest,
+        snapshot.scenario.audit_log_path,
+        base_dir=PROJECT_ROOT,
+    )
+    st.markdown("##### Live Verification")
+    ver_a, ver_b = st.columns(2)
+    m = panel["manifest"]
+    if m["present"]:
+        ver_a.metric(
+            "Manifest re-verify",
+            "PASS" if m["ok"] else "FAIL",
+            help=f"Checked {m['checked_artifacts']} artifact(s) against recorded hashes.",
+        )
+        if not m["ok"]:
+            for err in m["errors"]:
+                st.error(f"Manifest: {err}")
+    else:
+        ver_a.metric("Manifest re-verify", "n/a")
+    a = panel["audit"]
+    if a["present"]:
+        ver_b.metric(
+            "Audit chain",
+            "PASS" if a["ok"] else "FAIL",
+            help=f"{a['record_count']} hash-chained record(s).",
+        )
+        if not a["ok"] and a["error"]:
+            st.error(f"Audit chain: {a['error']}")
+    else:
+        ver_b.metric("Audit chain", "n/a")
+
+    st.markdown("#### Hash-Chained Audit Log")
+    audit_rows = build_audit_rows(audit_log)
+    if audit_rows:
+        st.dataframe(audit_rows, use_container_width=True, hide_index=True)
+        st.download_button(
+            "Download audit log",
+            data=audit_log,
+            file_name="avera-audit.jsonl",
+            mime="application/jsonl",
+        )
+    else:
+        st.info("No audit records are available yet.")
+
+    render_upload_preview()
+
+
+def render_upload_preview() -> None:
+    """Minimal, safe demo-preview upload path for JUnit XML or verification JSON."""
+
+    st.markdown("#### Artifact Upload — Demo Preview")
+    st.caption(
+        "Demo preview only: upload a JUnit/xUnit XML or AVERA verification-results JSON "
+        "file to see how AVERA parses it into normalized verification evidence. "
+        "Nothing is executed and the workspace is not modified."
+    )
+    uploaded = st.file_uploader(
+        "Upload JUnit XML or verification JSON",
+        type=["xml", "json"],
+        accept_multiple_files=False,
+        key="avera_demo_upload",
+    )
+    if uploaded is None:
+        return
+    result = preview_uploaded_evidence(uploaded.name, uploaded.getvalue())
+    if not result["ok"]:
+        st.error(f"Could not parse upload: {result['error']}")
+        return
+    preview = result["preview"]
+    st.success(f"Parsed as {result['kind']} — {preview['test_count']} test result(s).")
+    meta_a, meta_b, meta_c = st.columns(3)
+    meta_a.metric("Run id", str(preview.get("run_id") or "-"))
+    meta_b.metric("Stage", str(preview.get("stage") or "-"))
+    meta_c.metric("Tests", preview["test_count"])
+    if preview["statuses"]:
+        st.write("Status counts:", preview["statuses"])
+    if preview["tests"]:
+        st.dataframe(preview["tests"], use_container_width=True, hide_index=True)
+
+
 def render_artifacts(snapshot: ShellSnapshot) -> None:
     labels = {artifact.label: artifact for artifact in snapshot.artifacts}
     selected_label = st.selectbox("Artifact", list(labels))
@@ -461,6 +582,8 @@ def build_workspace_readiness_rows(snapshot: ShellSnapshot) -> list[dict[str, st
         ("Decision artifact", isinstance(snapshot.decision, dict)),
         ("Traceability index", isinstance(snapshot.traceability, dict)),
         ("Workspace pack", isinstance(snapshot.workspace_pack, dict)),
+        ("Evidence manifest", isinstance(snapshot.evidence_manifest, dict)),
+        ("Audit log", bool(snapshot.audit_log)),
         ("Trend artifact", isinstance(snapshot.trend, dict)),
         ("Change description", bool(snapshot.change_description)),
     ]
@@ -521,3 +644,45 @@ def as_optional_text(value: Any) -> str | None:
     if value in (None, ""):
         return None
     return str(value)
+
+
+def build_manifest_artifact_rows(artifacts: list[Any]) -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    for item in artifacts:
+        if not isinstance(item, dict):
+            continue
+        digest = str(item.get("sha256") or "-")
+        rows.append(
+            {
+                "role": as_text(item.get("role")),
+                "present": str(bool(item.get("present"))),
+                "schema_version": as_text(item.get("schema_version")),
+                "sha256": digest if digest == "-" else digest[:16] + "...",
+                "path": as_text(item.get("path")),
+            }
+        )
+    return rows
+
+
+def build_audit_rows(audit_log: str) -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    for line_number, line in enumerate(audit_log.splitlines(), start=1):
+        if not line.strip():
+            continue
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            rows.append({"line": str(line_number), "event": "unreadable", "integrity_root": "-", "self_hash": "-"})
+            continue
+        payload = record.get("payload") if isinstance(record.get("payload"), dict) else {}
+        integrity_root = str(payload.get("integrity_root") or "-")
+        self_hash = str(record.get("self_hash") or "-")
+        rows.append(
+            {
+                "line": str(line_number),
+                "event": as_text(record.get("event")),
+                "integrity_root": integrity_root if integrity_root == "-" else integrity_root[:16] + "...",
+                "self_hash": self_hash if self_hash == "-" else self_hash[:16] + "...",
+            }
+        )
+    return rows

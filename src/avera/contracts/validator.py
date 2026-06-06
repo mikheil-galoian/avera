@@ -46,6 +46,16 @@ ARTIFACT_REQUIRED_FIELDS = {
         "trend",
         "manifest",
     ),
+    "evidence_manifest": (
+        "schema_version",
+        "workspace",
+        "generated_at_utc",
+        "artifacts",
+        "integrity_root",
+        "completeness",
+        "summary",
+        "provenance",
+    ),
 }
 
 
@@ -130,6 +140,12 @@ def validate_artifact(name: str, payload: dict[str, Any]) -> ArtifactValidationR
         for field_name in ("workspace", "summary", "artifacts", "report", "graph", "traceability", "decision", "trend", "manifest"):
             _expect_type(errors, payload, field_name, dict, f"Workspace pack field {field_name} must be an object")
         _expect_type(errors, payload, "memory_slice", list, "Workspace pack field memory_slice must be an array")
+    elif artifact_name == "evidence_manifest":
+        for field_name in ("workspace", "completeness", "summary", "provenance"):
+            _expect_type(errors, payload, field_name, dict, f"Evidence manifest field {field_name} must be an object")
+        _expect_type(errors, payload, "artifacts", list, "Evidence manifest field artifacts must be an array")
+        _expect_type(errors, payload, "integrity_root", str, "Evidence manifest field integrity_root must be a string")
+        _expect_type(errors, payload, "generated_at_utc", str, "Evidence manifest field generated_at_utc must be a string")
 
     return ArtifactValidationResult(
         ok=not errors,
