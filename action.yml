@@ -1,5 +1,5 @@
 name: 'AVERA Change Verification'
-description: 'Turn engineering change artifacts into a structured, traceable evidence pack — ready for release review (ISO 26262, DO-178C, IEC 62304, EN 50128).'
+description: 'Turn engineering change artifacts into a structured, traceable evidence pack — ready for release review (ISO 26262, DO-178C, IEC 62304, EN 50128). Deterministic gate; optional evidence-grounded AI assistance.'
 author: 'AVERA Engineering'
 branding:
   icon: 'shield'
@@ -10,9 +10,13 @@ inputs:
     description: 'Path to the evidence pack directory. Must contain baseline + current verification results, requirements.csv, component_map.json, and change_description.txt. See the AVERA README for the full evidence pack contract.'
     required: true
   output_path:
-    description: 'Directory where the evidence report (avera-report.json, avera-report.md, avera-evidence-graph.json) will be written.'
+    description: 'Directory where the full canonical artifact set is written (report, markdown, evidence graph, traceability, decision, trend, workspace pack, evidence manifest, audit log).'
     required: false
     default: 'avera-reports'
+  policy:
+    description: 'Optional built-in gate policy for the gate_status output: general, automotive, aviation, medical, railway, ai_agent. Empty uses the default (general) policy.'
+    required: false
+    default: ''
   fail_on_release_blocking:
     description: 'Fail the workflow when AVERA classifies risk as release_blocking. Default true — recommended for safety-critical CI gates.'
     required: false
@@ -22,27 +26,28 @@ inputs:
     required: false
     default: 'false'
   expected_verdict:
-    description: 'Optional. When set, assert that AVERA produces this specific verdict (e.g. confirmed_regression, successful_change). Useful for fixture-based regression tests of the evidence pack itself.'
+    description: 'Optional. When set, assert that AVERA produces this specific verdict (e.g. confirmed_regression, successful_change). Mismatch fails the run.'
     required: false
     default: ''
 
 outputs:
   verdict:
-    description: 'AVERA verdict: confirmed_regression / successful_change / preexisting_failure / worsened_preexisting_failure / environment_failure / insufficient_evidence / requirements_coverage_gap.'
+    description: 'AVERA verdict (confirmed_regression / successful_change / preexisting_failure / worsened_preexisting_failure / environment_failure / insufficient_evidence / requirements_coverage_gap).'
   risk:
-    description: 'AVERA risk classification: release_blocking / high / medium / low / unknown.'
+    description: 'AVERA risk classification (release_blocking / high / medium / low / unknown).'
   confidence:
-    description: 'AVERA confidence: high / medium / low.'
+    description: 'AVERA confidence (high / medium / low).'
+  gate_status:
+    description: 'Deterministic gate status for the selected policy (pass / review / block).'
   report_path:
-    description: 'Filesystem path to the generated avera-report.json artifact.'
+    description: 'Filesystem path to avera-report.json.'
+  manifest_path:
+    description: 'Filesystem path to avera-evidence-manifest.json.'
+  integrity_root:
+    description: 'Content-addressed SHA-256 integrity root binding the evidence set.'
+  audit_log_path:
+    description: 'Filesystem path to the hash-chained avera-audit.jsonl.'
 
 runs:
   using: 'docker'
-  image: 'Dockerfile.cli'
-  entrypoint: '/usr/local/bin/avera-action'
-  args:
-    - ${{ inputs.project_path }}
-    - ${{ inputs.output_path }}
-    - ${{ inputs.fail_on_release_blocking }}
-    - ${{ inputs.fail_on_regression }}
-    - ${{ inputs.expected_verdict }}
+  image: 'Dockerfile.action'

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import sys
 from pathlib import Path
 
 from avera.adapters import adapt_junit_xml, adapt_log_csv, adapt_requirements_csv, adapt_simulation_csv
@@ -531,6 +533,51 @@ def build_parser() -> argparse.ArgumentParser:
         help="Number of newest memory records to include in traceability and trend.",
     )
 
+    action_run = subparsers.add_parser(
+        "action-run",
+        help="Run the full evidence pipeline for CI (GitHub Action). Emits all canonical artifacts and CI outputs.",
+    )
+    action_run.add_argument("--project", type=Path, required=True, help="Evidence pack directory.")
+    action_run.add_argument(
+        "--output",
+        type=Path,
+        default=Path("avera-reports"),
+        help="Directory for all canonical artifacts.",
+    )
+    action_run.add_argument(
+        "--memory",
+        type=Path,
+        default=None,
+        help="Memory ledger path. Defaults to <output>/avera-memory.jsonl.",
+    )
+    action_run.add_argument(
+        "--policy",
+        default=None,
+        choices=tuple(list_builtin_policies()),
+        help="Optional built-in gate policy for the gate_status output.",
+    )
+    action_run.add_argument(
+        "--fail-on-release-blocking",
+        default="true",
+        help="Fail (non-zero exit) when risk is release_blocking. true/false.",
+    )
+    action_run.add_argument(
+        "--fail-on-regression",
+        default="false",
+        help="Fail (non-zero exit) on any confirmed_regression verdict. true/false.",
+    )
+    action_run.add_argument(
+        "--expected-verdict",
+        default="",
+        help="Optional. Assert AVERA produces this verdict; mismatch fails the run.",
+    )
+    action_run.add_argument(
+        "--github-output",
+        type=Path,
+        default=None,
+        help="Path to write key=value CI outputs. Defaults to $GITHUB_OUTPUT when set.",
+    )
+
     return parser
 
 
@@ -998,6 +1045,141 @@ def run_demo_refresh(
     return 0
 
 
+def _truthy(value: object) -> bool:
+    return str(value).strip().lower() in {"1", "true", "yes", "on"}
+
+
+def canonical_artifact_paths(output: Path, memory: Path | None = None) -> dict[str, Path]:
+    """Return the canonical artifact path map for an output directory."""
+
+    output = Path(output)
+    return {
+        "report": output / "avera-report.json",
+        "markdown": output / "avera-report.md",
+        "graph": output / "avera-evidence-graph.json",
+        "traceability": output / "avera-traceability-index.json",
+        "decision": output / "avera-decision.json",
+        "trend": output / "avera-trend-index.json",
+        "workspace_pack": output / "avera-workspace-pack.json",
+        "manifest": output / "avera-evidence-manifest.json",
+        "audit_log": output / "avera-audit.jsonl",
+        "memory": memory or (output / "avera-memory.jsonl"),
+    }
+
+
+def produce_canonical_artifacts(
+    project: Path,
+    output: Path,
+    *,
+    memory: Path | None = None,
+    memory_limit: int = 500,
+) -> tuple[int, dict[str, Path]]:
+    """Run the full evidence pipeline into ``output``; return (exit_code, paths).
+
+    Single source of truth for the canonical artifact set, reused by the GitHub
+    Action (`run_action`) and the REST API. No fail-on-* semantics here — the
+    caller decides how to interpret the produced report.
+    """
+    paths = canonical_artifact_paths(output, memory)
+    code = run_demo_refresh(
+        project,
+        Path(output),
+        paths["memory"],
+        paths["traceability"],
+        paths["decision"],
+        paths["trend"],
+        paths["workspace_pack"],
+        memory_limit,
+    )
+    return code, paths
+
+
+def run_action(
+    project: Path,
+    output: Path,
+    *,
+    memory: Path | None = None,
+    policy_name: str | None = None,
+    fail_on_release_blocking: object = "true",
+    fail_on_regression: object = "false",
+    expected_verdict: str = "",
+    github_output: Path | None = None,
+) -> int:
+    """Run the full evidence pipeline for CI and emit canonical artifacts + outputs.
+
+    Produces every canonical artifact under ``output`` and writes CI outputs
+    (verdict, risk, confidence, gate_status, report_path, manifest_path,
+    integrity_root, audit_log_path). Returns a non-zero exit code when a fail
+    condition or an expected-verdict assertion is triggered — outputs are always
+    emitted first so the CI step can surface them even on failure.
+    """
+    output = Path(output)
+    refresh_code, paths = produce_canonical_artifacts(project, output, memory=memory)
+    report_path = paths["report"]
+    manifest_path = paths["manifest"]
+    audit_log_path = paths["audit_log"]
+    if refresh_code != 0:
+        print(f"AVERA Action: pipeline failed with exit code {refresh_code}", file=sys.stderr)
+        return refresh_code
+
+    report = json.loads(report_path.read_text(encoding="utf-8")) if report_path.exists() else {}
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.exists() else {}
+
+    verdict = str(report.get("verdict") or "")
+    risk = str(report.get("risk") or "")
+    confidence = str(report.get("confidence") or "")
+    integrity_root = str(manifest.get("integrity_root") or "")
+
+    policy = load_builtin_policy(policy_name) if policy_name else None
+    gate_decision = evaluate_gate(report, policy=policy)
+    gate_status = gate_decision.status
+
+    outputs = {
+        "verdict": verdict,
+        "risk": risk,
+        "confidence": confidence,
+        "gate_status": gate_status,
+        "report_path": str(report_path),
+        "manifest_path": str(manifest_path),
+        "integrity_root": integrity_root,
+        "audit_log_path": str(audit_log_path),
+    }
+
+    _emit_action_outputs(outputs, github_output)
+
+    print("AVERA Action")
+    for key, value in outputs.items():
+        print(f"{key}: {value}")
+
+    # Fail conditions (outputs already emitted).
+    exit_code = 0
+    if expected_verdict and verdict != expected_verdict:
+        print(
+            f"AVERA Action: expected verdict {expected_verdict!r} but got {verdict!r}",
+            file=sys.stderr,
+        )
+        exit_code = 1
+    if _truthy(fail_on_regression) and verdict == "confirmed_regression":
+        print("AVERA Action: failing on confirmed_regression (fail_on_regression).", file=sys.stderr)
+        exit_code = 1
+    if _truthy(fail_on_release_blocking) and risk == "release_blocking":
+        print("AVERA Action: failing on release_blocking risk (fail_on_release_blocking).", file=sys.stderr)
+        exit_code = 1
+    return exit_code
+
+
+def _emit_action_outputs(outputs: dict[str, str], github_output: Path | None) -> None:
+    target = github_output
+    if target is None:
+        env_path = os.environ.get("GITHUB_OUTPUT")
+        target = Path(env_path) if env_path else None
+    if target is None:
+        return
+    lines = [f"{key}={value}" for key, value in outputs.items()]
+    with Path(target).open("a", encoding="utf-8") as handle:
+        handle.write("\n".join(lines) + "\n")
+
+
 def run_query(traceability: Path, kind: str, value: str) -> int:
     payload = json.loads(traceability.read_text(encoding="utf-8"))
     handlers = {
@@ -1118,6 +1300,19 @@ def main() -> None:
                 args.trend_out,
                 args.pack_out,
                 args.memory_limit,
+            )
+        )
+    if args.command == "action-run":
+        raise SystemExit(
+            run_action(
+                args.project,
+                args.output,
+                memory=args.memory,
+                policy_name=args.policy,
+                fail_on_release_blocking=args.fail_on_release_blocking,
+                fail_on_regression=args.fail_on_regression,
+                expected_verdict=args.expected_verdict,
+                github_output=args.github_output,
             )
         )
 

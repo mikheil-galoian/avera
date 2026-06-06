@@ -23,6 +23,29 @@ class AnalyzePathRequest(BaseModel):
     )
 
 
+class EvidencePackRequest(BaseModel):
+    """Generate the full canonical AVERA artifact set for a server-side workspace."""
+
+    project: str = Field(
+        ...,
+        description="Path to an AVERA workspace folder (same contract as /analyze/path).",
+        examples=["fixtures/bms-fast-charge"],
+    )
+    policy: str | None = Field(
+        None,
+        description="Optional built-in gate policy for gate_status "
+                    "(general/automotive/aviation/medical/railway/ai_agent).",
+    )
+    output_path: str | None = Field(
+        None,
+        description="Optional directory to persist the artifacts. A server temp dir "
+                    "is used (and cleaned up) when omitted.",
+    )
+    include_manifest: bool = Field(
+        True, description="Include the full evidence manifest body in the response."
+    )
+
+
 class TestResult(BaseModel):
     """A single verification test result."""
 

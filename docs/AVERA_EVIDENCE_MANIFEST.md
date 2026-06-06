@@ -122,6 +122,9 @@ Implemented:
 - Contract validator support
 - **Emitted on every standard run** — `avera pack` and `avera demo-refresh` write
   `avera-evidence-manifest.json` (flag `--manifest-out`)
+- **Emitted by CI and the API** — the GitHub Action (`avera action-run`) writes it
+  into the output dir and exposes its `integrity_root` as a step output; the
+  deployed API returns it from `POST /evidence-pack`
 - **Bound into the hash-chained audit log** — `run_pack` appends an
   `evidence_manifest_emitted` record carrying the `integrity_root` (flag
   `--audit-log`)

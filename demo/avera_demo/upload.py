@@ -59,7 +59,17 @@ def preview_uploaded_evidence(
             "preview": None,
         }
 
+    if not raw or not str(raw).strip():
+        return {
+            "ok": False,
+            "kind": None,
+            "error": "uploaded file is empty",
+            "preview": None,
+        }
+
     text = raw.decode("utf-8", errors="replace") if isinstance(raw, bytes | bytearray) else str(raw)
+    if not text.strip():
+        return {"ok": False, "kind": None, "error": "uploaded file is empty", "preview": None}
 
     if suffix == ".xml":
         tmp_path: str | None = None
@@ -100,6 +110,23 @@ def preview_uploaded_evidence(
             "ok": False,
             "kind": "verification_json",
             "error": "expected an object with a 'tests' array or a list of test results",
+            "preview": None,
+        }
+
+    non_objects = sum(1 for t in tests if not isinstance(t, dict))
+    if non_objects:
+        return {
+            "ok": False,
+            "kind": "verification_json",
+            "error": f"{non_objects} of {len(tests)} test entries are not objects; each test must be a JSON object",
+            "preview": None,
+        }
+    missing_id = sum(1 for t in tests if "id" not in t)
+    if tests and missing_id == len(tests):
+        return {
+            "ok": False,
+            "kind": "verification_json",
+            "error": "no test entries contain an 'id' field; this does not look like AVERA verification results",
             "preview": None,
         }
 

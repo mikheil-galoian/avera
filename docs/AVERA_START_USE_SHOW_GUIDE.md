@@ -279,6 +279,22 @@ For the current stage, AVERA works if:
 
 That is the real acceptance definition of the current project.
 
+## Integration Surfaces (CI and API)
+
+Beyond the local CLI and demo preview, the same deterministic pipeline is
+available for integration:
+
+- **GitHub Action** — `avera action-run` emits all 9 canonical artifacts and 8
+  step outputs (verdict, risk, confidence, gate_status, report_path,
+  manifest_path, integrity_root, audit_log_path).
+- **REST API** (`avera_api.main`) — `POST /evidence-pack` returns the full
+  canonical set + deterministic gate status + manifest `integrity_root`;
+  `/analyze/path` and `/analyze/inline` remain unchanged.
+- **Deployment map** — [AVERA_DEPLOY_STATUS.md](/Users/mac/Desktop/AVERA/docs/AVERA_DEPLOY_STATUS.md).
+
+The gate is deterministic; AI assistance is optional and evidence-grounded. The
+Railway site is a demo preview, not full self-service.
+
 ## What To Read Next
 
 If someone needs the deeper project logic after this guide:

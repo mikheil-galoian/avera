@@ -29,6 +29,7 @@ from avera_api.models import (
     AnalyzeInlineRequest,
     AnalyzePathRequest,
     AnalyzeResponse,
+    EvidencePackRequest,
     HealthResponse,
 )
 
@@ -162,6 +163,118 @@ def analyze_inline(request: AnalyzeInlineRequest) -> AnalyzeResponse:
         report = _run_analyze_path(workspace)
 
     return AnalyzeResponse(**report)
+
+
+# ---------------------------------------------------------------------------
+# Evidence pack — full canonical artifact set
+# ---------------------------------------------------------------------------
+
+@app.post(
+    "/evidence-pack",
+    status_code=status.HTTP_200_OK,
+    summary="Generate the full canonical AVERA artifact set",
+    tags=["analysis"],
+    dependencies=[Depends(require_api_key)],
+)
+def evidence_pack(request: EvidencePackRequest) -> dict[str, Any]:
+    """Run the complete deterministic pipeline for a workspace and return the
+    full canonical artifact set.
+
+    Unlike ``/analyze/path`` (assessment report only), this returns the verdict,
+    the deterministic gate status, the evidence-manifest integrity root, the
+    decision summary, and on-disk paths for every canonical artifact (report,
+    markdown, evidence graph, traceability, decision, trend, workspace pack,
+    evidence manifest, hash-chained audit log).
+
+    HTTP 422 on a missing workspace or required files / unknown policy.
+    HTTP 500 on a pipeline error.
+    """
+    from avera.cli import produce_canonical_artifacts
+    from avera.gates import evaluate_gate, load_builtin_policy
+    from avera.gates.policy_loader import PolicyError
+
+    project = Path(request.project)
+    if not project.is_dir():
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Project path not found or not a directory: {request.project}",
+        )
+    missing = [
+        f
+        for f in ("requirements.csv", "component_map.json", "baseline_results.json", "current_results.json")
+        if not (project / f).exists()
+    ]
+    if missing:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Missing required workspace files: {missing}",
+        )
+
+    policy = None
+    if request.policy:
+        try:
+            policy = load_builtin_policy(request.policy)
+        except PolicyError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc)
+            ) from exc
+
+    tmp_dir: tempfile.TemporaryDirectory | None = None
+    if request.output_path:
+        output_dir = Path(request.output_path)
+    else:
+        tmp_dir = tempfile.TemporaryDirectory(prefix="avera_pack_")
+        output_dir = Path(tmp_dir.name)
+
+    try:
+        code, paths = produce_canonical_artifacts(project, output_dir)
+        if code != 0:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Pipeline failed with exit code {code}",
+            )
+
+        report = _read_json_file(paths["report"])
+        manifest = _read_json_file(paths["manifest"])
+        decision = _read_json_file(paths["decision"])
+        gate = evaluate_gate(report, policy=policy)
+
+        persisted = request.output_path is not None
+        artifacts_map = {
+            key: (str(value) if persisted else value.name) for key, value in paths.items()
+        }
+        response: dict[str, Any] = {
+            "project": request.project,
+            "verdict": str(report.get("verdict", "")),
+            "risk": str(report.get("risk", "")),
+            "confidence": str(report.get("confidence", "")),
+            "confidence_score": report.get("confidence_score"),
+            "gate_status": gate.status,
+            "gate_policy_id": gate.report_summary.get("policy_id"),
+            "release_blocked": str(report.get("risk", "")) == "release_blocking",
+            "integrity_root": str(manifest.get("integrity_root", "")),
+            "artifacts": artifacts_map,
+            "artifacts_persisted": persisted,
+            "decision": {
+                "action": decision.get("action"),
+                "category": decision.get("category"),
+                "owner": decision.get("owner"),
+                "release_recommendation": decision.get("release_recommendation"),
+            },
+        }
+        if request.include_manifest:
+            response["manifest"] = manifest
+        return response
+    finally:
+        if tmp_dir is not None:
+            tmp_dir.cleanup()
+
+
+def _read_json_file(path: Path) -> dict[str, Any]:
+    try:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
 
 
 # ---------------------------------------------------------------------------

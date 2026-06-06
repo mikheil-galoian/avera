@@ -1,0 +1,16 @@
+FROM python:3.11-slim
+
+WORKDIR /action
+
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+
+COPY pyproject.toml ./
+COPY src/ ./src/
+
+# Core install only — the action does not need the API extra.
+RUN pip install --no-cache-dir "."
+
+COPY action-entrypoint.sh /action-entrypoint.sh
+RUN chmod +x /action-entrypoint.sh
+
+ENTRYPOINT ["/action-entrypoint.sh"]

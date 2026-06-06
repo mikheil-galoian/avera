@@ -113,3 +113,23 @@ def test_upload_preview_rejects_malformed_xml():
     result = preview_uploaded_evidence("bad.xml", b"<testsuite><bad>")
     assert result["ok"] is False
     assert result["kind"] == "junit_xml"
+
+
+def test_upload_preview_rejects_empty_file():
+    for name in ("empty.json", "empty.xml"):
+        result = preview_uploaded_evidence(name, b"")
+        assert result["ok"] is False
+        assert "empty" in result["error"]
+
+
+def test_upload_preview_rejects_non_object_test_entries():
+    result = preview_uploaded_evidence("v.json", json.dumps({"tests": ["nope", 1, 2]}).encode())
+    assert result["ok"] is False
+    assert result["kind"] == "verification_json"
+    assert "not objects" in result["error"]
+
+
+def test_upload_preview_rejects_tests_without_id():
+    result = preview_uploaded_evidence("v.json", json.dumps({"tests": [{"status": "passed"}]}).encode())
+    assert result["ok"] is False
+    assert "id" in result["error"]

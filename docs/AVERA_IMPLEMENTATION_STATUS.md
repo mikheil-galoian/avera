@@ -1,7 +1,35 @@
 # AVERA Implementation Status
 
-**Date:** 6 June 2026  
-**Status:** Evidence-control layer — serious-program slices landed
+**Date:** 7 June 2026  
+**Status:** Evidence-control layer + production-usability slices landed
+
+## Production-Usability Layer (7 June 2026)
+
+Hardening integration surfaces (no speculative features):
+
+1. **GitHub Action** now emits **all 9 canonical artifacts** and **8 outputs**
+   (verdict, risk, confidence, gate_status, report_path, manifest_path,
+   integrity_root, audit_log_path). Logic lives in `avera action-run`
+   (unit-tested, `tests/test_cli_action_run.py`); the shell entrypoint is a thin
+   wrapper. `action.yml` / `Dockerfile.action` / smoke workflow aligned (fixed an
+   input-name mismatch).
+2. **Demo upload preview** hardened — JUnit XML + verification JSON, with
+   rejections for empty files, non-object entries, and missing ids. Clearly
+   labelled "demo preview". (`demo/avera_demo/upload.py`)
+3. **API artifact surface** — added `POST /evidence-pack` to the deployed API
+   (`avera_api.main`) returning the full canonical set + gate status +
+   integrity_root; `/analyze/path` and `/analyze/inline` unchanged.
+   (`tests/test_api_evidence_pack.py`)
+4. **Deploy readiness** documented in `docs/AVERA_DEPLOY_STATUS.md` (Railway demo
+   preview = NIXPACKS/Streamlit; CLI image; API image = `avera_api.main`; action
+   image; flagged stale/duplicate paths). No deploy files overwritten.
+5. **Docs** updated conservatively: deterministic gate, optional evidence-grounded
+   AI assistance, Railway = demo preview.
+
+Shared pipeline helper `avera.cli.produce_canonical_artifacts` is the single
+source of truth used by both the Action and the API.
+
+## Serious-Program Layer (6 June 2026)
 
 ## Serious-Program Layer (6 June 2026)
 

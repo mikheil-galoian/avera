@@ -67,8 +67,9 @@ PYTHONPATH=src python3 -m avera analyze \
   --out reports
 ```
 
-Or try the **hosted demo** instantly — no install required:
+Or try the **hosted demo preview** instantly — no install required:
 👉 [https://avera-production.up.railway.app](https://avera-production.up.railway.app)
+(A read-only preview of the Streamlit shell, including a safe JUnit/JSON upload preview — not full self-service.)
 
 ---
 
@@ -88,8 +89,10 @@ Or try the **hosted demo** instantly — no install required:
 - **Requirement coverage proof** — traceable from change to test to requirement
 - **Artifact normalization** — JUnit/xUnit, CSV, simulation outputs, requirements exports
 - **Immutable audit log** — SHA-256 hash-chained evidence chain
+- **Evidence manifest** — content-addressed `integrity_root` binding the whole artifact set
+- **Deterministic gate** — policy-as-data (per-domain); optional evidence-grounded AI assistance that returns "insufficient evidence" when unsupported. AVERA does not decide releases.
 - **Evidence pack** — structured output for compliance review and DER/auditor handoff
-- **REST API** — `POST /analyze` endpoint for CI/CD integration
+- **REST API** — `/analyze/path`, `/analyze/inline`, and `/evidence-pack` (full artifact set) for CI/CD integration
 - **Adapter SDK** — plug in CANoe/CAPL, custom artifact formats
 
 ---
@@ -159,21 +162,33 @@ Multi-arch image (`linux/amd64`, `linux/arm64`). Pinned tags: `latest`, `vX.Y.Z`
 
 ## REST API
 
+Deployed app: `avera_api.main` (served with `uvicorn avera_api.main:app`).
+
 ```bash
 # Start the API server
-avera-api
+uvicorn avera_api.main:app --host 0.0.0.0 --port 8000
 
-# Analyze a change
-curl -X POST http://localhost:8000/analyze \
+# Assessment report only (backward compatible)
+curl -X POST http://localhost:8000/analyze/path \
   -H "Content-Type: application/json" \
-  -d '{"project_path": "fixtures/bms-fast-charge"}'
+  -d '{"project": "fixtures/bms-fast-charge"}'
+
+# Full canonical artifact set (report, graph, traceability, decision, trend,
+# workspace pack, evidence manifest + integrity_root, audit log) + gate status
+curl -X POST http://localhost:8000/evidence-pack \
+  -H "Content-Type: application/json" \
+  -d '{"project": "fixtures/bms-fast-charge", "policy": "automotive"}'
 ```
+
+`/evidence-pack` returns `verdict`, `risk`, `confidence`, the deterministic
+`gate_status`, the evidence-manifest `integrity_root`, a decision summary, and
+the on-disk paths of every canonical artifact.
 
 ---
 
 ## GitHub Action
 
-AVERA ships as a reusable GitHub Action. Add one step to your workflow and AVERA will run on every PR, generate a structured evidence pack, and block merges when a safety-critical regression is detected.
+AVERA ships as a reusable GitHub Action. Add one step to your workflow and AVERA runs the full deterministic pipeline on every PR, emits the complete canonical evidence set, and fails the job when a safety-critical regression is detected.
 
 ```yaml
 # .github/workflows/avera-verify.yml
@@ -191,8 +206,10 @@ jobs:
           fail_on_release_blocking: 'true'
 ```
 
-**Inputs:** `project_path` (required), `output_path`, `fail_on_release_blocking`, `fail_on_regression`, `expected_verdict`.
-**Outputs:** `verdict`, `risk`, `confidence`, `report_path`.
+**Inputs:** `project_path` (required), `output_path`, `policy`, `fail_on_release_blocking`, `fail_on_regression`, `expected_verdict`.
+**Outputs:** `verdict`, `risk`, `confidence`, `gate_status`, `report_path`, `manifest_path`, `integrity_root`, `audit_log_path`.
+
+The action writes all 9 canonical artifacts (`avera-report.json`, `avera-report.md`, `avera-evidence-graph.json`, `avera-traceability-index.json`, `avera-decision.json`, `avera-trend-index.json`, `avera-workspace-pack.json`, `avera-evidence-manifest.json`, `avera-audit.jsonl`) into `output_path`.
 
 Full example with PR comments and artifact upload: [`examples/github-action-usage.yml`](examples/github-action-usage.yml). Minimal two-step variant: [`examples/github-action-minimal.yml`](examples/github-action-minimal.yml).
 

@@ -24,6 +24,7 @@ A policy file looks like::
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from .policy import RISK_RANK, GatePolicy
@@ -101,6 +102,24 @@ def load_policy(path: str | Path) -> GatePolicy:
     return policy_from_dict(data)
 
 
+def _candidate_dirs(explicit: str | Path | None) -> list[Path]:
+    """Ordered candidate directories to resolve a built-in policy file from.
+
+    Order: explicit arg, AVERA_POLICIES_DIR env, the package-relative repo dir,
+    then ``<cwd>/policies`` (covers the installed GitHub Action running inside a
+    checked-out repository).
+    """
+    candidates: list[Path] = []
+    if explicit is not None:
+        candidates.append(Path(explicit))
+    env_dir = os.environ.get("AVERA_POLICIES_DIR")
+    if env_dir:
+        candidates.append(Path(env_dir))
+    candidates.append(POLICIES_DIR)
+    candidates.append(Path.cwd() / "policies")
+    return candidates
+
+
 def load_builtin_policy(name: str, *, policies_dir: str | Path | None = None) -> GatePolicy:
     """Load a built-in policy by friendly name (e.g. ``"automotive"``)."""
 
@@ -110,8 +129,15 @@ def load_builtin_policy(name: str, *, policies_dir: str | Path | None = None) ->
             f"unknown built-in policy: {name!r}. "
             f"Available: {', '.join(sorted(BUILTIN_POLICIES))}"
         )
-    base = Path(policies_dir) if policies_dir is not None else POLICIES_DIR
-    return load_policy(base / f"{stem}.json")
+    tried: list[str] = []
+    for base in _candidate_dirs(policies_dir):
+        path = base / f"{stem}.json"
+        tried.append(str(path))
+        if path.exists():
+            return load_policy(path)
+    raise PolicyError(
+        f"policy file for {name!r} not found. Tried: {', '.join(tried)}"
+    )
 
 
 def list_builtin_policies() -> list[str]:
