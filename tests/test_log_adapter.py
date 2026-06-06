@@ -4,9 +4,11 @@ from pathlib import Path
 
 from avera.adapters import adapt_log_csv
 
+ROOT = Path(__file__).resolve().parents[1]
+
 
 def test_adapt_log_csv_groups_messages_and_metrics() -> None:
-    fixture = Path("/Users/mac/Desktop/AVERA/fixtures/bms-log-adapted/current_verification_log.csv")
+    fixture = ROOT / "fixtures/bms-log-adapted/current_verification_log.csv"
 
     payload = adapt_log_csv(fixture, run_id="bms-log", stage="current")
 

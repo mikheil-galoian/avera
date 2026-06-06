@@ -4,9 +4,11 @@ from pathlib import Path
 
 from avera.adapters import adapt_requirements_csv
 
+ROOT = Path(__file__).resolve().parents[1]
+
 
 def test_adapt_requirements_csv_maps_variant_columns() -> None:
-    fixture = Path("/Users/mac/Desktop/AVERA/fixtures/bms-requirements-adapted/requirements_export_variant.csv")
+    fixture = ROOT / "fixtures/bms-requirements-adapted/requirements_export_variant.csv"
 
     rows = adapt_requirements_csv(fixture)
 
