@@ -3,17 +3,14 @@
 # PURPOSE
 # ───────
 # This workflow demonstrates AVERA as a CI/CD gate enforcer.
-# It runs the AVERA analysis engine against every domain fixture and
-# enforces the exit-code contract:
-#
-#   Exit 0  → verdict is safe (successful_change or non-blocking regression)
-#   Exit 1  → verdict is RELEASE_BLOCKING — pipeline fails, PR cannot merge
-#   Exit 2  → analysis error (missing files, corrupt inputs)
+# It runs the AVERA analysis engine against every domain fixture and verifies
+# that each result matches fixtures/expected_outcomes.json. Some fixtures are
+# intentionally release_blocking; those pass when AVERA detects them correctly.
 #
 # INVESTOR DEMO VALUE
 # ───────────────────
-# This file is the evidence that AVERA is not just a reporting tool —
-# it is an automated safety gate that integrates into any CI/CD system.
+# This file is the evidence that AVERA is not just a reporting tool: it is an
+# automated safety-gate verifier that can be used as a CI/CD policy check.
 # The same contract works in Jenkins, GitLab CI, Azure Pipelines, etc.
 #
 # TRIGGERS
@@ -28,13 +25,17 @@ on:
   push:
     branches: ["main", "develop"]
     paths:
+      - ".github/workflows/avera-gate.yml"
       - "fixtures/**"
       - "src/**"
+      - "tests/**"
   pull_request:
     branches: ["main", "develop"]
     paths:
+      - ".github/workflows/avera-gate.yml"
       - "fixtures/**"
       - "src/**"
+      - "tests/**"
   workflow_dispatch:
     inputs:
       fixture:
@@ -109,29 +110,82 @@ jobs:
         run: pip install -e ".[api]" --quiet
 
       # ── Core gate step ──────────────────────────────────────────────────────
-      # avera-api exits with code 1 if risk == release_blocking.
-      # GitHub Actions treats non-zero exit as step failure → job fails → PR blocked.
+      # Demo fixtures include known release_blocking regressions. On repository
+      # CI, the gate passes when AVERA detects the expected verdict/risk rather
+      # than failing merely because a fixture is intentionally unsafe.
       - name: "Run AVERA gate — ${{ matrix.fixture }}"
         id: gate
+        env:
+          FIXTURE: ${{ matrix.fixture }}
         run: |
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo "  AVERA Safety Gate"
-          echo "  Fixture : ${{ matrix.fixture }}"
+          echo "  Fixture : $FIXTURE"
           echo "  Commit  : ${{ github.sha }}"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-          # Run analysis — exit code 1 = release_blocking
-          python -m avera.api.app \
-            --project "fixtures/${{ matrix.fixture }}" \
-            --json \
+          OUT_DIR="reports/gate/$FIXTURE"
+          REPORT="$OUT_DIR/avera-report.json"
+          mkdir -p "$OUT_DIR"
+
+          python -m avera analyze \
+            --project "fixtures/$FIXTURE" \
+            --out "$OUT_DIR" \
             2>&1 | tee /tmp/avera-output.txt
 
-          EXIT_CODE=${PIPESTATUS[0]}
+          python - <<'PY'
+          import json
+          import os
+          import pathlib
+          import sys
 
-          # Extract key fields for the summary
-          VERDICT=$(grep '"verdict"' /tmp/avera-output.txt | head -1 | sed 's/.*: "\(.*\)".*/\1/')
-          RISK=$(grep '"risk"' /tmp/avera-output.txt | head -1 | sed 's/.*: "\(.*\)".*/\1/')
-          CONF=$(grep '"confidence_score"' /tmp/avera-output.txt | head -1 | sed 's/.*: \(.*\),.*/\1/')
+          fixture = os.environ["FIXTURE"]
+          report_path = pathlib.Path("reports/gate") / fixture / "avera-report.json"
+          expected_path = pathlib.Path("fixtures/expected_outcomes.json")
+
+          report = json.loads(report_path.read_text(encoding="utf-8"))
+          expected = json.loads(expected_path.read_text(encoding="utf-8"))[fixture]
+
+          fields = ("verdict", "risk", "confidence")
+          mismatches = [
+              f"{field}: expected {expected.get(field)!r}, got {report.get(field)!r}"
+              for field in fields
+              if expected.get(field) != report.get(field)
+          ]
+
+          summary = pathlib.Path(os.environ["GITHUB_STEP_SUMMARY"])
+          with summary.open("a", encoding="utf-8") as fh:
+              fh.write(f"## AVERA Gate Result — `{fixture}`\n\n")
+              fh.write("| Field | Expected | Actual |\n")
+              fh.write("|-------|----------|--------|\n")
+              for field in fields:
+                  fh.write(
+                      f"| {field} | `{expected.get(field)}` | `{report.get(field)}` |\n"
+                  )
+              fh.write("\n")
+              if mismatches:
+                  fh.write("> ❌ **Gate mismatch** — AVERA output did not match the expected fixture outcome.\n")
+              else:
+                  fh.write("> ✅ **Gate verified** — expected outcome detected correctly.\n")
+
+          if mismatches:
+              print("AVERA gate mismatch:")
+              for mismatch in mismatches:
+                  print(f" - {mismatch}")
+              sys.exit(1)
+
+          print(
+              "AVERA gate verified:",
+              fixture,
+              report.get("verdict"),
+              report.get("risk"),
+              report.get("confidence"),
+          )
+          PY
+
+          VERDICT=$(python -c "import json; print(json.load(open('$REPORT'))['verdict'])")
+          RISK=$(python -c "import json; print(json.load(open('$REPORT'))['risk'])")
+          CONF=$(python -c "import json; print(json.load(open('$REPORT'))['confidence_score'])")
 
           echo ""
           echo "  VERDICT          : $VERDICT"
@@ -139,37 +193,15 @@ jobs:
           echo "  CONFIDENCE SCORE : $CONF"
           echo ""
 
-          # Write to GitHub step summary (visible in Actions UI)
-          {
-            echo "## AVERA Gate Result — \`${{ matrix.fixture }}\`"
-            echo ""
-            echo "| Field | Value |"
-            echo "|-------|-------|"
-            echo "| Verdict | \`$VERDICT\` |"
-            echo "| Risk | \`$RISK\` |"
-            echo "| Confidence | \`$CONF\` |"
-            echo "| Exit Code | \`$EXIT_CODE\` |"
-            echo ""
-            if [ "$EXIT_CODE" = "1" ]; then
-              echo "> ❌ **RELEASE BLOCKED** — safety-critical regression detected."
-              echo "> This fixture cannot be merged until the regression is resolved."
-            elif [ "$EXIT_CODE" = "0" ]; then
-              echo "> ✅ **Gate passed** — no release-blocking issues found."
-            else
-              echo "> ⚠️ **Analysis error** — check input files and engine logs."
-            fi
-          } >> $GITHUB_STEP_SUMMARY
-
-          # Propagate exit code — this is what blocks the PR
-          exit $EXIT_CODE
-
       # ── Upload evidence report ──────────────────────────────────────────────
       - name: Upload AVERA evidence report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: "avera-report-${{ matrix.fixture }}"
-          path: /tmp/avera-output.txt
+          path: |
+            /tmp/avera-output.txt
+            reports/gate/${{ matrix.fixture }}/
           retention-days: 30
 
 
@@ -184,11 +216,11 @@ jobs:
       - name: Report gate outcome
         run: |
           if [ "${{ needs.safety-gate.result }}" = "success" ]; then
-            echo "✅ All AVERA safety gates passed."
-            echo "   4 domains verified: Automotive / Aviation / Railway / Medical"
+            echo "✅ All AVERA safety-gate fixtures matched expected outcomes."
+            echo "   Domains verified: Automotive / Aviation / Railway / Medical"
           else
             echo "❌ One or more AVERA safety gates FAILED."
-            echo "   Release-blocking regressions were detected."
+            echo "   At least one fixture did not match its expected verdict/risk/confidence."
             echo "   Review the individual job summaries above."
             exit 1
           fi
