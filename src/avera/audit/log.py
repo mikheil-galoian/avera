@@ -27,12 +27,19 @@ Usage::
 from __future__ import annotations
 
 import hashlib
+import hmac
 import json
+import os
 import threading
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterator
+
+try:  # POSIX advisory locking for cross-process safety; degrades gracefully if absent.
+    import fcntl
+except ImportError:  # pragma: no cover - non-POSIX
+    fcntl = None  # type: ignore[assignment]
 
 
 # ---------------------------------------------------------------------------
@@ -97,9 +104,24 @@ class AuditLog:
         Path to the ``.jsonl`` file.  Created on first append if absent.
     """
 
-    def __init__(self, path: str | Path) -> None:
+    def __init__(self, path: str | Path, *, key: bytes | str | None = None) -> None:
         self._path = Path(path)
         self._lock = threading.Lock()
+        # Optional HMAC key for keyed tamper-evidence. Without a key the chain is
+        # tamper-evident only against accidental edits / adjacent tampering (a
+        # privileged attacker can re-stitch it). With a key held outside the file
+        # (passed here or via AVERA_AUDIT_KEY), records cannot be forged or the
+        # chain re-stitched without the secret.
+        if key is None:
+            env_key = os.environ.get("AVERA_AUDIT_KEY")
+            key = env_key if env_key else None
+        self._key: bytes | None = key.encode() if isinstance(key, str) else key
+
+    def _digest(self, raw: str) -> str:
+        """Keyed (HMAC-SHA256) digest when a key is set, else plain SHA-256."""
+        if self._key:
+            return hmac.new(self._key, raw.encode(), hashlib.sha256).hexdigest()
+        return hashlib.sha256(raw.encode()).hexdigest()
 
     # ------------------------------------------------------------------
     # Write
@@ -118,28 +140,43 @@ class AuditLog:
             Arbitrary additional fields stored in ``payload``.
         """
         with self._lock:
-            prev_raw, prev_hash = self._last_raw_and_hash()
-            seq = self._count_records()          # exact position before this write
-            timestamp = datetime.now(timezone.utc).isoformat()
-
-            # Build the «pre-hash» object — everything except self_hash.
-            pre: dict[str, Any] = {
-                "seq": seq,
-                "timestamp_utc": timestamp,
-                "event": event,
-                "project": project,
-                "prev_hash": prev_hash,
-                "payload": payload,
-            }
-            pre_raw = _canonical(pre)
-            self_hash = hashlib.sha256(pre_raw.encode()).hexdigest()
-
-            full: dict[str, Any] = {**pre, "self_hash": self_hash}
-            line = json.dumps(full, ensure_ascii=False, separators=(",", ":"))
-
             self._path.parent.mkdir(parents=True, exist_ok=True)
-            with self._path.open("a", encoding="utf-8") as fh:
-                fh.write(line + "\n")
+            # Hold a cross-process exclusive lock across read-prev + write so two
+            # processes (or instances) cannot race the prev_hash/seq computation.
+            with self._path.open("a+", encoding="utf-8") as fh:
+                if fcntl is not None:
+                    try:
+                        fcntl.flock(fh.fileno(), fcntl.LOCK_EX)
+                    except OSError:
+                        pass
+                try:
+                    fh.seek(0)
+                    existing = [l for l in fh.read().splitlines() if l.strip()]
+                    seq = len(existing)
+                    prev_hash = _GENESIS_HASH
+                    if existing:
+                        prev_hash = str(json.loads(existing[-1]).get("self_hash", _GENESIS_HASH))
+
+                    timestamp = datetime.now(timezone.utc).isoformat()
+                    pre: dict[str, Any] = {
+                        "seq": seq,
+                        "timestamp_utc": timestamp,
+                        "event": event,
+                        "project": project,
+                        "prev_hash": prev_hash,
+                        "payload": payload,
+                    }
+                    self_hash = self._digest(_canonical(pre))
+                    full: dict[str, Any] = {**pre, "self_hash": self_hash}
+                    line = json.dumps(full, ensure_ascii=False, separators=(",", ":"))
+                    fh.write(line + "\n")
+                    fh.flush()
+                finally:
+                    if fcntl is not None:
+                        try:
+                            fcntl.flock(fh.fileno(), fcntl.LOCK_UN)
+                        except OSError:
+                            pass
 
             return AuditRecord(
                 seq=pre["seq"],
@@ -167,8 +204,21 @@ class AuditLog:
     # Verification
     # ------------------------------------------------------------------
 
-    def verify_chain(self) -> int:
+    def verify_chain(
+        self,
+        *,
+        expected_count: int | None = None,
+        expected_last_hash: str | None = None,
+    ) -> int:
         """Verify the full hash chain.
+
+        Parameters
+        ----------
+        expected_count, expected_last_hash:
+            Optional external anchor. A plain hash chain cannot detect truncation
+            on its own (a prefix is a valid chain). If a caller persists the record
+            count and/or last ``self_hash`` in a separate trust store, pass them here
+            and truncation/rollback is detected.
 
         Returns
         -------
@@ -178,10 +228,15 @@ class AuditLog:
         Raises
         ------
         ChainIntegrityError
-            If any record's ``prev_hash`` does not match the hash of the
-            preceding raw line, or if ``self_hash`` is inconsistent.
+            If any record's ``prev_hash`` does not match the preceding record's
+            ``self_hash``, if a ``self_hash`` is inconsistent, or if the external
+            anchor (count / last hash) does not match.
         """
         if not self._path.exists():
+            if expected_count:
+                raise ChainIntegrityError(
+                    f"audit log missing but {expected_count} records expected (truncation)"
+                )
             return 0
 
         lines = [l.strip() for l in self._path.read_text(encoding="utf-8").splitlines() if l.strip()]
@@ -205,7 +260,7 @@ class AuditLog:
                 "prev_hash": obj.get("prev_hash"),
                 "payload": obj.get("payload"),
             }
-            recomputed = hashlib.sha256(_canonical(pre).encode()).hexdigest()
+            recomputed = self._digest(_canonical(pre))
             if stored_self != recomputed:
                 raise ChainIntegrityError(
                     f"Record {i} ({obj.get('event', '?')}): "
@@ -223,6 +278,19 @@ class AuditLog:
                 )
 
             prev_self_hash = stored_self  # type: ignore[assignment]
+
+        # External anchor checks (truncation / rollback) — opt-in.
+        if expected_count is not None and len(lines) < expected_count:
+            raise ChainIntegrityError(
+                f"truncation: {len(lines)} records present, {expected_count} expected"
+            )
+        if expected_last_hash is not None:
+            actual_last = prev_self_hash if lines else _GENESIS_HASH
+            if actual_last != expected_last_hash:
+                raise ChainIntegrityError(
+                    f"head mismatch: last self_hash {str(actual_last)[:12]}… "
+                    f"!= expected {str(expected_last_hash)[:12]}…"
+                )
 
         return len(lines)
 

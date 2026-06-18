@@ -22,14 +22,14 @@ Domains the core must serve: automotive (ISO 26262), aviation (DO-178C), railway
 | K1 | Classifier | introduced failure could yield a pass-like verdict | HIGH | **FIXED** (backstop) |
 | M1 | Manifest | root commits only to *listed* artifacts → silent omission | MED | **FIXED** |
 | A4 | Audit log | `verify_chain` trusts arbitrary top-level fields | MED | **FIXED** |
-| A1 | Audit log | no external anchor → chain fully rewritable | CRITICAL | **SCHEDULED** |
-| A2 | Audit log | truncation undetected | HIGH | **SCHEDULED** |
-| A3 | Audit log | forged record can be appended (no key) | HIGH | **SCHEDULED** |
-| A5 | Audit log | multi-process concurrency corrupts chain | MED | **SCHEDULED** |
-| K3 | Classifier | `passed→timeout` → environment_failure while introduced≠∅ (contradiction) | HIGH | **SCHEDULED** |
+| A1 | Audit log | no external anchor → chain fully rewritable | CRITICAL | **FIXED** (keyed HMAC mode) |
+| A2 | Audit log | truncation undetected | HIGH | **FIXED** (anchor) |
+| A3 | Audit log | forged record can be appended (no key) | HIGH | **FIXED** (keyed HMAC mode) |
+| A5 | Audit log | multi-process concurrency corrupts chain | MED | **FIXED** (file lock) |
+| S1 | Sign-off | `verify_artifacts=False` severs binding | MED | **FIXED** (fail-closed) |
+| K3 | Classifier | `passed→timeout` → environment_failure while introduced≠∅ (contradiction) | HIGH | **SCHEDULED** (design) |
 | K4 | Adapters | single-file JUnit duplicate id, fail-then-pass dropped | HIGH | **SCHEDULED** |
 | K5 | Adapters | CSV `_combine_status` ranks unknown = passed, order-dependent | MED | **SCHEDULED** |
-| S1 | Sign-off | `verify_artifacts=False` severs binding; root check trusts manifest field | MED | **SCHEDULED** |
 | Gp | Gate/policy | policy with bad `risk_rank`/`max_allowed_risk` silently degrades | MED | **SCHEDULED** |
 | Pol | Policy resolution | env/cwd can change which builtin policy file loads | MED | **SCHEDULED** |
 | M2/M3 | Manifest | path re-point & summary fields outside the root | LOW | noted |
@@ -63,15 +63,19 @@ All 20 fixtures and the affected unit suites stay green after these changes.
 
 ## Scheduled (honest — not yet closed)
 
-**A1–A3,A5 Audit log — the biggest item.** The chain is currently self-consistent
-only: an attacker with file write access can re-stitch the whole log from genesis,
-truncate the tail, or append forged records, because there is no secret/anchor.
-Design to close: (1) keyed **HMAC-SHA256** per record using a key held outside the
-file (env/KMS), or per-checkpoint asymmetric signatures; (2) persist a monotonic
-HEAD/count in a separate trust store and require the last record to match it
-(truncation); (3) process-global file lock (`fcntl.flock`) + server-side atomic
-`seq`. Until then the audit log is tamper-*evident against accidental edits and
-adjacent tampering*, not against a privileged attacker — stated plainly.
+**A1–A3, A5 Audit log — CLOSED (with deployment note).** Now implemented:
+(1) optional keyed **HMAC-SHA256** (`AuditLog(path, key=...)` or `AVERA_AUDIT_KEY`)
+— without the secret a forged record or full re-stitch is rejected; (2) opt-in
+external anchor `verify_chain(expected_count=, expected_last_hash=)` detects
+truncation/rollback; (3) cross-process `fcntl.flock` around the read-prev+write
+critical section. Tests: `tests/test_audit_hardening.py`. **Deployment note:** the
+strong guarantee requires a key + persisted anchor; the default unkeyed/anchorless
+mode remains tamper-evident only against accidental/adjacent edits — set
+`AVERA_AUDIT_KEY` and persist the head in production.
+
+**S1 Sign-off — CLOSED.** `validate_signoff_against_manifest` now fails closed: when
+`verify_artifacts=False` it records an error and `manifest_intact=False`, so skipping
+verification can never yield `ok=True`. (`signoff/workflow.py`.)
 
 **K3 env-vs-introduced ordering.** `passed→timeout` is currently classed
 environment_failure even when an introduced failure exists. Needs a deliberate

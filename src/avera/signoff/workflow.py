@@ -248,13 +248,20 @@ def validate_signoff_against_manifest(
             f"{manifest_root[:12]}… — the evidence set changed; sign-off is no longer valid"
         )
 
-    manifest_intact = True
+    # Fail-closed: skipping artifact verification can never yield a clean pass.
+    # Without re-verifying the manifest against disk we cannot trust its declared
+    # integrity_root, so an unverified validation is not a valid sign-off.
     if verify_artifacts:
         result = verify_evidence_manifest(m, base_dir=base_dir)
         manifest_intact = result.ok
         if not result.ok:
-            manifest_intact = False
             errors.extend(f"manifest verification: {e}" for e in result.errors)
+    else:
+        manifest_intact = False
+        errors.append(
+            "artifact verification skipped — manifest integrity not confirmed; "
+            "sign-off cannot be validated without re-verifying the evidence"
+        )
 
     return SignoffValidation(
         ok=not errors,
