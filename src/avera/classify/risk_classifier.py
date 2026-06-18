@@ -274,9 +274,12 @@ def _verdict(
     if preexisting and current_failures and has_material_worsening(worsened_metric_deltas):
         return verdicts.WORSENED_PREEXISTING_FAILURE
     if introduced:
-        if coverage_gap:
-            return verdicts.REQUIREMENTS_COVERAGE_GAP
-        return verdicts.POSSIBLE_REGRESSION
+        # A test that passed in the baseline and fails in the current run is
+        # direct proof of a regression, even without a numeric threshold metric.
+        # Threshold crossings (handled above) add corroborating evidence and lift
+        # confidence, but are not required for the verdict. This makes AVERA work
+        # for pure pass/fail software CI, not only metric/threshold verification.
+        return verdicts.CONFIRMED_REGRESSION
     if preexisting and current_failures:
         return verdicts.PREEXISTING_FAILURE
     if preexisting and has_material_worsening(worsened_metric_deltas):

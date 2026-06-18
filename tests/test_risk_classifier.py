@@ -70,6 +70,31 @@ class TestConfirmedRegression:
         assert result.confidence == "high"
         assert result.confidence_score > 0.8
 
+    def test_pass_to_fail_without_threshold_is_confirmed_regression(self):
+        # Pure pass/fail software test (no metric/threshold). An introduced
+        # failure is itself proof of a regression — enables ordinary software CI,
+        # not only metric/threshold verification.
+        result = _classify(
+            [_test("T1", "passed", component="formatting")],
+            [_test("T1", "failed", component="formatting")],
+        )
+        assert result.verdict == "confirmed_regression"
+        assert len(result.introduced_failures) == 1
+
+    def test_pass_to_fail_with_unmatched_requirement_is_confirmed_regression(self):
+        # Requirement exists but its metric never appears in the test results
+        # (the real python-tabulate/toolz/slugify case). Previously this was
+        # requirements_coverage_gap; an introduced test failure now wins.
+        reqs = [_req("R1", "Formatting", "out_failures", "<=", 0, safety="medium")]
+        cmap = _cmap("src/fmt.py", "Formatting", ["R1"])
+        result = _classify(
+            [_test("T1", "passed", component="Formatting")],
+            [_test("T1", "failed", component="Formatting")],
+            requirements=reqs,
+            component_map=cmap,
+        )
+        assert result.verdict == "confirmed_regression"
+
     def test_confirmed_regression_has_affected_requirements(self):
         reqs = [_req("R1", "BMS", "max_temp", "<=", 50.0)]
         result = _classify(

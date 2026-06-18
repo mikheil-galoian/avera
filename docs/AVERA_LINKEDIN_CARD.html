@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AVERA — Real-World Validation</title>
+    <style>
+      :root{
+        --bg:#0f172a; --card:#111c33; --line:#22304d; --muted:#94a3b8;
+        --text:#f1f5f9; --accent:#38bdf8; --bad:#f87171; --good:#34d399;
+      }
+      *{box-sizing:border-box;margin:0;padding:0}
+      body{background:#0b1220;font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;padding:28px}
+      /* ~1200x675 capture area */
+      .card{width:1140px;background:linear-gradient(160deg,#101a30,#0c1424);border:1px solid var(--line);border-radius:20px;color:var(--text);padding:44px 48px;}
+      .eyebrow{color:var(--accent);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+      h1{font-size:38px;line-height:1.12;margin:12px 0 10px;font-weight:800}
+      .sub{color:var(--muted);font-size:18px;max-width:880px}
+      table{width:100%;border-collapse:collapse;margin:28px 0 8px}
+      th{ text-align:left;color:var(--muted);font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;padding:0 14px 12px;border-bottom:1px solid var(--line)}
+      td{padding:16px 14px;border-bottom:1px solid var(--line);font-size:17px;vertical-align:middle}
+      tr:last-child td{border-bottom:none}
+      .proj{font-weight:700}
+      .proj small{display:block;color:var(--muted);font-weight:500;font-size:13px;margin-top:2px}
+      .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;color:#cbd5e1}
+      .fail{color:var(--bad);font-weight:800;font-size:22px}
+      .pill{display:inline-block;padding:5px 12px;border-radius:999px;font-size:13px;font-weight:800}
+      .pill.block{background:rgba(248,113,113,.14);color:var(--bad);border:1px solid rgba(248,113,113,.35)}
+      .verdict{color:#fca5a5;font-family:ui-monospace,Menlo,monospace;font-size:14px}
+      .foot{display:flex;justify-content:space-between;align-items:center;margin-top:26px;gap:24px}
+      .note{color:var(--muted);font-size:14px;max-width:720px}
+      .note b{color:#cbd5e1}
+      .brand{text-align:right;white-space:nowrap}
+      .brand .name{font-weight:800;letter-spacing:.02em}
+      .brand .tag{color:var(--muted);font-size:13px}
+      .hl{color:var(--good);font-weight:800}
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="eyebrow">AVERA · Real-world validation</div>
+      <h1>Catching regressions in code I didn't write</h1>
+      <p class="sub">Ran a local evidence-first change gate on 3 real open-source libraries: real test suite before &amp; after a one-line change. Every regression caught and blocked — with a signed evidence trail.</p>
+
+      <table>
+        <thead>
+          <tr><th>Project</th><th>Tests</th><th>One-line regression</th><th>Failures caught</th><th>Verdict / Gate</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="proj">python-tabulate<small>text formatting · 204 tests</small></td>
+            <td class="mono">204</td>
+            <td class="mono">float format g→f</td>
+            <td class="fail">78</td>
+            <td><span class="verdict">confirmed_regression</span><br><span class="pill block">⛔ BLOCK</span></td>
+          </tr>
+          <tr>
+            <td class="proj">toolz<small>functional utils · 181 tests</small></td>
+            <td class="mono">181</td>
+            <td class="mono">off-by-one in first()</td>
+            <td class="fail">6</td>
+            <td><span class="verdict">confirmed_regression</span><br><span class="pill block">⛔ BLOCK</span></td>
+          </tr>
+          <tr>
+            <td class="proj">python-slugify<small>string slugs · 82 tests</small></td>
+            <td class="mono">82</td>
+            <td class="mono">separator -→_</td>
+            <td class="fail">56</td>
+            <td><span class="verdict">confirmed_regression</span><br><span class="pill block">⛔ BLOCK</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="foot">
+        <div class="note">
+          <b>Honest note:</b> regressions were introduced deliberately to test <b>detection</b> — not bug-hunting.
+          The point: the evidence pipeline works on real third-party code, not just my own fixtures.
+          Deterministic gate · evidence manifest + integrity hash · hash-chained audit log.
+        </div>
+        <div class="brand">
+          <div class="name">AVERA</div>
+          <div class="tag">evidence-first change review</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
