@@ -76,6 +76,34 @@ def build_parser() -> argparse.ArgumentParser:
         help="Append analysis history to this JSONL memory ledger.",
     )
 
+    check = subparsers.add_parser(
+        "check",
+        help="Zero-config gate: compare two JUnit result files and decide pass/review/block.",
+    )
+    check.add_argument(
+        "--baseline",
+        type=Path,
+        required=True,
+        help="Baseline JUnit XML — the known-good run (e.g. main).",
+    )
+    check.add_argument(
+        "--current",
+        type=Path,
+        required=True,
+        help="Current JUnit XML — the run to gate (e.g. the PR).",
+    )
+    check.add_argument(
+        "--policy",
+        default="general",
+        help="Built-in policy name (default: general). See list-policies.",
+    )
+    check.add_argument(
+        "--json",
+        dest="as_json",
+        action="store_true",
+        help="Emit machine-readable JSON instead of the human summary.",
+    )
+
     adapt_junit = subparsers.add_parser(
         "adapt-junit",
         help="Convert JUnit / xUnit XML into an AVERA verification-results JSON artifact.",
@@ -662,6 +690,55 @@ def run_validate_workspace(project: Path) -> int:
     return 0 if validation.ok else 2
 
 
+def run_check(baseline: Path, current: Path, policy_name: str, as_json: bool) -> int:
+    """Zero-config gate: two JUnit files in, a pass/review/block decision out.
+
+    No requirements, component map, or project folder needed — the broad on-ramp
+    for plain pass/fail CI. Exit code follows the gate so it drops straight into a
+    CI step.
+    """
+    from avera.core import assessment_to_public_report
+
+    base = adapt_junit_xml(baseline, run_id="baseline", stage="baseline")
+    curr = adapt_junit_xml(current, run_id="current", stage="current")
+    comparison = compare_runs(baseline=base, current=curr)
+    assessment = classify_risk(comparison=comparison)
+    report = assessment_to_public_report(assessment)
+    decision = evaluate_gate(report, policy=load_builtin_policy(policy_name))
+
+    def _tid(item: object) -> str | None:
+        return getattr(item, "test_id", None) or getattr(item, "id", None)
+
+    introduced = [t for t in (_tid(x) for x in assessment.introduced_failures) if t]
+
+    if as_json:
+        print(json.dumps({
+            "verdict": assessment.verdict,
+            "risk": assessment.risk,
+            "confidence": assessment.confidence,
+            "confidence_score": assessment.confidence_score,
+            "introduced_failures": introduced,
+            "gate_status": decision.status,
+            "policy": decision.report_summary["policy_id"],
+        }, indent=2, ensure_ascii=False))
+        return decision.exit_code
+
+    print("AVERA Check")
+    print(f"Baseline: {baseline} ({len(base['tests'])} tests)")
+    print(f"Current:  {current} ({len(curr['tests'])} tests)")
+    print(f"Verdict:  {assessment.verdict}")
+    print(f"Risk:     {assessment.risk}")
+    print(f"Confidence: {assessment.confidence} ({assessment.confidence_score:.2f})")
+    if introduced:
+        print(f"Introduced failures ({len(introduced)}):")
+        for test_id in introduced:
+            print(f"- {test_id}")
+    print(f"Gate [{decision.report_summary['policy_id']}]: {decision.status}")
+    for reason in decision.reasons:
+        print(f"- {reason}")
+    return decision.exit_code
+
+
 def run_adapt_junit(input_path: Path, out: Path, run_id: str, stage: str) -> int:
     payload = adapt_junit_xml(input_path, run_id=run_id, stage=stage)
     write_json_report(payload, out)
@@ -1224,6 +1301,8 @@ def main() -> None:
 
     if args.command == "analyze":
         raise SystemExit(run_analyze(args.project, args.out, args.memory))
+    if args.command == "check":
+        raise SystemExit(run_check(args.baseline, args.current, args.policy, args.as_json))
     if args.command == "adapt-junit":
         raise SystemExit(run_adapt_junit(args.input, args.out, args.run_id, args.stage))
     if args.command == "adapt-simulation":
