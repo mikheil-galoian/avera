@@ -30,6 +30,27 @@ SKIP_STATUSES = {
 }
 
 
+def status_severity(status: Any) -> int:
+    """Canonical worst-status-wins severity, fail-closed.
+
+    Used to merge duplicate test ids (a retried/flaky test reported twice, the
+    same id across several artifacts). Higher wins. An unrecognised or empty
+    status is treated as a *failure* tier — never as a pass — so an unknown
+    token (``crash``, ``segfault``, ``""``) can never let a later ``passed`` row
+    silently overwrite a real failure. This is the single taxonomy shared by the
+    comparator and every adapter.
+    """
+    s = (str(status) if status is not None else "").strip().lower()
+    if s in PASS_STATUSES:
+        return 1
+    if s in SKIP_STATUSES:
+        return 2
+    if s in {"error", "errored"}:
+        return 4
+    # known failures AND anything unrecognised/empty → failure tier (fail-closed)
+    return 3
+
+
 @dataclass(frozen=True)
 class MetricDelta:
     """Numeric metric movement between baseline and current runs."""
@@ -180,7 +201,14 @@ def _index_tests(tests: Any) -> dict[str, Any]:
             _get(test, "name"),
             f"test-{position}",
         )
-        indexed[str(test_id)] = test
+        key = str(test_id)
+        existing = indexed.get(key)
+        # Duplicate id within one run (a retried/flaky test reported twice):
+        # keep the worst status so a later "passed" row cannot drop a failure.
+        if existing is None or status_severity(_get(test, "status")) > status_severity(
+            _get(existing, "status")
+        ):
+            indexed[key] = test
     return indexed
 
 

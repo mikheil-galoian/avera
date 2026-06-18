@@ -47,16 +47,24 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any, Iterable
 
+from avera.compare.baseline_comparator import status_severity
 
-# Priority order for worst-status-wins merge
-_STATUS_ORDER: dict[str, int] = {
-    "error": 5,
-    "failed": 4,
-    "inconclusive": 3,
-    "skipped": 2,
-    "passed": 1,
-    "": 0,
-}
+
+def _merge_into(merged: dict[str, dict[str, Any]], test: dict[str, Any]) -> None:
+    """Merge *test* into *merged* by id, worst-status-wins (fail-closed).
+
+    Used for duplicate test ids both within a single file (a retried test
+    emitting fail-then-pass) and across files in a batch.
+    """
+    tid = test["id"]
+    existing = merged.get(tid)
+    if existing is None:
+        merged[tid] = test
+        return
+    if status_severity(test["status"]) > status_severity(existing["status"]):
+        existing["status"] = test["status"]
+        existing["evidence"] = test["evidence"]
+    existing["metrics"].update(test["metrics"])
 
 
 # ---------------------------------------------------------------------------
@@ -96,13 +104,14 @@ def adapt_junit_xml(
     except ET.ParseError as exc:
         raise ValueError(f"JUnit XML parse error in {source}: {exc}") from exc
 
-    tests: list[dict[str, Any]] = []
+    merged: dict[str, dict[str, Any]] = {}
     suites = _collect_suites(root)
     for suite in suites:
         suite_name = suite.attrib.get("name", "").strip()
         suite_props = _parse_properties(suite)
         for testcase in suite.findall(".//testcase"):
-            tests.append(_adapt_testcase(testcase, suite_name, suite_props))
+            _merge_into(merged, _adapt_testcase(testcase, suite_name, suite_props))
+    tests = list(merged.values())
 
     return {
         "runId": run_id,
@@ -162,19 +171,7 @@ def adapt_junit_xml_batch(
         total_suites += single["metadata"]["suite_count"]
         source_paths.append(str(source))
         for test in single["tests"]:
-            tid = test["id"]
-            if tid not in merged:
-                merged[tid] = test
-            else:
-                existing = merged[tid]
-                # Worst-status wins
-                if _STATUS_ORDER.get(test["status"], 0) > _STATUS_ORDER.get(
-                    str(existing["status"]), 0
-                ):
-                    existing["status"] = test["status"]
-                    existing["evidence"] = test["evidence"]
-                # Merge metrics (later overrides)
-                existing["metrics"].update(test["metrics"])
+            _merge_into(merged, test)
 
     return {
         "runId": run_id,

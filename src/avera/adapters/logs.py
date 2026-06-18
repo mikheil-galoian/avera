@@ -6,6 +6,8 @@ import csv
 from pathlib import Path
 from typing import Any
 
+from avera.compare.baseline_comparator import status_severity
+
 
 REQUIRED_COLUMNS = ("test_id", "component", "status", "message")
 
@@ -123,16 +125,13 @@ def _coerce_value(raw_value: str) -> Any:
 
 
 def _combine_status(existing: str, incoming: str) -> str:
-    order = {
-        "error": 4,
-        "failed": 3,
-        "inconclusive": 2,
-        "skipped": 1,
-        "passed": 0,
-    }
-    current = order.get(existing, 0)
-    candidate = order.get(incoming, 0)
-    return existing if current >= candidate else incoming
+    """Worst-status-wins, fail-closed, order-independent.
+
+    Uses the shared taxonomy so an unknown status word ranks as a failure rather
+    than tying with ``passed`` — an unrecognised token can never let a real
+    failure be hidden, regardless of CSV row order.
+    """
+    return existing if status_severity(existing) >= status_severity(incoming) else incoming
 
 
 # ---------------------------------------------------------------------------

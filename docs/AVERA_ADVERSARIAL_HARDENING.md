@@ -28,10 +28,10 @@ Domains the core must serve: automotive (ISO 26262), aviation (DO-178C), railway
 | A5 | Audit log | multi-process concurrency corrupts chain | MED | **FIXED** (file lock) |
 | S1 | Sign-off | `verify_artifacts=False` severs binding | MED | **FIXED** (fail-closed) |
 | K3 | Classifier | `passed→timeout` → environment_failure while introduced≠∅ (contradiction) | HIGH | **SCHEDULED** (design) |
-| K4 | Adapters | single-file JUnit duplicate id, fail-then-pass dropped | HIGH | **SCHEDULED** |
-| K5 | Adapters | CSV `_combine_status` ranks unknown = passed, order-dependent | MED | **SCHEDULED** |
-| Gp | Gate/policy | policy with bad `risk_rank`/`max_allowed_risk` silently degrades | MED | **SCHEDULED** |
-| Pol | Policy resolution | env/cwd can change which builtin policy file loads | MED | **SCHEDULED** |
+| K4 | Adapters | single-file JUnit duplicate id, fail-then-pass dropped | HIGH | **FIXED** (shared merge) |
+| K5 | Adapters | CSV `_combine_status` ranks unknown = passed, order-dependent | MED | **FIXED** (fail-closed taxonomy) |
+| Gp | Gate/policy | policy with bad `risk_rank`/`max_allowed_risk` silently degrades | MED | **FIXED** (validation) |
+| Pol | Policy resolution | env/cwd can change which builtin policy file loads | MED | **FIXED** (package-dir first) |
 | M2/M3 | Manifest | path re-point & summary fields outside the root | LOW | noted |
 
 What **held** under attack (verified): gate arithmetic/boundary determinism;
@@ -82,18 +82,26 @@ environment_failure even when an introduced failure exists. Needs a deliberate
 policy: when is a timeout environmental vs a real regression? Touching it shifts the
 `bms-environment-failure` fixture contract, so it requires a decision, not a quick flip.
 
-**K4/K5 adapter status merging.** Single-file JUnit and CSV adapters should use the
-same worst-status-wins, fail-closed merge as the batch JUnit path; centralise one
-status taxonomy shared by comparator + all adapters.
+**K4/K5 adapter status merging — CLOSED.** A single fail-closed taxonomy now lives
+in `compare/baseline_comparator.py::status_severity` (unknown/empty status ranks as
+a *failure*, never tying with `passed`). It is shared by: the comparator's
+`_index_tests` (duplicate ids across a run merge worst-status-wins), the JUnit
+adapter (single-file *and* batch dedup via one `_merge_into`), and the CSV log
+adapter (`_combine_status` now order-independent and fail-closed). Tests:
+`tests/test_adapter_policy_hardening.py`.
 
 **S1 sign-off toggle.** Make `verify_artifacts` fail-closed (skipping verification
 must not yield `ok=True`) and re-derive the manifest root for the binding check
 rather than trusting the manifest's self-declared `integrity_root` field.
 
-**Gp/Pol policy validation & resolution.** `policy_from_dict` should reject a
-`max_allowed_risk` absent from `risk_rank`, a `risk_rank` missing levels, and
-non-finite `min_confidence_score`; builtin-policy resolution should be pinned
-(package data or recorded resolved-path + content hash) so env/cwd cannot swap it.
+**Gp/Pol policy validation & resolution — CLOSED.** `policy_from_dict` now rejects:
+a `max_allowed_risk` absent from the effective `risk_rank`, non-integer rank values,
+an empty `risk_rank`, an empty `policy_id`, and a non-finite or out-of-`[0,1]`
+`min_confidence_score` (previously a `NaN` silently sent every report to review).
+Built-in resolution tries the trusted package `policies/` dir *before*
+`AVERA_POLICIES_DIR`/cwd, so a present built-in always loads from the shipped,
+audited copy and the environment cannot swap it for a laxer one; env/cwd remain a
+fallback only when the package copy is absent. (`gates/policy_loader.py`.)
 
 ## Standing principle
 
