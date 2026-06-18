@@ -27,7 +27,7 @@ Domains the core must serve: automotive (ISO 26262), aviation (DO-178C), railway
 | A3 | Audit log | forged record can be appended (no key) | HIGH | **FIXED** (keyed HMAC mode) |
 | A5 | Audit log | multi-process concurrency corrupts chain | MED | **FIXED** (file lock) |
 | S1 | Sign-off | `verify_artifacts=False` severs binding | MED | **FIXED** (fail-closed) |
-| K3 | Classifier | `passed→timeout` → environment_failure while introduced≠∅ (contradiction) | HIGH | **SCHEDULED** (design) |
+| K3 | Classifier | `passed→timeout` → environment_failure while introduced≠∅ (contradiction) | HIGH | **FIXED** (env must explain all) |
 | K4 | Adapters | single-file JUnit duplicate id, fail-then-pass dropped | HIGH | **FIXED** (shared merge) |
 | K5 | Adapters | CSV `_combine_status` ranks unknown = passed, order-dependent | MED | **FIXED** (fail-closed taxonomy) |
 | Gp | Gate/policy | policy with bad `risk_rank`/`max_allowed_risk` silently degrades | MED | **FIXED** (validation) |
@@ -77,10 +77,14 @@ mode remains tamper-evident only against accidental/adjacent edits — set
 `verify_artifacts=False` it records an error and `manifest_intact=False`, so skipping
 verification can never yield `ok=True`. (`signoff/workflow.py`.)
 
-**K3 env-vs-introduced ordering.** `passed→timeout` is currently classed
-environment_failure even when an introduced failure exists. Needs a deliberate
-policy: when is a timeout environmental vs a real regression? Touching it shifts the
-`bms-environment-failure` fixture contract, so it requires a decision, not a quick flip.
+**K3 env-vs-introduced ordering — CLOSED.** `environment_failure` is now returned
+only when the environment signal is the *whole* story: no introduced threshold
+regression AND every introduced pass→fail is itself explained by an environment
+pattern. A lone `passed→timeout` still classifies as `environment_failure` (review,
+fixture contract preserved); but a real introduced failure that is NOT an env
+pattern can no longer be masked as flaky infra just because some other test timed
+out — it falls through to `confirmed_regression`. Tests:
+`tests/test_classifier_env_vs_regression.py`. (`classify/risk_classifier.py`.)
 
 **K4/K5 adapter status merging — CLOSED.** A single fail-closed taxonomy now lives
 in `compare/baseline_comparator.py::status_severity` (unknown/empty status ranks as

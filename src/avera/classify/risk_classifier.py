@@ -273,7 +273,18 @@ def _verdict(
         if _get(item, "classification") == "unchanged_pass"
     ]
 
-    if env_signals and not introduced_thresholds:
+    # Environment failure only when the env signal is the WHOLE story: no
+    # introduced threshold regression, and every introduced pass→fail is itself
+    # explained by an environment pattern (e.g. a lone timeout). An introduced
+    # failure that is NOT an env signal is real regression evidence and must not
+    # be masked as flaky infra — it falls through to confirmed_regression below.
+    env_signal_ids = {sig.get("test_id") for sig in env_signals}
+    introduced_ids = {
+        str(_get(item, "test_id", default=_get(item, "id", default="")))
+        for item in introduced
+    }
+    unexplained_introduced = {tid for tid in introduced_ids if tid and tid not in env_signal_ids}
+    if env_signals and not introduced_thresholds and not unexplained_introduced:
         return verdicts.ENVIRONMENT_FAILURE
     if introduced and introduced_thresholds:
         return verdicts.CONFIRMED_REGRESSION
