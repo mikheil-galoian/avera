@@ -84,6 +84,12 @@ def classify_risk(
         affected_requirements,
         coverage_gap,
     )
+    # Fail-closed backstop: an introduced failure (baseline pass -> current fail) can
+    # never be reported as a benign/pass-like outcome. If any verdict path tried to
+    # do so, escalate to a confirmed regression. (Environment-failure remains a valid
+    # explanation and is intentionally not overridden here.)
+    if introduced and verdict in {verdicts.SUCCESSFUL_CHANGE, verdicts.EXPECTED_CHANGE}:
+        verdict = verdicts.CONFIRMED_REGRESSION
     risk = _risk(verdict, affected_requirements, threshold_evidence, introduced)
     confidence = _confidence(verdict, introduced, threshold_evidence, affected_requirements)
     evidence_summary = _summary(

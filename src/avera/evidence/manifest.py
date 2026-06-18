@@ -360,22 +360,27 @@ def _build_ref(
 
 
 def _compute_integrity_root(refs: list[ArtifactRef]) -> str:
-    """Deterministic root hash over present artifacts.
+    """Deterministic root hash committing to the full canonical role surface.
 
     Excludes timestamps and absolute paths so the root is stable across machines
-    for the same content. Binds (role, sha256, schema_version) for each present
-    artifact, sorted by role.
+    for the same content. Crucially, it iterates over every canonical role and binds
+    ``(role, present, sha256, schema_version)`` — including roles that are absent.
+    This means dropping or hiding a produced artifact changes the root, so any
+    downstream binding (e.g. a sign-off) to the original root detects the omission.
     """
-    binding = [
-        {
-            "role": ref.role,
-            "sha256": ref.sha256,
-            "schema_version": ref.schema_version,
-        }
-        for ref in refs
-        if ref.present and ref.sha256
-    ]
-    binding.sort(key=lambda item: item["role"])
+    by_role = {ref.role: ref for ref in refs}
+    binding = []
+    for role in CANONICAL_ROLES:
+        ref = by_role.get(role)
+        present = bool(ref.present) if ref else False
+        binding.append(
+            {
+                "role": role,
+                "present": present,
+                "sha256": ref.sha256 if (ref and present) else None,
+                "schema_version": ref.schema_version if ref else None,
+            }
+        )
     canonical = json.dumps(binding, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 

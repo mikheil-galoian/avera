@@ -14,6 +14,7 @@ never introduces non-deterministic behaviour.
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -116,12 +117,20 @@ def evaluate_gate(
         min_confidence_score if min_confidence_score is not None else active.min_confidence_score
     )
     risk_rank_map = active.risk_rank or RISK_RANK
+    max_known_rank = max(risk_rank_map.values()) if risk_rank_map else RISK_RANK["safety_critical"]
 
-    verdict = str(report.get("verdict") or "insufficient_evidence")
-    risk = str(report.get("risk") or "unknown")
+    # --- Normalise inputs and fail CLOSED on degenerate values -------------
+    # A gate must never pass on malformed evidence. Unknown risk levels, mis-cased
+    # strings, non-string verdicts, and non-finite confidence are treated as the
+    # most adverse interpretation, not the safest.
+    verdict = _normalise_verdict(report.get("verdict"))
+    risk, risk_recognised = _normalise_risk(report.get("risk"), risk_rank_map)
     confidence_score = _float(report.get("confidence_score"), default=0.0)
-    risk_rank = risk_rank_map.get(risk, 0)
-    max_risk_rank = risk_rank_map.get(effective_max_risk, RISK_RANK["medium"])
+    confidence_finite = math.isfinite(confidence_score)
+
+    risk_rank = risk_rank_map.get(risk, max_known_rank)  # unknown risk -> max severity
+    eff_max_key = str(effective_max_risk).strip().lower()
+    max_risk_rank = risk_rank_map.get(eff_max_key, RISK_RANK["medium"])
 
     reasons: list[str] = []
     status = "pass"
@@ -130,15 +139,21 @@ def evaluate_gate(
         status = "block"
         reasons.append(f"blocking verdict: {verdict}")
 
-    if risk_rank > max_risk_rank:
+    if not risk_recognised:
         status = "block"
-        reasons.append(f"risk {risk} exceeds allowed risk {effective_max_risk}")
+        reasons.append(f"unrecognised risk level {risk!r} treated as maximum severity")
+    elif risk_rank > max_risk_rank:
+        status = "block"
+        reasons.append(f"risk {risk} exceeds allowed risk {eff_max_key}")
 
     if status != "block" and verdict in active.review_verdicts:
         status = "review"
         reasons.append(f"manual review verdict: {verdict}")
 
-    if status != "block" and confidence_score < effective_min_conf:
+    if status != "block" and not confidence_finite:
+        status = "review"
+        reasons.append("confidence_score is not a finite number — treated as below minimum")
+    elif status != "block" and confidence_score < effective_min_conf:
         status = "review"
         reasons.append(
             f"confidence_score {confidence_score:.2f} below minimum {effective_min_conf:.2f}"
@@ -156,15 +171,36 @@ def evaluate_gate(
             "verdict": verdict,
             "risk": risk,
             "confidence": report.get("confidence"),
-            "confidence_score": confidence_score,
-            "max_allowed_risk": effective_max_risk,
+            "confidence_score": confidence_score if confidence_finite else None,
+            "max_allowed_risk": eff_max_key,
             "min_confidence_score": effective_min_conf,
             "policy_id": active.policy_id,
         },
     )
 
 
+def _normalise_verdict(raw: Any) -> str:
+    """Return a safe, lower-cased verdict string. Non-string/empty -> insufficient_evidence."""
+    if isinstance(raw, str) and raw.strip():
+        return raw.strip().lower()
+    return "insufficient_evidence"
+
+
+def _normalise_risk(raw: Any, risk_rank_map: dict[str, int]) -> tuple[str, bool]:
+    """Return (risk, recognised). Non-string/empty -> 'unknown' (recognised).
+
+    A string not present in the rank map is returned lower-cased with recognised=False
+    so the caller can fail closed.
+    """
+    if not isinstance(raw, str) or not raw.strip():
+        return "unknown", True
+    value = raw.strip().lower()
+    return value, value in risk_rank_map
+
+
 def _float(value: Any, *, default: float) -> float:
+    if isinstance(value, bool):  # bool is a malformed confidence score
+        return default
     try:
         return float(value)
     except (TypeError, ValueError):

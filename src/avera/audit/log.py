@@ -193,9 +193,19 @@ class AuditLog:
             except json.JSONDecodeError as exc:
                 raise ChainIntegrityError(f"Record {i}: JSON parse error — {exc}") from exc
 
-            # 1. Verify self_hash (recompute from pre-hash fields)
-            stored_self = obj.pop("self_hash", None)
-            recomputed = hashlib.sha256(_canonical(obj).encode()).hexdigest()
+            # 1. Verify self_hash (recompute from a FIXED schema, not whatever keys
+            #    the line happens to contain — otherwise injected/renamed top-level
+            #    fields could be smuggled in by recomputing self_hash over them).
+            stored_self = obj.get("self_hash")
+            pre = {
+                "seq": obj.get("seq"),
+                "timestamp_utc": obj.get("timestamp_utc"),
+                "event": obj.get("event"),
+                "project": obj.get("project"),
+                "prev_hash": obj.get("prev_hash"),
+                "payload": obj.get("payload"),
+            }
+            recomputed = hashlib.sha256(_canonical(pre).encode()).hexdigest()
             if stored_self != recomputed:
                 raise ChainIntegrityError(
                     f"Record {i} ({obj.get('event', '?')}): "

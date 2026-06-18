@@ -13,7 +13,21 @@ from typing import Any
 
 
 PASS_STATUSES = {"pass", "passed", "ok", "success", "successful"}
+# Known failure words (informational). The actual rule is fail-CLOSED (see
+# _is_failure): any status that is neither a recognised pass nor a neutral
+# skip is treated as a failure, so unusual tokens (crash, segfault, panic, "",
+# regression, ...) cannot silently hide a real regression.
 FAIL_STATUSES = {"fail", "failed", "failure", "error", "errored", "timeout"}
+# Neutral statuses: not a pass and not a failure — either intentionally skipped or
+# genuinely inconclusive ("we don't know"). These map to insufficient-evidence, not
+# to a failure. Everything that is NOT a pass and NOT in this set fails closed.
+SKIP_STATUSES = {
+    # skipped / not executed
+    "skip", "skipped", "xfail", "xfailed", "deselected",
+    "not_run", "notrun", "pending", "n/a", "na", "none",
+    # genuinely inconclusive (distinct from a failure)
+    "inconclusive", "unknown", "indeterminate", "undetermined",
+}
 
 
 @dataclass(frozen=True)
@@ -182,16 +196,15 @@ def _classify_status(baseline_status: str | None, current_status: str | None) ->
         return "missing_baseline"
     if current_status is None:
         return "missing_current"
-    if baseline_passed and current_failed:
-        return "introduced_failure"
-    if baseline_failed and current_failed:
-        return "preexisting_failure"
-    if baseline_failed and current_passed:
-        return "resolved_failure"
-    if baseline_passed and current_passed:
-        return "unchanged_pass"
+    # Fail-closed: a current failure is surfaced regardless of how the baseline is
+    # labelled. If the baseline was not itself a failure (pass, skip, or an
+    # unrecognised non-failure token), a current failure is an INTRODUCED failure —
+    # never silently dropped. This closes the "unusual status hides a regression"
+    # hole found by the adversarial audit.
     if current_failed:
-        return "possible_failure"
+        return "preexisting_failure" if baseline_failed else "introduced_failure"
+    if current_passed:
+        return "resolved_failure" if baseline_failed else "unchanged_pass"
     return "changed_status"
 
 
@@ -261,7 +274,12 @@ def _is_pass(status: str | None) -> bool:
 
 
 def _is_failure(status: str | None) -> bool:
-    return status in FAIL_STATUSES
+    # Fail-closed open vocabulary: anything that is not a recognised pass and not a
+    # neutral skip is a failure. A safety gate must never default an unknown status
+    # to "not a failure".
+    if status is None:
+        return False
+    return status not in PASS_STATUSES and status not in SKIP_STATUSES
 
 
 def _number(value: Any) -> float | None:
