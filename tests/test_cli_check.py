@@ -52,3 +52,15 @@ def test_check_human_output_is_readable(capsys):
     assert "confirmed_regression" in text
     assert "block" in text
     assert code != 0
+
+
+def test_check_writes_github_output(capsys):
+    out = Path(tempfile.mkdtemp()) / "gh_output"
+    code = run_check(_xml(False), _xml(True), "space", as_json=True, github_output=out)
+    capsys.readouterr()
+    body = out.read_text(encoding="utf-8")
+    assert "verdict=confirmed_regression" in body
+    assert "gate_status=block" in body
+    assert "introduced_count=1" in body
+    assert "policy=space.v1" in body
+    assert code != 0  # block fails the CI step

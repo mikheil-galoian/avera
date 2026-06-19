@@ -103,6 +103,12 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Emit machine-readable JSON instead of the human summary.",
     )
+    check.add_argument(
+        "--github-output",
+        type=Path,
+        default=None,
+        help="Append key=value gate outputs to this file (for GitHub Actions $GITHUB_OUTPUT).",
+    )
 
     adapt_junit = subparsers.add_parser(
         "adapt-junit",
@@ -690,12 +696,19 @@ def run_validate_workspace(project: Path) -> int:
     return 0 if validation.ok else 2
 
 
-def run_check(baseline: Path, current: Path, policy_name: str, as_json: bool) -> int:
+def run_check(
+    baseline: Path,
+    current: Path,
+    policy_name: str,
+    as_json: bool,
+    github_output: Path | None = None,
+) -> int:
     """Zero-config gate: two JUnit files in, a pass/review/block decision out.
 
     No requirements, component map, or project folder needed — the broad on-ramp
     for plain pass/fail CI. Exit code follows the gate so it drops straight into a
-    CI step.
+    CI step. With ``github_output`` set, appends key=value lines (verdict,
+    gate_status, …) to that file so the GitHub Action can expose them as outputs.
     """
     from avera.core import assessment_to_public_report
 
@@ -710,6 +723,18 @@ def run_check(baseline: Path, current: Path, policy_name: str, as_json: bool) ->
         return getattr(item, "test_id", None) or getattr(item, "id", None)
 
     introduced = [t for t in (_tid(x) for x in assessment.introduced_failures) if t]
+
+    if github_output is not None:
+        lines = [
+            f"verdict={assessment.verdict}",
+            f"risk={assessment.risk}",
+            f"confidence={assessment.confidence}",
+            f"gate_status={decision.status}",
+            f"introduced_count={len(introduced)}",
+            f"policy={decision.report_summary['policy_id']}",
+        ]
+        with Path(github_output).open("a", encoding="utf-8") as fh:
+            fh.write("\n".join(lines) + "\n")
 
     if as_json:
         print(json.dumps({
@@ -1302,7 +1327,9 @@ def main() -> None:
     if args.command == "analyze":
         raise SystemExit(run_analyze(args.project, args.out, args.memory))
     if args.command == "check":
-        raise SystemExit(run_check(args.baseline, args.current, args.policy, args.as_json))
+        raise SystemExit(
+            run_check(args.baseline, args.current, args.policy, args.as_json, args.github_output)
+        )
     if args.command == "adapt-junit":
         raise SystemExit(run_adapt_junit(args.input, args.out, args.run_id, args.stage))
     if args.command == "adapt-simulation":

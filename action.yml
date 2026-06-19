@@ -6,15 +6,24 @@ branding:
   color: 'blue'
 
 inputs:
+  baseline:
+    description: 'Zero-config mode: path to the baseline JUnit/xUnit XML (known-good run, e.g. main). Set together with `current` to run the simple `check` gate — no evidence pack needed. Ideal for plain pass/fail CI.'
+    required: false
+    default: ''
+  current:
+    description: 'Zero-config mode: path to the current JUnit/xUnit XML (the run to gate, e.g. the PR). Pair with `baseline`.'
+    required: false
+    default: ''
   project_path:
-    description: 'Path to the evidence pack directory. Must contain baseline + current verification results, requirements.csv, component_map.json, and change_description.txt. See the AVERA README for the full evidence pack contract.'
-    required: true
+    description: 'Full evidence-pack mode: path to the evidence pack directory (baseline + current results, requirements.csv, component_map.json, change_description.txt). Use this OR the baseline/current pair.'
+    required: false
+    default: ''
   output_path:
     description: 'Directory where the full canonical artifact set is written (report, markdown, evidence graph, traceability, decision, trend, workspace pack, evidence manifest, audit log).'
     required: false
     default: 'avera-reports'
   policy:
-    description: 'Optional built-in gate policy for the gate_status output: general, automotive, aviation, medical, railway, ai_agent. Empty uses the default (general) policy.'
+    description: 'Optional built-in gate policy for the gate_status output: general, automotive, aviation, medical, railway, space, ai_agent. Empty uses the default (general) policy.'
     required: false
     default: ''
   fail_on_release_blocking:

@@ -9,8 +9,24 @@ set -eu
 
 cd "${GITHUB_WORKSPACE:-$PWD}"
 
+# Zero-config mode: two JUnit files in -> verdict + gate out. No evidence pack.
+# Triggered when both `baseline` and `current` inputs are provided.
+if [ -n "${INPUT_BASELINE:-}" ] && [ -n "${INPUT_CURRENT:-}" ]; then
+  CHECK_POLICY_ARG=""
+  if [ -n "${INPUT_POLICY:-}" ]; then
+    CHECK_POLICY_ARG="--policy ${INPUT_POLICY}"
+  fi
+  # shellcheck disable=SC2086
+  exec python -m avera check \
+    --baseline "${INPUT_BASELINE}" \
+    --current "${INPUT_CURRENT}" \
+    --github-output "${GITHUB_OUTPUT:-/dev/null}" \
+    ${CHECK_POLICY_ARG}
+  # `avera check` exits non-zero when the gate blocks -> fails the CI step.
+fi
+
 if [ -z "${INPUT_PROJECT_PATH:-}" ]; then
-  echo "AVERA Action error: project_path input is required." >&2
+  echo "AVERA Action error: provide either baseline+current (zero-config) or project_path (full evidence pack)." >&2
   exit 2
 fi
 

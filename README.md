@@ -136,7 +136,9 @@ Or try the **hosted demo preview** — no install:
 
 ## GitHub Action
 
-AVERA ships as a reusable GitHub Action. Add one step and AVERA runs the deterministic pipeline on every PR, emits the canonical evidence set, and fails the job when a regression is detected.
+AVERA ships as a reusable GitHub Action, in two modes.
+
+**Zero-config** — gate plain pass/fail CI with two JUnit files, no evidence pack:
 
 ```yaml
 # .github/workflows/avera-verify.yml
@@ -147,6 +149,17 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
+      - uses: tc7kxsszs5-cloud/avera@v1
+        with:
+          baseline: main-junit.xml   # known-good results (e.g. from main)
+          current: pr-junit.xml      # this PR's results
+          policy: general            # or space / automotive / aviation / …
+      # The job fails when the gate blocks (a confirmed regression).
+```
+
+**Full evidence pack** — the canonical artifact set for regulated review:
+
+```yaml
       - uses: actions/checkout@v4
       - uses: tc7kxsszs5-cloud/avera@v1
         with:
