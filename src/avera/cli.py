@@ -109,6 +109,13 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Append key=value gate outputs to this file (for GitHub Actions $GITHUB_OUTPUT).",
     )
+    check.add_argument(
+        "--report-only",
+        dest="report_only",
+        action="store_true",
+        help="Advisory mode: print the verdict but always exit 0 (do not fail the build). "
+             "Recommended for a first trial on an unfamiliar/noisy repo.",
+    )
 
     adapt_junit = subparsers.add_parser(
         "adapt-junit",
@@ -702,6 +709,7 @@ def run_check(
     policy_name: str,
     as_json: bool,
     github_output: Path | None = None,
+    report_only: bool = False,
 ) -> int:
     """Zero-config gate: two JUnit files in, a pass/review/block decision out.
 
@@ -709,6 +717,12 @@ def run_check(
     for plain pass/fail CI. Exit code follows the gate so it drops straight into a
     CI step. With ``github_output`` set, appends key=value lines (verdict,
     gate_status, …) to that file so the GitHub Action can expose them as outputs.
+
+    ``report_only`` is advisory mode: the verdict is still printed, but the exit
+    code is always 0 so the build is not failed. Recommended for a first trial on
+    an unfamiliar/noisy repo — a flaky test that flips pass→fail looks identical to
+    a real regression from a single diff, so advisory mode lets a team see the
+    verdict without a false block costing trust.
     """
     from avera.core import assessment_to_public_report
 
@@ -745,8 +759,9 @@ def run_check(
             "introduced_failures": introduced,
             "gate_status": decision.status,
             "policy": decision.report_summary["policy_id"],
+            "report_only": report_only,
         }, indent=2, ensure_ascii=False))
-        return decision.exit_code
+        return 0 if report_only else decision.exit_code
 
     print("AVERA Check")
     print(f"Baseline: {baseline} ({len(base['tests'])} tests)")
@@ -761,7 +776,9 @@ def run_check(
     print(f"Gate [{decision.report_summary['policy_id']}]: {decision.status}")
     for reason in decision.reasons:
         print(f"- {reason}")
-    return decision.exit_code
+    if report_only:
+        print("(advisory mode: --report-only — exit 0, the build is not failed)")
+    return 0 if report_only else decision.exit_code
 
 
 def run_adapt_junit(input_path: Path, out: Path, run_id: str, stage: str) -> int:
@@ -1328,7 +1345,10 @@ def main() -> None:
         raise SystemExit(run_analyze(args.project, args.out, args.memory))
     if args.command == "check":
         raise SystemExit(
-            run_check(args.baseline, args.current, args.policy, args.as_json, args.github_output)
+            run_check(
+                args.baseline, args.current, args.policy, args.as_json,
+                args.github_output, args.report_only,
+            )
         )
     if args.command == "adapt-junit":
         raise SystemExit(run_adapt_junit(args.input, args.out, args.run_id, args.stage))

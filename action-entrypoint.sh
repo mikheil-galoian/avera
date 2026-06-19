@@ -16,12 +16,16 @@ if [ -n "${INPUT_BASELINE:-}" ] && [ -n "${INPUT_CURRENT:-}" ]; then
   if [ -n "${INPUT_POLICY:-}" ]; then
     CHECK_POLICY_ARG="--policy ${INPUT_POLICY}"
   fi
+  REPORT_ONLY_ARG=""
+  case "${INPUT_REPORT_ONLY:-false}" in
+    true|TRUE|1|yes) REPORT_ONLY_ARG="--report-only" ;;
+  esac
   # shellcheck disable=SC2086
   exec python -m avera check \
     --baseline "${INPUT_BASELINE}" \
     --current "${INPUT_CURRENT}" \
     --github-output "${GITHUB_OUTPUT:-/dev/null}" \
-    ${CHECK_POLICY_ARG}
+    ${CHECK_POLICY_ARG} ${REPORT_ONLY_ARG}
   # `avera check` exits non-zero when the gate blocks -> fails the CI step.
 fi
 

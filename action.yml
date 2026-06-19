@@ -14,6 +14,10 @@ inputs:
     description: 'Zero-config mode: path to the current JUnit/xUnit XML (the run to gate, e.g. the PR). Pair with `baseline`.'
     required: false
     default: ''
+  report_only:
+    description: 'Advisory mode (zero-config): print the verdict but never fail the job (always exit 0). Recommended for a first trial on a noisy repo, where a flaky test flipping pass→fail would otherwise look like a real regression.'
+    required: false
+    default: 'false'
   project_path:
     description: 'Full evidence-pack mode: path to the evidence pack directory (baseline + current results, requirements.csv, component_map.json, change_description.txt). Use this OR the baseline/current pair.'
     required: false

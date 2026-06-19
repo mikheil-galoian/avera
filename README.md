@@ -29,6 +29,8 @@ avera check --baseline main.xml --current pr.xml
 
 Works with anything that emits **JUnit / xUnit XML** (pytest, jest, go test, JUnit, …). Add `--json` for machines; the exit code drops into any pipeline.
 
+> **First trial on a noisy repo? Use `--report-only`** (advisory mode): it prints the verdict but always exits 0, so the build is never failed. On a single diff a flaky test that flips pass→fail looks identical to a real regression — advisory mode lets you see what AVERA flags without a false block costing trust. Switch to the hard gate once you trust it. (Action: `report_only: true`.)
+
 ---
 
 ## Does it actually work? Reproduce it yourself.

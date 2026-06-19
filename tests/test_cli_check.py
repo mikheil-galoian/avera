@@ -54,6 +54,17 @@ def test_check_human_output_is_readable(capsys):
     assert code != 0
 
 
+def test_check_report_only_never_fails_build(capsys):
+    # A real introduced regression: verdict/gate still report block, but advisory
+    # mode returns exit 0 so the CI step does not fail.
+    code = run_check(_xml(False), _xml(True), "general", as_json=True, report_only=True)
+    out = json.loads(capsys.readouterr().out)
+    assert out["verdict"] == "confirmed_regression"
+    assert out["gate_status"] == "block"      # verdict is unchanged
+    assert out["report_only"] is True
+    assert code == 0                          # but the build is NOT failed
+
+
 def test_check_writes_github_output(capsys):
     out = Path(tempfile.mkdtemp()) / "gh_output"
     code = run_check(_xml(False), _xml(True), "space", as_json=True, github_output=out)

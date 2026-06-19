@@ -13,9 +13,17 @@ pip install -e .
 # produce two JUnit files from your own project (any tool that emits JUnit):
 #   pytest --junitxml=current.xml      (jest --reporters=jest-junit, gotestsum --junitfile=..., etc.)
 # and one from a known-good ref as baseline.xml, then:
-avera check --baseline baseline.xml --current current.xml
+avera check --baseline baseline.xml --current current.xml --report-only
 ```
-How to get the baseline in CI: docs/CI_BASELINE_PATTERN.md.
+`--report-only` = advisory: it prints the verdict but never fails your build — so a
+flaky test that flips can't cost you anything on the first try. Drop the flag for
+the hard gate once you trust it. How to get the baseline in CI:
+docs/CI_BASELINE_PATTERN.md.
+
+**The outreach framing that follows from this:** ask people to *try to break it*
+in `--report-only` mode and show you where it misfires — a misfire (esp. on a
+flaky test) is the most useful reply, not an embarrassment. It tells you exactly
+what to build next.
 
 ## Likely questions → honest answers
 
@@ -33,9 +41,11 @@ red/green.
 
 **"What about flaky tests?"**
 Honest answer: it does **not** decide flaky-vs-real today — that stays a human call.
-That's the #1 thing I want to solve next, and the right way is statistical (repeated
-runs + significance), not an LLM guessing. I'd rather say "I don't know yet" than
-fake it.
+On a single diff, a flaky test flipping pass→fail looks like a real regression. So
+for a first trial use `--report-only` (advisory — never fails the build); you see
+the verdict without a false block. Solving flaky-vs-real properly is the #1 thing
+I want to do next, and the right way is statistical (repeated runs + significance),
+not an LLM guessing. I'd rather say "I don't know yet" than fake it.
 
 **"Is this another AI PR reviewer?"**
 No — and deliberately so. There is **no LLM in the decision**. It's a deterministic
