@@ -12,11 +12,14 @@
 
 ## 30-second try (zero config)
 
-Two JUnit result files in → verdict + gate out. No project setup, no requirements file.
+Install from source (AVERA is not yet on PyPI), then point it at two JUnit files —
+verdict + gate out, no project setup, no requirements file:
 
 ```bash
-PYTHONPATH=src python3 -m avera check \
-  --baseline main.xml --current pr.xml
+git clone https://github.com/tc7kxsszs5-cloud/avera && cd avera
+pip install -e .
+
+avera check --baseline main.xml --current pr.xml
 #
 # AVERA Check
 # Verdict:  confirmed_regression
@@ -116,7 +119,7 @@ tests/          — unit + cross-domain fixtures + exhaustive verdict-spec proof
 ## Quick start (full evidence pack)
 
 ```bash
-git clone https://github.com/averaeng/avera
+git clone https://github.com/tc7kxsszs5-cloud/avera
 cd avera
 pip install -e ".[demo]"
 
@@ -124,8 +127,7 @@ pip install -e ".[demo]"
 ./start_demo.sh                      # → http://localhost:8501
 
 # Or analyze a full evidence pack
-PYTHONPATH=src python3 -m avera analyze \
-  --project fixtures/bms-fast-charge --out reports
+avera analyze --project fixtures/bms-fast-charge --out reports
 ```
 
 Or try the **hosted demo preview** — no install:
