@@ -1,99 +1,92 @@
 # AVERA
 
-**AI Change Verification & Evidence Architecture for Safety-Critical Systems**
+**A deterministic regression gate for code changes.** Green CI proves nothing *failed* — AVERA proves nothing *regressed*.
 
 [![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://avera-production.up.railway.app)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org)
 
-> **AVERA** turns engineering change artifacts into structured, traceable verification evidence — ready for release review, audit, and compliance handoff.
-
-🔗 **Live demo:** [https://avera-production.up.railway.app](https://avera-production.up.railway.app)
+> AVERA compares a baseline test run against the current one and blocks a release only when there is **proof of an introduced regression** — a test that passed before and fails now — with a tamper-evident evidence trail behind the verdict. Local-first, deterministic, **no LLM in the decision**.
 
 ---
 
-## The Problem
+## 30-second try (zero config)
 
-When a software change touches safety-relevant functions, assembling the evidence trail for release review is manual, fragmented, and hard to audit.
+Two JUnit result files in → verdict + gate out. No project setup, no requirements file.
 
-Engineers spend hours collecting test logs, JUnit/xUnit reports, simulation outputs, and requirement traceability data from different tools — then manually formatting it into something a reviewer can trust.
+```bash
+PYTHONPATH=src python3 -m avera check \
+  --baseline main.xml --current pr.xml
+#
+# AVERA Check
+# Verdict:  confirmed_regression
+# Introduced failures (1): pkg.tests.test_thing
+# Gate [general.v1]: block         (exit 1 — fails the CI step)
+```
 
-**AVERA automates that assembly.**
-
----
-
-## What AVERA Does
-
-AVERA ingests your existing engineering artifacts and normalizes them into one structured, traceable evidence pack per change:
-
-| Input | Output |
-|-------|--------|
-| Verification log CSV | Change-level regression triage |
-| JUnit / xUnit XML | Pass/fail delta vs. baseline |
-| Simulation CSV | Requirement coverage proof |
-| Requirements export | SHA-256 audit log (immutable) |
-| Change description | Structured evidence pack for review |
-
-No toolchain changes. No hosted infrastructure required. Fully local and auditable.
+Works with anything that emits **JUnit / xUnit XML** (pytest, jest, go test, JUnit, …). Add `--json` for machines; the exit code drops into any pipeline.
 
 ---
 
-## Supported Domains & Standards
+## Does it actually work? Reproduce it yourself.
+
+AVERA ships a public **blind-replay benchmark** of real regressions. AVERA is given *only* the before/after test results — no hint where the bug is — and must catch it.
+
+```bash
+AVERA_PY=python3 ./benchmark/reproduce.sh
+# PASS  toolz-f0831e7  -> confirmed_regression / block
+```
+
+That case is commit `f0831e7` in the real [`pytoolz/toolz`](https://github.com/pytoolz/toolz) library (later reverted in PR #551). Given only the two result sets, AVERA independently identified the introduced failure (`test_isiterable`, pass→fail), ruled `confirmed_regression`, and returned `gate=block` under every domain policy. See [`benchmark/`](benchmark/) — and add your own case.
+
+---
+
+## The problem it closes
+
+A passing CI run only proves *no expressed test failed* — not that nothing regressed. When prod breaks after a green merge, there is no machine-checkable record of **what** regressed or **why the merge was allowed**; teams reconstruct it by hand after an incident.
+
+With AI agents now generating PRs faster than anyone can review them, "the suite was green" and "that test is just flaky" are exactly how genuine pass→fail regressions slip through. AVERA gives the reviewer a deterministic separator — **proven introduced regression vs everything else** — and a tamper-evident trail behind every gate decision.
+
+---
+
+## What AVERA does **not** do
+
+Stated plainly, because overclaiming is the failure mode this project avoids:
+
+- It does **not** catch a regression that **no test exercises** — that needs fault-injection / mutation analysis, not the gate.
+- It does **not** decide **flaky vs real** — that stays a human call.
+- It does **not** decide your release — it produces auditable evidence; a human signs off. No LLM in the decision path.
+- It is **not** a certified/qualified tool. Its output is designed to be **independently re-checkable** by a human (inspectable manifest, hash-chained audit, re-derivable integrity root).
+
+---
+
+## Supported domains & standards
+
+The same deterministic engine, calibrated per domain via policy-as-data. Verdict assignment is a [proven-total decision table](docs/AVERA_VERDICT_SPECIFICATION.md).
 
 | Domain | Standard | Status |
 |--------|----------|--------|
-| Automotive (ADAS, BMS) | ISO 26262 | ✅ Production |
-| Railway (signaling, control) | CENELEC EN 50128 | ✅ Production |
-| Aviation (avionics) | DO-178C | ✅ Production |
-| Medical devices | IEC 62304 / ISO 14971 | ✅ Production |
+| Software / CI / DevOps | plain pass/fail CI, AI-PR triage | ✅ |
+| Automotive (ADAS, BMS) | ISO 26262 | ✅ |
+| Aviation (avionics) | DO-178C | ✅ |
+| Railway (signaling, control) | CENELEC EN 50128 | ✅ |
+| Medical devices | IEC 62304 / ISO 14971 | ✅ |
+| Space / flight software | NASA NPR 7150.2 / NASA-STD-8739.8 | ✅ |
+
+Pick a policy with `--policy <name>` (`general`, `automotive`, `aviation`, `railway`, `medical`, `space`, `ai_agent`).
 
 ---
 
-## Quick Start
+## Core capabilities
 
-```bash
-# Clone and install
-git clone https://github.com/averaeng/avera
-cd avera
-pip install -e ".[demo]"
-
-# Run the live demo shell
-./start_demo.sh
-# → opens at http://localhost:8501
-
-# Or run analysis directly
-PYTHONPATH=src python3 -m avera analyze \
-  --project fixtures/bms-fast-charge \
-  --out reports
-```
-
-Or try the **hosted demo preview** instantly — no install required:
-👉 [https://avera-production.up.railway.app](https://avera-production.up.railway.app)
-(A read-only preview of the Streamlit shell, including a safe JUnit/JSON upload preview — not full self-service.)
-
----
-
-## Demo Scenarios
-
-| Scenario | Domain | What It Shows |
-|----------|--------|---------------|
-| `bms-fast-charge` | Automotive / BMS | Thermal regression evidence, ISO 26262 ASIL-B |
-| `adas-pedestrian-detection-regression` | Automotive / ADAS | Simulation delta, requirement coverage proof |
-| `fadec-overspeed-regression` | Aviation | DO-178C evidence pack, baseline vs. current |
-
----
-
-## Core Capabilities
-
-- **Regression triage** — baseline vs. current comparison, pass/fail delta classification
-- **Requirement coverage proof** — traceable from change to test to requirement
-- **Artifact normalization** — JUnit/xUnit, CSV, simulation outputs, requirements exports
-- **Immutable audit log** — SHA-256 hash-chained evidence chain
-- **Evidence manifest** — content-addressed `integrity_root` binding the whole artifact set
-- **Deterministic gate** — policy-as-data (per-domain); optional evidence-grounded AI assistance that returns "insufficient evidence" when unsupported. AVERA does not decide releases.
-- **Evidence pack** — structured output for compliance review and DER/auditor handoff
-- **REST API** — `/analyze/path`, `/analyze/inline`, and `/evidence-pack` (full artifact set) for CI/CD integration
-- **Adapter SDK** — plug in CANoe/CAPL, custom artifact formats
+- **Zero-config check** — `avera check` (two JUnit files → verdict + gate), for plain pass/fail CI.
+- **Regression triage** — baseline vs current comparison; fail-closed classification (unknown status → treated as failure, never hidden).
+- **Deterministic gate** — policy-as-data per domain; same inputs → same verdict → same evidence root, on any machine.
+- **Evidence manifest** — content-addressed `integrity_root` binding the whole artifact set.
+- **Immutable audit log** — SHA-256 hash-chained, with an optional keyed (HMAC) tamper-evident mode.
+- **Sign-off** — bound to the manifest root; fails closed if verification is skipped.
+- **Requirement coverage proof** — traceable from change → test → requirement (regulated domains).
+- **REST API & GitHub Action** — for CI/CD integration (see below).
 
 ---
 
@@ -101,94 +94,49 @@ Or try the **hosted demo preview** instantly — no install required:
 
 ```
 src/avera/
-├── core/          — change analysis, risk classification
-├── compare/       — baseline vs. current comparison
-├── classify/      — regression and impact classification
-├── adapters/      — artifact format adapters (JUnit, CANoe, CSV)
-├── audit/         — immutable SHA-256 audit log
-├── coverage/      — requirement coverage checker
-├── reporters/     — evidence pack formatters
-└── api/           — FastAPI REST endpoint
+├── adapters/   — artifact format adapters (JUnit, CSV, simulation, logs, CANoe)
+├── compare/    — baseline vs current comparison (fail-closed status taxonomy)
+├── classify/   — regression classification + proven-total verdict spec
+├── gates/      — deterministic gate, policy-as-data (policies/*.json)
+├── evidence/   — content-addressed evidence manifest (integrity_root)
+├── audit/      — hash-chained SHA-256 audit log (optional keyed HMAC)
+├── signoff/    — sign-off state machine bound to the manifest root
+├── domains/    — per-domain profiles (avionics, powertrain, space, …)
+├── mutation/   — fault-injection / mutation-based confidence lens
+└── api/        — FastAPI REST endpoint
 
-demo/              — Streamlit interactive shell
-fixtures/          — reference scenarios (BMS, ADAS, FADEC)
-tests/             — 63 passing tests
+benchmark/      — public blind-replay regression benchmark (reproduce.sh)
+fixtures/       — reference scenarios across domains
+docs/           — verdict spec, hardening report, dev principles, GTM
+tests/          — unit + cross-domain fixtures + exhaustive verdict-spec proof
 ```
 
 ---
 
-## Installation
+## Quick start (full evidence pack)
 
 ```bash
-# Core engine
-pip install avera
+git clone https://github.com/averaeng/avera
+cd avera
+pip install -e ".[demo]"
 
-# With demo shell
-pip install "avera[demo]"
+# Run the live demo shell
+./start_demo.sh                      # → http://localhost:8501
 
-# With REST API
-pip install "avera[api]"
-
-# Full development setup
-pip install -e ".[demo,api,dev]"
+# Or analyze a full evidence pack
+PYTHONPATH=src python3 -m avera analyze \
+  --project fixtures/bms-fast-charge --out reports
 ```
 
-**Requirements:** Python 3.11+
-
----
-
-## Docker
-
-Run AVERA without installing Python:
-
-```bash
-# Pull the latest CLI image
-docker pull ghcr.io/tc7kxsszs5-cloud/avera-cli:latest
-
-# Analyze an evidence pack
-docker run --rm \
-  -v "$PWD/fixtures/bms-fast-charge:/workspace" \
-  -v "$PWD/reports:/reports" \
-  ghcr.io/tc7kxsszs5-cloud/avera-cli:latest \
-  analyze --project /workspace --out /reports \
-  --memory /reports/avera-memory.jsonl
-```
-
-Multi-arch image (`linux/amd64`, `linux/arm64`). Pinned tags: `latest`, `vX.Y.Z`, `sha-<short>`.
-
-> The evidence pack mount can be read-only (`:ro`) if you also pass `--memory /reports/avera-memory.jsonl` so the engineering-memory ledger lands in the writable reports volume.
-
----
-
-## REST API
-
-Deployed app: `avera_api.main` (served with `uvicorn avera_api.main:app`).
-
-```bash
-# Start the API server
-uvicorn avera_api.main:app --host 0.0.0.0 --port 8000
-
-# Assessment report only (backward compatible)
-curl -X POST http://localhost:8000/analyze/path \
-  -H "Content-Type: application/json" \
-  -d '{"project": "fixtures/bms-fast-charge"}'
-
-# Full canonical artifact set (report, graph, traceability, decision, trend,
-# workspace pack, evidence manifest + integrity_root, audit log) + gate status
-curl -X POST http://localhost:8000/evidence-pack \
-  -H "Content-Type: application/json" \
-  -d '{"project": "fixtures/bms-fast-charge", "policy": "automotive"}'
-```
-
-`/evidence-pack` returns `verdict`, `risk`, `confidence`, the deterministic
-`gate_status`, the evidence-manifest `integrity_root`, a decision summary, and
-the on-disk paths of every canonical artifact.
+Or try the **hosted demo preview** — no install:
+👉 [https://avera-production.up.railway.app](https://avera-production.up.railway.app)
+(Read-only preview of the Streamlit shell — not full self-service.)
 
 ---
 
 ## GitHub Action
 
-AVERA ships as a reusable GitHub Action. Add one step to your workflow and AVERA runs the full deterministic pipeline on every PR, emits the complete canonical evidence set, and fails the job when a safety-critical regression is detected.
+AVERA ships as a reusable GitHub Action. Add one step and AVERA runs the deterministic pipeline on every PR, emits the canonical evidence set, and fails the job when a regression is detected.
 
 ```yaml
 # .github/workflows/avera-verify.yml
@@ -209,25 +157,49 @@ jobs:
 **Inputs:** `project_path` (required), `output_path`, `policy`, `fail_on_release_blocking`, `fail_on_regression`, `expected_verdict`.
 **Outputs:** `verdict`, `risk`, `confidence`, `gate_status`, `report_path`, `manifest_path`, `integrity_root`, `audit_log_path`.
 
-The action writes all 9 canonical artifacts (`avera-report.json`, `avera-report.md`, `avera-evidence-graph.json`, `avera-traceability-index.json`, `avera-decision.json`, `avera-trend-index.json`, `avera-workspace-pack.json`, `avera-evidence-manifest.json`, `avera-audit.jsonl`) into `output_path`.
-
-Full example with PR comments and artifact upload: [`examples/github-action-usage.yml`](examples/github-action-usage.yml). Minimal two-step variant: [`examples/github-action-minimal.yml`](examples/github-action-minimal.yml).
+Examples: [`examples/github-action-usage.yml`](examples/github-action-usage.yml), [`examples/github-action-minimal.yml`](examples/github-action-minimal.yml).
 
 ---
 
-## Design Partner Program
+## REST API
 
-We are looking for engineering teams in automotive, aviation, railway, or medical devices who want to run a narrow pilot with their own artifacts.
+Served with `uvicorn avera_api.main:app`.
 
-**The pilot is simple:**
-- One software change
-- One artifact family you already export
-- One 2-week evidence review session
+```bash
+uvicorn avera_api.main:app --host 0.0.0.0 --port 8000
 
-No infrastructure changes. No process disruption.
+# Full canonical artifact set + deterministic gate status + integrity_root
+curl -X POST http://localhost:8000/evidence-pack \
+  -H "Content-Type: application/json" \
+  -d '{"project": "fixtures/bms-fast-charge", "policy": "automotive"}'
+```
 
-📩 Contact: [mgaloyan79@gmail.com](mailto:mgaloyan79@gmail.com)
-🔗 Demo: [https://avera-production.up.railway.app](https://avera-production.up.railway.app)
+`/evidence-pack` returns `verdict`, `risk`, `confidence`, the deterministic `gate_status`, the evidence-manifest `integrity_root`, a decision summary, and the on-disk paths of every canonical artifact.
+
+---
+
+## Docker
+
+```bash
+docker pull ghcr.io/tc7kxsszs5-cloud/avera-cli:latest
+docker run --rm \
+  -v "$PWD/fixtures/bms-fast-charge:/workspace" \
+  -v "$PWD/reports:/reports" \
+  ghcr.io/tc7kxsszs5-cloud/avera-cli:latest \
+  analyze --project /workspace --out /reports --memory /reports/avera-memory.jsonl
+```
+
+Multi-arch (`linux/amd64`, `linux/arm64`). Pinned tags: `latest`, `vX.Y.Z`, `sha-<short>`.
+
+---
+
+## Design partner program
+
+Looking for engineering teams — running ordinary CI, or in automotive, aviation, railway, medical, or space — who want a narrow pilot with their own artifacts.
+
+**The pilot is simple:** one software change · one artifact family you already export · one 2-week review session. No infrastructure changes, no process disruption.
+
+📩 Contact: [mgaloyan79@gmail.com](mailto:mgaloyan79@gmail.com) · 🔗 Demo: [avera-production.up.railway.app](https://avera-production.up.railway.app)
 
 ---
 
@@ -237,4 +209,4 @@ Apache 2.0 — see [LICENSE](LICENSE)
 
 ---
 
-*AVERA Engineering — engineering truth, preserved as evidence*
+*AVERA Engineering — engineering truth, preserved as evidence.*
