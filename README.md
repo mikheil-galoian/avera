@@ -159,6 +159,8 @@ jobs:
       # The job fails when the gate blocks (a confirmed regression).
 ```
 
+Full working example (runs base + PR, then gates): [`examples/github-action-zero-config.yml`](examples/github-action-zero-config.yml). How to produce the baseline in CI (run-both / cached / nightly): [`docs/CI_BASELINE_PATTERN.md`](docs/CI_BASELINE_PATTERN.md). Verified on pytest, jest, and go JUnit output (`tests/test_format_breadth.py`).
+
 **Full evidence pack** — the canonical artifact set for regulated review:
 
 ```yaml

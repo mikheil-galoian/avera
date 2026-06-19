@@ -1,0 +1,40 @@
+# Zero-config AVERA gate for plain pass/fail CI (Pattern A: run both refs).
+# Drop this in .github/workflows/avera.yml. Replace the pytest lines with your
+# own test command (jest --reporters=jest-junit, gotestsum --junitfile=..., etc.).
+name: AVERA regression gate
+
+on: [pull_request]
+
+jobs:
+  avera:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # need base branch history
+
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.x' }
+
+      - name: Install project test deps
+        run: pip install -e ".[dev]" || pip install -e .
+
+      # --- baseline: the base branch (known-good) ---
+      - name: Run tests on base branch
+        run: |
+          git checkout "origin/${{ github.base_ref }}"
+          pytest --junitxml=baseline.xml || true   # keep XML even if tests fail
+
+      # --- current: the PR head ---
+      - name: Run tests on PR head
+        run: |
+          git checkout "${{ github.event.pull_request.head.sha }}"
+          pytest --junitxml=current.xml || true
+
+      # --- gate: blocks the job on a proven introduced regression ---
+      - name: AVERA check
+        uses: tc7kxsszs5-cloud/avera@v1
+        with:
+          baseline: baseline.xml
+          current: current.xml
+          policy: general          # or space / automotive / aviation / …
