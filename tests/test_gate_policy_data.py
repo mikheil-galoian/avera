@@ -22,7 +22,7 @@ from avera.gates import (
 )
 from avera.gates.policy_loader import POLICIES_DIR, PolicyError
 
-ALL_BUILTINS = ["general", "automotive", "aviation", "medical", "railway", "ai_agent"]
+ALL_BUILTINS = ["general", "automotive", "aviation", "medical", "railway", "space", "ai_agent"]
 
 
 def _report(verdict="confirmed_regression", risk="high", confidence_score=0.95, confidence="high"):

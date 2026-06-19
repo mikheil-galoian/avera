@@ -1,0 +1,18 @@
+{
+  "schema_version": "avera.gate_policy.v1",
+  "policy_id": "space.v1",
+  "domain": "space",
+  "description": "Space (NASA NPR 7150.2 / NASA-STD-8739.8). Strictest tier alongside aviation: only low risk passes, confidence must reach 0.8, and both possible regressions and coverage gaps are blocking. Mirrors human-rated software-assurance rigor.",
+  "max_allowed_risk": "low",
+  "min_confidence_score": 0.8,
+  "blocking_verdicts": [
+    "confirmed_regression",
+    "worsened_preexisting_failure",
+    "possible_regression",
+    "requirements_coverage_gap"
+  ],
+  "review_verdicts": [
+    "environment_failure",
+    "insufficient_evidence"
+  ]
+}

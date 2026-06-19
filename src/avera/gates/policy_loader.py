@@ -44,6 +44,7 @@ BUILTIN_POLICIES: dict[str, str] = {
     "aviation": "aviation_policy",
     "medical": "medical_policy",
     "railway": "railway_policy",
+    "space": "space_policy",
     "ai_agent": "ai_agent_policy",
 }
 

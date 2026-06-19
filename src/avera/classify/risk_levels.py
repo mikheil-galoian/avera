@@ -85,6 +85,15 @@ SAFETY_LEVEL_RANK = {
     "class-c": 3,
     "class_c": 3,
     "iec-c": 3,
+    # Space NASA NPR 7150.2 — software Class A (human-rated) .. F (general).
+    # Six classes compressed onto the 0..4 scale (D and E -> minor). Always use
+    # the nasa-* prefix to avoid collision with ASIL/IEC single-letter forms.
+    "nasa-a": 4, "nasa_a": 4, "nasaa": 4,
+    "nasa-b": 3, "nasa_b": 3, "nasab": 3,
+    "nasa-c": 2, "nasa_c": 2, "nasac": 2,
+    "nasa-d": 1, "nasa_d": 1, "nasad": 1,
+    "nasa-e": 1, "nasa_e": 1, "nasae": 1,
+    "nasa-f": 0, "nasa_f": 0, "nasaf": 0,
 }
 
 
