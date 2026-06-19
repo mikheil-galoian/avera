@@ -1,0 +1,16 @@
+{
+  "id": "toolz-f0831e7",
+  "project": "pytoolz/toolz",
+  "bad_commit": "f0831e7cc4f0dd8eb67cbd3e23491e99827b0af4",
+  "bad_commit_title": "Faster isiterable when x isn't iterable.",
+  "reverted_by_pr": 551,
+  "method": "blind-replay: AVERA receives only baseline.xml (good code) and current.xml (bad code re-applied); it is given no hint where the bug is.",
+  "baseline": "baseline.xml",
+  "current": "current.xml",
+  "expected": {
+    "verdict": "confirmed_regression",
+    "gate_status": "block",
+    "introduced_failures": ["toolz.tests.test_itertoolz.test_isiterable"]
+  },
+  "honest_note": "Historically this regression SLIPPED past toolz's own CI because no test expressed it yet (the catching test was added in the revert PR). AVERA catches it once a test expresses the bug; it does not catch regressions no test exercises (that is the mutation-lens's job, not the gate's)."
+}
