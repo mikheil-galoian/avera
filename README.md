@@ -16,7 +16,7 @@ Install from source (AVERA is not yet on PyPI), then point it at two JUnit files
 verdict + gate out, no project setup, no requirements file:
 
 ```bash
-git clone https://github.com/tc7kxsszs5-cloud/avera && cd avera
+git clone https://github.com/mikheil-galoian/avera && cd avera
 pip install -e .
 
 avera check --baseline main.xml --current pr.xml
@@ -121,7 +121,7 @@ tests/          — unit + cross-domain fixtures + exhaustive verdict-spec proof
 ## Quick start (full evidence pack)
 
 ```bash
-git clone https://github.com/tc7kxsszs5-cloud/avera
+git clone https://github.com/mikheil-galoian/avera
 cd avera
 pip install -e ".[demo]"
 
@@ -153,7 +153,7 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: tc7kxsszs5-cloud/avera@v1
+      - uses: mikheil-galoian/avera@v1
         with:
           baseline: main-junit.xml   # known-good results (e.g. from main)
           current: pr-junit.xml      # this PR's results
@@ -167,7 +167,7 @@ Full working example (runs base + PR, then gates): [`examples/github-action-zero
 
 ```yaml
       - uses: actions/checkout@v4
-      - uses: tc7kxsszs5-cloud/avera@v1
+      - uses: mikheil-galoian/avera@v1
         with:
           project_path: evidence/my-change
           fail_on_release_blocking: 'true'
@@ -200,11 +200,11 @@ curl -X POST http://localhost:8000/evidence-pack \
 ## Docker
 
 ```bash
-docker pull ghcr.io/tc7kxsszs5-cloud/avera-cli:latest
+docker pull ghcr.io/mikheil-galoian/avera-cli:latest
 docker run --rm \
   -v "$PWD/fixtures/bms-fast-charge:/workspace" \
   -v "$PWD/reports:/reports" \
-  ghcr.io/tc7kxsszs5-cloud/avera-cli:latest \
+  ghcr.io/mikheil-galoian/avera-cli:latest \
   analyze --project /workspace --out /reports --memory /reports/avera-memory.jsonl
 ```
 
