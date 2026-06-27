@@ -393,6 +393,15 @@ class AnalysisStore:
             db_path = str(self._path) if str(self._path) != ":memory:" else ":memory:"
             conn = sqlite3.connect(db_path, check_same_thread=False)
             conn.row_factory = sqlite3.Row
+            # Concurrency hardening. The default SQLite busy-timeout is 0, so a
+            # writer that meets a held lock fails immediately with
+            # "database is locked" (e.g. under concurrent threads). Wait for the
+            # lock instead, and use WAL so readers never block the single writer.
+            # WAL is a persistent, file-level mode and a harmless no-op for
+            # ``:memory:`` databases.
+            conn.execute("PRAGMA busy_timeout = 5000")
+            if db_path != ":memory:":
+                conn.execute("PRAGMA journal_mode = WAL")
             self._local.conn = conn
         return conn
 
