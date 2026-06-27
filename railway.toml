@@ -16,9 +16,9 @@
 builder = "NIXPACKS"
 
 [deploy]
-startCommand = "python -m streamlit run demo/app.py --server.port=$PORT --server.address=0.0.0.0 --server.headless=true"
+startCommand = "/opt/venv/bin/python -m streamlit run /app/demo/app.py --server.port=$PORT --server.address=0.0.0.0 --server.headless=true"
 healthcheckPath = "/_stcore/health"
-healthcheckTimeout = 30
+healthcheckTimeout = 120
 
 [variables]
 AVERA_DEFAULT_SCENARIO = "bms-fast-charge"

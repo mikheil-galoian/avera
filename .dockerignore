@@ -34,8 +34,6 @@ htmlcov/
 # Runtime reports (not needed in image)
 reports/
 
-# Demo shell (Streamlit — optional, not needed for API image)
-demo/
 
 # Docs (not needed at runtime)
 docs/

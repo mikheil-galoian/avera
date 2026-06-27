@@ -1,10 +1,17 @@
-"""AVERA REST API.
+"""AVERA REST API (LEGACY — DEPRECATED).
+
+DEPRECATED: this is the legacy API and is not the project's entry point.
+The canonical API is ``avera_api`` (``src/avera_api/main.py``): the ``avera-api``
+console script maps to ``avera_api.main:main`` and the test-suite targets
+``avera_api.main``. Nothing imports ``avera.api`` except itself. Prefer
+``uvicorn avera_api.main:app``. This module is kept only as a compatibility
+stub and is a candidate for removal.
 
 Provides a single ``POST /analyze`` endpoint that accepts paths to an AVERA
 evidence pack and returns the structured verdict, risk, confidence, and
 evidence.
 
-Exit-code contract (CLI entrypoint ``avera-api``)::
+Historical exit-code contract (this legacy module's own ``--project`` CLI)::
 
     0  — successful_change or no release_blocking verdict
     1  — confirmed_regression with risk == release_blocking
@@ -46,6 +53,7 @@ from __future__ import annotations
 
 import sys
 import time
+import warnings
 from pathlib import Path
 from typing import Any
 
@@ -104,7 +112,18 @@ if _FASTAPI_AVAILABLE:
 # ---------------------------------------------------------------------------
 
 def create_app() -> "FastAPI":
-    """Construct and return the FastAPI application instance."""
+    """Construct and return the FastAPI application instance.
+
+    .. deprecated::
+        Legacy API. Use the canonical ``avera_api`` package instead
+        (``uvicorn avera_api.main:app``).
+    """
+    warnings.warn(
+        "avera.api is the legacy AVERA API and is a candidate for removal; "
+        "use the canonical avera_api package (uvicorn avera_api.main:app).",
+        DeprecationWarning,
+        stacklevel=2,
+    )
     if not _FASTAPI_AVAILABLE:
         raise ImportError(
             "FastAPI is required to run the AVERA API. "

@@ -32,11 +32,15 @@
 
 Читай перед работой в соответствующей зоне:
 
-- Supabase-работа → `00_AGENT_MENU/SUPABASE.md`
-- Деплой/сборка → `00_AGENT_MENU/DEPLOYMENT.md`
-- Интеграции → `00_AGENT_MENU/INTEGRATIONS.md`
-- БД/миграции → `00_AGENT_MENU/DATABASE.md`
-- Безопасность → `00_AGENT_MENU/SAFETY_RULES.md`
+- Безопасность → `00_AGENT_MENU/SAFETY_RULES.md` ✅ (есть)
+- Деплой/сборка → `.github/workflows/` + `docs/AVERA_GITHUB_ACTION_V0_1_0_RELEASE.md`, `docs/AVERA_RUNTIME_STABILIZATION.md`
+
+Зон-гайдов ниже в проекте **сейчас нет** (нет Supabase/внешней БД). Создавать по запросу,
+а до этого — остановись и спроси (см. ниже):
+
+- Supabase-работа → `00_AGENT_MENU/SUPABASE.md` ⚠️ (не создан — Supabase в проекте не используется)
+- Интеграции → `00_AGENT_MENU/INTEGRATIONS.md` ⚠️ (не создан)
+- БД/миграции → `00_AGENT_MENU/DATABASE.md` ⚠️ (не создан; локально только SQLite store в `src/avera/storage/`)
 
 ## Остановись и спроси когда
 

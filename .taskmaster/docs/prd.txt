@@ -1,0 +1,92 @@
+AVERA — Product Requirements Document (near-term backlog)
+=========================================================
+
+Owner: AVERA Engineering (mgaloyan79@gmail.com)
+Status source of truth: 00_AGENT_MENU/ACTIVE_TASK.md
+Generated for: `task-master parse-prd` to seed the task list.
+
+Context
+-------
+AVERA is a deterministic regression gate for safety-critical software changes.
+The core pipeline (ingestion -> compare -> classify -> gate -> evidence-manifest
+-> audit-log -> sign-off) is implemented and covered by 66 test files across
+domains (software/CI, automotive/ISO26262, avionics/DO-178C, railway/EN50128,
+medical/IEC62304, space/NASA). A canonical REST API (avera_api), a CLI, a GitHub
+Action, Docker image, and a Streamlit demo shell already exist.
+
+This PRD captures the remaining, verified near-term work. Each item below should
+become a top-level task; large ones expand into subtasks.
+
+Goals
+-----
+1. Repository hygiene: remove build artifacts and duplicate files; keep the tree clean.
+2. Resolve the duplicate REST API: avera_api is canonical; src/avera/api is legacy.
+3. Keep the agent operating system (00_AGENT_MENU) consistent with reality.
+4. Advance the AI-verification extension (the strategic new direction).
+5. Strengthen release-readiness: packaging build check, lint gate in CI, coverage.
+
+----------------------------------------------------------------------
+Task 1 — Repository cleanup
+Priority: high
+Remove the committed build/ directory (already in .gitignore) and the macOS
+duplicate artifacts: src/avera/traceability/index 2.py and the three
+reports/fixtures/bms-mixed-results/* " 2" files. Add a guard so accidental
+" 2" copies and build/ are caught (e.g. a CI check or a pre-commit hook).
+Acceptance: tree has no build/ and no "* 2.*" files; CI fails if they reappear.
+
+----------------------------------------------------------------------
+Task 2 — Consolidate the REST API
+Priority: high
+avera_api (src/avera_api/main.py) is canonical: it is the pyproject `avera-api`
+entry point, documented in README, and imported by tests/test_api.py and
+tests/test_api_evidence_pack.py. src/avera/api/ (app.py + __init__.py) is an
+older, orphaned implementation referenced by nothing except itself.
+Decide and execute: either delete src/avera/api/, or formally deprecate it with
+a redirect to avera_api. Update any stale docstring that claims `avera-api`
+maps to avera.api.app.
+Acceptance: one canonical API; no dead module; tests green.
+
+----------------------------------------------------------------------
+Task 3 — Agent OS consistency guard
+Priority: medium
+00_AGENT_MENU drifted from the codebase before (PROJECT_MAP module names, a
+missing root ARCHITECTURE.md, ROUTER pointing at non-existent zone guides).
+Add a lightweight check (script or test) that verifies every file path
+referenced by ROUTER.md / PROJECT_MAP.md / ACTIVE_TASK.md actually exists.
+Acceptance: a test fails when an agent-menu document references a missing path.
+
+----------------------------------------------------------------------
+Task 4 — AI-verification extension
+Priority: critical
+Per ACTIVE_TASK.md and docs/AVERA_AI_EXTENSION.md, extend AVERA to gate AI/ML
+model updates as a first-class change type.
+Scope:
+- src/avera/adapters/ai_evaluation.py adapter (model eval results -> AVERA verdict).
+- src/avera/ingestion/model_card.py loader for model metadata.
+- fixtures/adas-model-update-regression/ reference scenario.
+- tests/test_ai_model_update_fixture.py.
+(Some of these may already exist — reconcile, finish, and document.)
+Acceptance: an AI model-update regression is caught deterministically with the
+same evidence/audit guarantees as code changes; documented in AI_EXTENSION doc.
+
+----------------------------------------------------------------------
+Task 5 — Release-readiness hardening
+Priority: medium
+- Add a packaging build smoke check (python -m build / pip install .) to CI so the
+  pyproject readme/entry-points are verified.
+- Add a ruff lint gate to CI (line-length 100, target py311 are already configured).
+- Add a coverage measurement step and publish a badge.
+Acceptance: CI runs pytest + ruff + build + coverage on every PR.
+
+----------------------------------------------------------------------
+Task 6 — Documentation index sync
+Priority: low
+docs/ has ~100 files. Ensure docs/AVERA_INDEX.md lists the canonical, current
+documents and flags superseded ones, so a reader (or investor) has one entry point.
+Acceptance: AVERA_INDEX.md is current and links resolve.
+
+Non-goals
+---------
+- No LLM in the decision path (architectural invariant — must remain true).
+- No Supabase / external DB work unless explicitly requested.
+- Do not modify fixtures/ without an explicit request.

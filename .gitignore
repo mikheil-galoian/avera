@@ -37,3 +37,19 @@ demo_output/
 # Railway / Deploy cache
 .railway/
 .venv311/
+
+# Private outreach & contact data — NOT for public repo
+docs/outreach/
+docs/AVERA_REAL_CONTACT_TRACKER*.md
+docs/AVERA_PILOT_CONTACT_TRACKER*.md
+docs/AVERA_OUTREACH_DRAFTS*.md
+docs/AVERA_OUTREACH_MESSAGE*.md
+docs/AVERA_TARGET_CANDIDATE*.md
+docs/AVERA_TARGET_SHORTLIST*.md
+docs/AVERA_TARGET_ACCOUNT_MAP*.md
+docs/AVERA_PILOT_OUTREACH_RUN*.md
+docs/AVERA_ENGLISH_FIRST_CONTACT*.md
+docs/AVERA_FIRST_CONTACT_BUNDLE*.md
+docs/AVERA_FORWARDABLE*.md
+docs/AVERA_DESIGN_PARTNER*.md
+AVERA_Outreach_Emails.docx
