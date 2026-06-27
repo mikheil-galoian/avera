@@ -1,0 +1,90 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Repository cleanup: remove build/ and duplicate files",
+        "description": "Remove the committed build/ artifact directory and the macOS ' 2' duplicate files, and add a guard so they cannot reappear.",
+        "details": "Delete build/ (already in .gitignore) and the duplicates: src/avera/traceability/index 2.py and reports/fixtures/bms-mixed-results/avera-{report 2.md, report 2.json, evidence-graph 2.json}. Copies are archived on T7 (/Volumes/T7Projects/AVERA_archive/duplicates_2026-06-27). Add a CI check or pre-commit hook that fails if any '* 2.*' file or build/ is tracked.",
+        "testStrategy": "git ls-files | grep -E ' 2\\.|^build/' returns nothing; CI guard fails on a deliberately added '* 2.*' file.",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Consolidate the REST API (avera_api canonical)",
+        "description": "Remove or formally retire the legacy src/avera/api/ package; avera_api is the single canonical REST API.",
+        "details": "avera_api (src/avera_api/main.py) is the pyproject 'avera-api' entry point, documented in README, and imported by tests/test_api.py and tests/test_api_evidence_pack.py. src/avera/api/ is referenced by nothing except itself. It is now marked DEPRECATED (docstring + runtime DeprecationWarning in create_app). Remaining: after a green pytest run, delete src/avera/api/ (git rm -r src/avera/api) and confirm nothing imports it.",
+        "testStrategy": "grep -rn 'avera.api' src tests shows no real imports; full pytest suite green after removal.",
+        "status": "in-progress",
+        "dependencies": [],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Mark avera.api deprecated (done)",
+            "description": "Docstrings + DeprecationWarning added, pointing to avera_api.",
+            "status": "done"
+          },
+          {
+            "id": 2,
+            "title": "Remove src/avera/api/ after green tests",
+            "description": "git rm -r src/avera/api once the suite is confirmed green.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Agent-OS consistency guard",
+        "description": "Add a check that every file path referenced by the 00_AGENT_MENU docs actually exists.",
+        "details": "The agent operating system (AGENTS.md, 00_AGENT_MENU/ROUTER.md, PROJECT_MAP.md, ACTIVE_TASK.md) previously drifted from the codebase (missing root ARCHITECTURE.md, ROUTER pointing at non-existent zone guides, stale module names — now fixed). Add a lightweight test or script that parses those docs for referenced paths and asserts each exists, so drift is caught automatically.",
+        "testStrategy": "A pytest test fails when an agent-menu document references a path that does not exist on disk.",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "AI-verification extension",
+        "description": "Gate AI/ML model updates as a first-class change type, with the same evidence/audit guarantees as code changes.",
+        "details": "Per ACTIVE_TASK.md and docs/AVERA_AI_EXTENSION.md. Scope: src/avera/adapters/ai_evaluation.py (model eval results -> AVERA verdict), src/avera/ingestion/model_card.py (model metadata loader), fixtures/adas-model-update-regression/ reference scenario, tests/test_ai_model_update_fixture.py. Some of these already exist — reconcile, finish, and document. Invariant: no LLM in the decision path.",
+        "testStrategy": "An AI model-update regression fixture is classified deterministically as a regression and produces a complete evidence manifest + audit chain; test_ai_model_update_fixture passes.",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Release-readiness hardening in CI",
+        "description": "Add packaging build check, ruff lint gate, and coverage to CI.",
+        "details": "Add to .github/workflows: a packaging smoke check (python -m build / pip install .) so pyproject readme/entry-points are verified; a ruff lint gate (line-length 100, target py311 already configured); and a coverage measurement step with a published badge. CI should run pytest + ruff + build + coverage on every PR.",
+        "testStrategy": "CI workflow runs and passes pytest, ruff, build, and coverage stages on a PR.",
+        "status": "pending",
+        "dependencies": [1],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Documentation index sync",
+        "description": "Ensure docs/AVERA_INDEX.md lists the canonical current documents and flags superseded ones.",
+        "details": "docs/ has ~100 files. Update docs/AVERA_INDEX.md so a reader (or investor) has one entry point: list the canonical, current documents, mark superseded ones, and verify all links resolve.",
+        "testStrategy": "Every link in docs/AVERA_INDEX.md resolves to an existing file; manual review confirms superseded docs are flagged.",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "low",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2026-06-27T00:00:00.000Z",
+      "updated": "2026-06-27T00:00:00.000Z",
+      "description": "AVERA near-term backlog, generated from .taskmaster/docs/prd.txt"
+    }
+  }
+}
