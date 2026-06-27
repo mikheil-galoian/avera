@@ -1,0 +1,68 @@
+# Quality gates that complement the existing pytest / gate / analysis workflows.
+# pytest already runs in avera-gate.yml and avera-analysis.yml, so this file adds
+# only the missing pieces: lint (ruff), a packaging build check, and coverage.
+#
+# Rollout note: ruff and coverage are advisory (continue-on-error) so they report
+# without breaking a currently-green pipeline — mirroring AVERA's own report-only
+# philosophy. Flip `continue-on-error` to false to make them hard gates once the
+# tree is confirmed clean.
+name: AVERA Quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  lint:
+    name: "Lint — ruff (advisory)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install ruff
+        run: pip install ruff --quiet
+      - name: Ruff check
+        continue-on-error: true
+        run: ruff check .
+
+  build:
+    name: "Packaging — build & metadata check"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install build tooling
+        run: pip install build twine --quiet
+      - name: Build sdist + wheel
+        run: python -m build
+      - name: Validate package metadata
+        run: twine check dist/*
+
+  coverage:
+    name: "Coverage (advisory)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install AVERA + coverage
+        run: pip install -e ".[api,dev]" pytest-cov --quiet
+      - name: Run tests with coverage
+        continue-on-error: true
+        run: python -m pytest tests/ -q --cov=avera --cov=avera_api --cov-report=term-missing --cov-report=xml
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
+          if-no-files-found: ignore
