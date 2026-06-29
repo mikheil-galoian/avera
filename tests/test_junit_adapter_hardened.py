@@ -455,3 +455,55 @@ class TestJUnitXmlAdapter:
 
     def test_repr_contains_name(self):
         assert "junit_xml" in repr(JUnitXmlAdapter())
+
+
+# ---------------------------------------------------------------------------
+# Audit regressions: entity-expansion DoS (#12) and non-finite metrics (#18)
+# ---------------------------------------------------------------------------
+
+class TestXmlSecurityHardening:
+    def test_billion_laughs_doctype_is_rejected(self, tmp_path):
+        bomb = """\
+            <?xml version="1.0"?>
+            <!DOCTYPE lolz [
+              <!ENTITY lol "lol">
+              <!ENTITY lol2 "&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;">
+              <!ENTITY lol3 "&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;">
+            ]>
+            <testsuite name="s"><testcase name="t">&lol3;</testcase></testsuite>
+        """
+        f = _write(tmp_path, "bomb.xml", bomb)
+        with pytest.raises(ValueError):
+            adapt_junit_xml(f, run_id="r1", stage="current")
+
+    def test_plain_doctype_is_rejected(self, tmp_path):
+        f = _write(
+            tmp_path, "dtd.xml",
+            '<?xml version="1.0"?><!DOCTYPE testsuite>'
+            '<testsuite name="s"><testcase name="t"/></testsuite>',
+        )
+        with pytest.raises(ValueError):
+            adapt_junit_xml(f, run_id="r1", stage="current")
+
+    def test_non_finite_duration_not_stored_as_metric(self, tmp_path):
+        # time="1e999" overflows to +inf; it must not become a numeric metric.
+        f = _write(
+            tmp_path, "inf.xml",
+            '<testsuite name="s"><testcase classname="p" name="t" time="1e999"/></testsuite>',
+        )
+        payload = adapt_junit_xml(f, run_id="r1", stage="current")
+        test = payload["tests"][0]
+        assert "duration_s" not in test.get("metrics", {})
+
+    def test_non_finite_property_not_stored_as_float(self, tmp_path):
+        f = _write(
+            tmp_path, "nanprop.xml",
+            '<testsuite name="s"><testcase classname="p" name="t">'
+            '<properties><property name="overflow" value="1e999"/></properties>'
+            '</testcase></testsuite>',
+        )
+        payload = adapt_junit_xml(f, run_id="r1", stage="current")
+        import math
+        for v in payload["tests"][0].get("metrics", {}).values():
+            if isinstance(v, float):
+                assert math.isfinite(v)

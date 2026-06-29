@@ -375,3 +375,48 @@ class TestThreadSafety:
         store = AnalysisStore(db_path)
         assert store.run_count() == N_THREADS * RUNS_PER_THREAD
         store.close()
+
+
+# ---------------------------------------------------------------------------
+# Audit regressions: shared in-memory across threads (#11), run_id collision (#17)
+# ---------------------------------------------------------------------------
+
+class TestMemoryStoreThreadSharing:
+    def test_memory_store_visible_from_another_thread(self):
+        store = AnalysisStore(":memory:")
+        try:
+            store.store_analysis(SAMPLE_REPORT, project="p", run_id="run-x")
+            result: dict = {}
+
+            def worker():
+                try:
+                    result["count"] = store.run_count()
+                except Exception as exc:  # noqa: BLE001
+                    result["error"] = exc
+
+            t = threading.Thread(target=worker)
+            t.start()
+            t.join()
+
+            assert "error" not in result, f"worker thread failed: {result.get('error')}"
+            assert result["count"] == 1
+        finally:
+            store.close()
+
+
+class TestRunIdCollision:
+    def test_derive_run_id_distinguishes_reports_at_same_instant(self):
+        from avera.storage.sqlite_store import _derive_run_id
+        ts = "2026-04-28T08:00:00.000000Z"
+        a = _derive_run_id(ts, "proj", '{"verdict":"a"}')
+        b = _derive_run_id(ts, "proj", '{"verdict":"b"}')
+        # Same instant + same project but DIFFERENT content must not collide.
+        assert a != b
+        # Identical content + instant maps to the same id (intended dedup).
+        assert a == _derive_run_id(ts, "proj", '{"verdict":"a"}')
+
+    def test_two_different_reports_without_run_id_both_persist(self, mem_store):
+        r1 = mem_store.store_analysis(SAMPLE_REPORT, project="proj")
+        r2 = mem_store.store_analysis(SAMPLE_REPORT_2, project="proj")
+        assert r1.run_id != r2.run_id
+        assert mem_store.run_count() == 2

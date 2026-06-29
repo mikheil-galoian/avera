@@ -47,6 +47,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any, Iterable
 
+from avera.adapters._xml_safe import finite_float, secure_fromstring
 from avera.compare.baseline_comparator import status_severity
 
 
@@ -100,7 +101,7 @@ def adapt_junit_xml(
         raise FileNotFoundError(f"JUnit XML report not found: {source}")
 
     try:
-        root = ET.fromstring(source.read_text(encoding="utf-8", errors="replace"))
+        root = secure_fromstring(source.read_text(encoding="utf-8", errors="replace"), source)
     except ET.ParseError as exc:
         raise ValueError(f"JUnit XML parse error in {source}: {exc}") from exc
 
@@ -245,9 +246,10 @@ def _adapt_testcase(
 
     # Duration
     if duration_raw:
-        try:
-            metrics["duration_s"] = float(duration_raw)
-        except ValueError:
+        value = finite_float(duration_raw)
+        if value is not None:
+            metrics["duration_s"] = value
+        else:
             metadata["duration_raw"] = duration_raw
 
     # Failure / error / skipped
@@ -343,7 +345,10 @@ def _coerce(raw: str) -> Any:
         return lowered == "true"
     try:
         if any(c in raw for c in (".", "e", "E")):
-            return float(raw)
+            # Keep non-finite values (NaN / inf, incl. overflow like "1e999")
+            # as the raw string — a non-finite metric must not enter the gate.
+            value = finite_float(raw)
+            return value if value is not None else raw
         return int(raw)
     except ValueError:
         return raw

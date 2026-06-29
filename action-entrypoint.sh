@@ -45,5 +45,6 @@ exec python -m avera action-run \
   --output "${INPUT_OUTPUT_PATH:-avera-reports}" \
   --fail-on-release-blocking "${INPUT_FAIL_ON_RELEASE_BLOCKING:-true}" \
   --fail-on-regression "${INPUT_FAIL_ON_REGRESSION:-false}" \
+  --fail-on-gate "${INPUT_FAIL_ON_GATE:-true}" \
   --expected-verdict "${INPUT_EXPECTED_VERDICT:-}" \
   ${POLICY_ARG}

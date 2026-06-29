@@ -140,3 +140,36 @@ def test_build_workspace_pack_stable_memory_slice_filtering(tmp_path) -> None:
     )
 
     assert [item["record_type"] for item in pack["memory_slice"]] == ["gate", "analysis"]
+
+
+def test_workspace_pack_is_deterministic_no_wallclock(tmp_path) -> None:
+    # Audit regression: the pack is hashed into the evidence integrity_root, so it
+    # must be content-addressed — byte-identical inputs must yield a byte-identical
+    # pack. A wall-clock export timestamp would leak into the root and make two
+    # identical runs produce different roots.
+    report_path = tmp_path / "avera-report.json"
+    report_path.write_text("{}\n", encoding="utf-8")
+    report = {
+        "schema_version": "avera.assessment.v0.2",
+        "verdict": "successful_change",
+        "risk": "low",
+        "confidence": "high",
+        "confidence_score": 0.9,
+        "affected_components": [],
+        "affected_requirements": [],
+        "introduced_failures": [],
+        "preexisting_failures": [],
+    }
+
+    def _build():
+        return build_workspace_pack(
+            workspace=tmp_path / "fixture",
+            report=report,
+            report_path=report_path,
+        )
+
+    pack_a = _build()
+    pack_b = _build()
+
+    assert "exported_at_utc" not in pack_a["manifest"]
+    assert pack_a == pack_b

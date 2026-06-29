@@ -38,6 +38,10 @@ inputs:
     description: 'Fail the workflow on any confirmed_regression verdict, regardless of risk level. Default false.'
     required: false
     default: 'false'
+  fail_on_gate:
+    description: 'Fail the workflow when the deterministic gate status is block or review. Default true — so the action never reports gate_status=block while passing. Set false for an advisory run that only reports.'
+    required: false
+    default: 'true'
   expected_verdict:
     description: 'Optional. When set, assert that AVERA produces this specific verdict (e.g. confirmed_regression, successful_change). Mismatch fails the run.'
     required: false

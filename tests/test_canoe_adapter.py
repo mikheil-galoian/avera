@@ -333,3 +333,55 @@ class TestCANoeAdapter:
 
     def test_repr(self):
         assert "canoe" in repr(CANoeAdapter())
+
+
+# ---------------------------------------------------------------------------
+# Child-element Name/Verdict (audit regression: a leaf <Verdict>failed</Verdict>
+# must not be silently dropped to inconclusive / unnamed_testcase)
+# ---------------------------------------------------------------------------
+
+_XML_CHILD_ELEMENTS = """\
+    <?xml version="1.0" encoding="UTF-8"?>
+    <TestReport>
+      <TestCase>
+        <Name>BrakeTest</Name>
+        <Verdict>failed</Verdict>
+      </TestCase>
+      <TestCase>
+        <Name>SteeringTest</Name>
+        <Verdict>passed</Verdict>
+      </TestCase>
+    </TestReport>
+"""
+
+
+class TestCanoeChildElementVerdict:
+    def test_child_element_name_and_verdict_are_parsed(self, tmp_path):
+        f = _write(tmp_path, "child.xml", _XML_CHILD_ELEMENTS)
+        result = adapt_canoe_xml(f, run_id="r1", stage="current")
+        by_id = {t["id"]: t for t in result["tests"]}
+        # Names must come from the child <Name>, not collapse to unnamed_testcase
+        assert "BrakeTest" in by_id
+        assert "SteeringTest" in by_id
+        # A failed child <Verdict> must map to failed, not inconclusive
+        assert by_id["BrakeTest"]["status"] == "failed"
+        assert by_id["SteeringTest"]["status"] == "passed"
+
+    def test_failed_child_verdict_not_downgraded_to_inconclusive(self, tmp_path):
+        f = _write(tmp_path, "child.xml", _XML_CHILD_ELEMENTS)
+        result = adapt_canoe_xml(f, run_id="r1", stage="current")
+        statuses = {t["status"] for t in result["tests"]}
+        assert "inconclusive" not in statuses
+
+
+class TestCanoeXmlSecurityHardening:
+    def test_doctype_dtd_is_rejected(self, tmp_path):
+        # Entity-expansion / external-entity entry point — must be refused (#12).
+        bomb = """\
+            <?xml version="1.0"?>
+            <!DOCTYPE TEF_Report [ <!ENTITY x "boom"> ]>
+            <TEF_Report><TestCase Name="t" Verdict="failed">&x;</TestCase></TEF_Report>
+        """
+        f = _write(tmp_path, "bomb.xml", bomb)
+        with pytest.raises(ValueError):
+            adapt_canoe_xml(f, run_id="r1", stage="current")

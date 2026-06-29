@@ -328,3 +328,80 @@ class TestAuthentication:
             headers={"X-API-Key": "revoked-token"},
         )
         assert r.status_code == 401
+
+
+# ---------------------------------------------------------------------------
+# Audit regressions: path containment, CSV safety, error hygiene
+# ---------------------------------------------------------------------------
+
+from fastapi import HTTPException  # noqa: E402
+
+
+class TestPathContainment:
+    def test_safe_path_allows_inside_root_rejects_escape(self, tmp_path, monkeypatch):
+        from avera_api.main import _safe_path
+        root = tmp_path / "root"
+        root.mkdir()
+        monkeypatch.setenv("AVERA_WORKSPACE_ROOT", str(root))
+        inside = root / "ws"
+        inside.mkdir()
+        assert _safe_path(str(inside), kind="project") == inside.resolve()
+        outside = tmp_path / "evil"
+        outside.mkdir()
+        with pytest.raises(HTTPException) as ei:
+            _safe_path(str(outside), kind="project")
+        assert ei.value.status_code == 400
+
+    def test_analyze_path_outside_root_is_rejected(self, tmp_path, monkeypatch):
+        root = tmp_path / "root"
+        root.mkdir()
+        monkeypatch.setenv("AVERA_WORKSPACE_ROOT", str(root))
+        outside = tmp_path / "secrets"
+        outside.mkdir()
+        r = client.post("/analyze/path", json={"project": str(outside)})
+        assert r.status_code == 400
+
+
+class TestCsvSafety:
+    def test_requirements_csv_quotes_special_chars(self):
+        import csv
+        import io
+
+        from avera_api.main import _requirements_to_csv
+
+        class _R:
+            id = "R1"
+            component = "BMS"
+            requirement = "Voltage shall stay below 4.2V, per cell"  # comma!
+            metric = "max_v"
+            operator = "<="
+            threshold = "4.2"
+            safety_level = "ASIL-C"
+            next_checks = "A;B"
+
+        text = _requirements_to_csv([_R()])
+        rows = list(csv.DictReader(io.StringIO(text)))
+        assert len(rows) == 1
+        # The comma in the free-text requirement must NOT shift columns.
+        assert rows[0]["id"] == "R1"
+        assert rows[0]["requirement"] == "Voltage shall stay below 4.2V, per cell"
+        assert rows[0]["safety_level"] == "ASIL-C"
+        assert rows[0]["next_checks"] == "A;B"
+
+
+class TestErrorHygiene:
+    def test_analyze_500_does_not_leak_internal_error(self, tmp_path, monkeypatch):
+        monkeypatch.delenv("AVERA_WORKSPACE_ROOT", raising=False)
+        ws = tmp_path / "ws"
+        ws.mkdir()
+        (ws / "requirements.csv").write_text(
+            "id,component,requirement,metric,operator,threshold,safety_level,next_checks\n",
+            encoding="utf-8",
+        )
+        (ws / "component_map.json").write_text("{}", encoding="utf-8")
+        (ws / "baseline_results.json").write_text("NOT JSON {{{", encoding="utf-8")
+        (ws / "current_results.json").write_text("{}", encoding="utf-8")
+        r = client.post("/analyze/path", json={"project": str(ws)})
+        assert r.status_code == 500
+        # Generic message only — no exception text / internal paths leaked.
+        assert r.json()["detail"] == "Analysis failed."

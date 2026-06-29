@@ -319,3 +319,29 @@ class TestNextChecks:
             [_test("T1", "failed")],
         )
         assert result.recommended_next_checks == []
+
+
+# ---------------------------------------------------------------------------
+# Missing-baseline failures (audit regression: a brand-new failing test must
+# never silently pass the gate just because it carries no numeric threshold)
+# ---------------------------------------------------------------------------
+
+class TestMissingBaselineFailure:
+    def test_new_failing_test_without_threshold_is_insufficient_evidence(self):
+        # A test that exists only in the current run and FAILS on plain pass/fail
+        # status (no metric/threshold) has no baseline to prove a regression, but
+        # is not a clean change either. It must route to insufficient_evidence
+        # (review), never fall through to expected_change.
+        result = _classify(
+            [],
+            [_test("T_NEW", "failed")],
+        )
+        assert result.verdict == "insufficient_evidence"
+
+    def test_new_passing_test_without_baseline_stays_benign(self):
+        # A brand-new PASSING test with no baseline is a benign expected change.
+        result = _classify(
+            [],
+            [_test("T_NEW", "passed")],
+        )
+        assert result.verdict == "expected_change"

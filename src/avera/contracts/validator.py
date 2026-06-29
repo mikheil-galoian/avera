@@ -5,6 +5,12 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+from avera.contracts.versions import (
+    SUPPORTED_VERSIONS,
+    get_deprecation_message,
+    is_deprecated_version,
+    is_supported_version,
+)
 from avera.validation import validate_report
 
 
@@ -109,8 +115,20 @@ def validate_artifact(name: str, payload: dict[str, Any]) -> ArtifactValidationR
             errors.append(f"Missing required {artifact_name} field: {field_name}")
 
     schema_version = payload.get("schema_version")
-    if schema_version is not None and not _uses_known_schema_namespace(str(schema_version)):
-        warnings.append("schema_version does not use the avera.* namespace")
+    if schema_version is not None:
+        sv = str(schema_version)
+        if artifact_name in SUPPORTED_VERSIONS:
+            # Check the declared version against the central registry — an unknown
+            # version for a known artifact type would otherwise pass silently.
+            if not is_supported_version(artifact_name, sv):
+                warnings.append(
+                    f"schema_version {sv!r} is not a supported version for "
+                    f"{artifact_name} (supported: {sorted(SUPPORTED_VERSIONS[artifact_name])})"
+                )
+            elif is_deprecated_version(artifact_name, sv):
+                warnings.append(get_deprecation_message(artifact_name, sv))
+        elif not _uses_known_schema_namespace(sv):
+            warnings.append("schema_version does not use the avera.* namespace")
 
     if artifact_name == "graph":
         if "nodes" in payload and not isinstance(payload["nodes"], list):

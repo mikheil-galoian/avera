@@ -337,6 +337,27 @@ def test_validate_artifact_rejects_unknown_artifact_name() -> None:
     assert any(token in messages for token in ("unknown", "unsupported", "unrecognized", "artifact"))
 
 
+def test_validate_artifact_warns_on_unsupported_schema_version() -> None:
+    # Audit regression (#19): a known artifact carrying a schema_version that is
+    # not in the central registry must be flagged, not pass silently.
+    validate_artifact = _require_validator("validate_artifact")
+
+    payload = deepcopy(VALID_PAYLOADS["decision"])
+    payload["schema_version"] = "avera.decision.v9.9"  # not a registered version
+    result = validate_artifact("decision", payload)
+
+    warnings_text = " ".join(getattr(result, "warnings", []) or [])
+    assert "v9.9" in warnings_text or "supported version" in warnings_text
+
+
+def test_validate_artifact_accepts_registered_schema_version() -> None:
+    validate_artifact = _require_validator("validate_artifact")
+    payload = deepcopy(VALID_PAYLOADS["decision"])  # uses the registered version
+    result = validate_artifact("decision", payload)
+    warnings_text = " ".join(getattr(result, "warnings", []) or [])
+    assert "supported version" not in warnings_text
+
+
 def test_validate_bundle_accepts_complete_workspace_pack_contract() -> None:
     validate_bundle = _maybe_validator("validate_bundle")
     if validate_bundle is None:
