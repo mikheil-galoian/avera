@@ -212,7 +212,7 @@ class CoverageChecker:
 # Helpers
 # ---------------------------------------------------------------------------
 
-_RISK_ORDER = ["low", "medium", "high", "release_blocking"]
+_RISK_ORDER = ["none", "low", "medium", "high", "release_blocking"]
 
 
 def _escalate(rank: int) -> str:
@@ -226,5 +226,5 @@ def _escalate(rank: int) -> str:
 
 def _worst_risk(risks: list[str]) -> str:
     if not risks:
-        return "low"
+        return "none"  # no coverage gaps at all — not a (low) gap risk
     return max(risks, key=lambda r: _RISK_ORDER.index(r) if r in _RISK_ORDER else -1)

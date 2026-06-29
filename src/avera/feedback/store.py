@@ -43,10 +43,16 @@ from __future__ import annotations
 
 import sqlite3
 import threading
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
+
+
+class FeedbackStoreError(RuntimeError):
+    """Raised when a feedback-store operation fails (e.g. an integrity/foreign-key
+    violation), so callers get a typed error instead of a raw ``sqlite3`` exception."""
 
 
 # ---------------------------------------------------------------------------
@@ -136,7 +142,7 @@ class FeedbackStore:
         confidence_score: float | None = None,
     ) -> None:
         """Record a machine-issued verdict.  Idempotent (duplicate run_id ignored)."""
-        with self._lock, self._connect() as conn:
+        with self._lock, self._connection() as conn:
             conn.execute(
                 """
                 INSERT OR IGNORE INTO verdicts
@@ -171,16 +177,22 @@ class FeedbackStore:
         notes:
             Free-text justification for the decision.
         """
-        with self._lock, self._connect() as conn:
-            conn.execute(
-                """
-                INSERT INTO feedback
-                    (run_id, human_verdict, confirmed, reviewer, reviewed_at, notes)
-                VALUES (?, ?, ?, ?, ?, ?)
-                """,
-                (run_id, human_verdict, int(confirmed), reviewer,
-                 datetime.now(timezone.utc).isoformat(), notes),
-            )
+        try:
+            with self._lock, self._connection() as conn:
+                conn.execute(
+                    """
+                    INSERT INTO feedback
+                        (run_id, human_verdict, confirmed, reviewer, reviewed_at, notes)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                    """,
+                    (run_id, human_verdict, int(confirmed), reviewer,
+                     datetime.now(timezone.utc).isoformat(), notes),
+                )
+        except sqlite3.IntegrityError as exc:
+            # e.g. the foreign-key constraint: no stored verdict for this run_id.
+            raise FeedbackStoreError(
+                f"cannot record feedback for run_id {run_id!r}: {exc}"
+            ) from exc
 
     # ------------------------------------------------------------------
     # Read
@@ -188,7 +200,7 @@ class FeedbackStore:
 
     def get_record(self, run_id: str) -> FeedbackRecord | None:
         """Return the combined verdict + latest feedback for a run_id."""
-        with self._connect() as conn:
+        with self._connection() as conn:
             row = conn.execute(
                 """
                 SELECT v.run_id, v.project, v.engine_verdict, v.engine_risk,
@@ -197,9 +209,10 @@ class FeedbackStore:
                        f.reviewed_at, f.notes
                 FROM verdicts v
                 LEFT JOIN feedback f ON f.run_id = v.run_id
+                WHERE v.run_id = ?
                 ORDER BY f.id DESC LIMIT 1
                 """,
-                # ← SQLite does not support FETCH FIRST; LIMIT is fine
+                (run_id,),
             ).fetchone()
         if row is None:
             return None
@@ -207,7 +220,7 @@ class FeedbackStore:
 
     def list_pending(self, project: str | None = None) -> list[FeedbackRecord]:
         """Return verdicts that have no human feedback yet."""
-        with self._connect() as conn:
+        with self._connection() as conn:
             if project:
                 rows = conn.execute(
                     """
@@ -241,7 +254,7 @@ class FeedbackStore:
 
         If ``project`` is given, scoped to that project; otherwise global.
         """
-        with self._connect() as conn:
+        with self._connection() as conn:
             where = "WHERE v.project = ?" if project else ""
             params: tuple[Any, ...] = (project,) if project else ()
 
@@ -257,27 +270,36 @@ class FeedbackStore:
                 """, params
             ).fetchone()[0]
 
+            # Count each reviewed run ONCE, by its LATEST feedback row (a reviewer
+            # may change their mind, appending a new row). Without this a run with
+            # both a confirm and an overrule is double-counted, so confirmed +
+            # overruled can exceed reviewed and accuracy can exceed 1.0.
+            latest = (
+                "JOIN (SELECT run_id, MAX(id) AS max_id FROM feedback GROUP BY run_id) "
+                "latest ON latest.max_id = f.id"
+            )
+
             confirmed_count = conn.execute(
                 f"""
-                SELECT COUNT(DISTINCT v.run_id)
-                FROM verdicts v JOIN feedback f ON f.run_id = v.run_id
+                SELECT COUNT(*)
+                FROM verdicts v JOIN feedback f ON f.run_id = v.run_id {latest}
                 WHERE f.confirmed = 1 {'AND v.project = ?' if project else ''}
                 """, params
             ).fetchone()[0]
 
             overruled_count = conn.execute(
                 f"""
-                SELECT COUNT(DISTINCT v.run_id)
-                FROM verdicts v JOIN feedback f ON f.run_id = v.run_id
+                SELECT COUNT(*)
+                FROM verdicts v JOIN feedback f ON f.run_id = v.run_id {latest}
                 WHERE f.confirmed = 0 {'AND v.project = ?' if project else ''}
                 """, params
             ).fetchone()[0]
 
-            # Most commonly overruled engine verdict
+            # Most commonly overruled engine verdict (by latest decision per run)
             row = conn.execute(
                 f"""
                 SELECT v.engine_verdict, COUNT(*) as cnt
-                FROM verdicts v JOIN feedback f ON f.run_id = v.run_id
+                FROM verdicts v JOIN feedback f ON f.run_id = v.run_id {latest}
                 WHERE f.confirmed = 0 {'AND v.project = ?' if project else ''}
                 GROUP BY v.engine_verdict ORDER BY cnt DESC LIMIT 1
                 """, params
@@ -303,7 +325,7 @@ class FeedbackStore:
 
         Used as an early-warning signal that the engine may need recalibration.
         """
-        with self._connect() as conn:
+        with self._connection() as conn:
             rows = conn.execute(
                 """
                 SELECT f.confirmed
@@ -324,8 +346,22 @@ class FeedbackStore:
 
     def _init_db(self) -> None:
         self._path.parent.mkdir(parents=True, exist_ok=True)
-        with self._connect() as conn:
+        with self._connection() as conn:
             conn.executescript(self._DDL)
+
+    @contextmanager
+    def _connection(self) -> Iterator[sqlite3.Connection]:
+        """Open a connection, commit on success / roll back on error, and ALWAYS
+        close it. The sqlite3 connection context manager only commits — it never
+        closes — so using it alone leaks a connection (and file descriptors) on
+        every call.
+        """
+        conn = self._connect()
+        try:
+            with conn:  # commit on success, rollback on exception
+                yield conn
+        finally:
+            conn.close()
 
     def _connect(self) -> sqlite3.Connection:
         conn = sqlite3.connect(str(self._path), check_same_thread=False)

@@ -16,12 +16,71 @@ from __future__ import annotations
 import csv
 import io
 import json
+import logging
+import os
 import tempfile
 from pathlib import Path
 from typing import Any
 
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.responses import JSONResponse
+
+logger = logging.getLogger(__name__)
+_warned_open_fs = False
+
+
+def _workspace_root() -> Path | None:
+    """The directory client-supplied paths are confined to, or None (local mode)."""
+    root = os.environ.get("AVERA_WORKSPACE_ROOT")
+    return Path(root).resolve() if root else None
+
+
+def _safe_path(user_path: str, *, kind: str) -> Path:
+    """Resolve a client-supplied filesystem path with containment.
+
+    With ``AVERA_WORKSPACE_ROOT`` set, the resolved path must live inside that
+    root or the request is rejected — this closes the arbitrary-filesystem
+    read/write (path-traversal) holes. Without it the API runs in trusted local
+    mode and logs a one-time warning; shared/production deployments MUST set it.
+    """
+    global _warned_open_fs
+    resolved = Path(user_path).resolve()
+    root = _workspace_root()
+    if root is None:
+        if not _warned_open_fs:
+            _warned_open_fs = True
+            logger.warning(
+                "AVERA_WORKSPACE_ROOT is not set: the API uses the caller-supplied "
+                "%s path without containment. Set AVERA_WORKSPACE_ROOT to confine "
+                "filesystem access in any shared or production deployment.", kind,
+            )
+        return resolved
+    if resolved != root and not resolved.is_relative_to(root):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"{kind} path escapes the configured workspace root",
+        )
+    return resolved
+
+
+def _requirements_to_csv(requirements: Any) -> str:
+    """Serialise requirement rows as RFC-4180 CSV.
+
+    Uses ``csv.writer`` (not f-string joining) so a comma, quote, or newline in
+    any free-text field is quoted instead of shifting columns / injecting rows.
+    """
+    buf = io.StringIO()
+    writer = csv.writer(buf)
+    writer.writerow(
+        ["id", "component", "requirement", "metric", "operator",
+         "threshold", "safety_level", "next_checks"]
+    )
+    for r in requirements:
+        writer.writerow(
+            [r.id, r.component, r.requirement, r.metric,
+             r.operator, r.threshold, r.safety_level, r.next_checks]
+        )
+    return buf.getvalue()
 
 from avera_api import __version__
 from avera_api.auth import require_api_key
@@ -81,7 +140,7 @@ def analyze_path(request: AnalyzePathRequest) -> AnalyzeResponse:
     - ``baseline_results.json``
     - ``current_results.json``
     """
-    project = Path(request.project)
+    project = _safe_path(request.project, kind="project")
     if not project.is_dir():
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -125,15 +184,9 @@ def analyze_inline(request: AnalyzeInlineRequest) -> AnalyzeResponse:
         workspace = Path(tmpdir)
 
         # Write requirements.csv
-        req_lines = [
-            "id,component,requirement,metric,operator,threshold,safety_level,next_checks"
-        ]
-        for r in request.requirements:
-            req_lines.append(
-                f"{r.id},{r.component},{r.requirement},{r.metric},"
-                f"{r.operator},{r.threshold},{r.safety_level},{r.next_checks}"
-            )
-        (workspace / "requirements.csv").write_text("\n".join(req_lines) + "\n", encoding="utf-8")
+        (workspace / "requirements.csv").write_text(
+            _requirements_to_csv(request.requirements), encoding="utf-8"
+        )
 
         # Write component_map.json
         cmap = {
@@ -193,7 +246,7 @@ def evidence_pack(request: EvidencePackRequest) -> dict[str, Any]:
     from avera.gates import evaluate_gate, load_builtin_policy
     from avera.gates.policy_loader import PolicyError
 
-    project = Path(request.project)
+    project = _safe_path(request.project, kind="project")
     if not project.is_dir():
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -221,7 +274,7 @@ def evidence_pack(request: EvidencePackRequest) -> dict[str, Any]:
 
     tmp_dir: tempfile.TemporaryDirectory | None = None
     if request.output_path:
-        output_dir = Path(request.output_path)
+        output_dir = _safe_path(request.output_path, kind="output")
     else:
         tmp_dir = tempfile.TemporaryDirectory(prefix="avera_pack_")
         output_dir = Path(tmp_dir.name)
@@ -294,9 +347,12 @@ def _run_analyze_path(project: Path) -> dict[str, Any]:
             change_description_path=project / "change_description.txt",
         )
     except Exception as exc:  # noqa: BLE001
+        # Log the detail server-side; do not leak internal exception text (paths,
+        # stack context, parser internals) to the client.
+        logger.exception("Analysis failed for workspace %s", project)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Analysis failed: {exc}",
+            detail="Analysis failed.",
         ) from exc
 
     # Ensure all AnalyzeResponse fields exist with defaults

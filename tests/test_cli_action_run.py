@@ -103,11 +103,41 @@ def test_action_run_can_suppress_release_blocking_failure(tmp_path: Path):
         out_dir,
         fail_on_release_blocking="false",
         fail_on_regression="false",
+        fail_on_gate="false",  # advisory run: report the gate but don't fail the build
         github_output=gho,
     )
     assert code == 0
     outputs = _parse_outputs(gho)
     assert outputs["risk"] == "release_blocking"
+
+
+def test_action_run_gate_block_fails_by_default(tmp_path: Path):
+    # Audit regression (#20): the action must not advertise gate_status=block while
+    # exiting 0. By default a blocking gate fails the build...
+    out_dir = tmp_path / "default"
+    gho = tmp_path / "default.txt"
+    code = cli.run_action(
+        ROOT / "fixtures" / "powertrain-overspeed-regression",
+        out_dir,
+        github_output=gho,
+    )
+    assert code != 0
+    assert _parse_outputs(gho)["gate_status"] == "block"
+
+    # ...and fail_on_gate=false turns it into an advisory run (exit 0) while still
+    # reporting the same block status.
+    out_dir2 = tmp_path / "advisory"
+    gho2 = tmp_path / "advisory.txt"
+    code2 = cli.run_action(
+        ROOT / "fixtures" / "powertrain-overspeed-regression",
+        out_dir2,
+        fail_on_release_blocking="false",
+        fail_on_regression="false",
+        fail_on_gate="false",
+        github_output=gho2,
+    )
+    assert code2 == 0
+    assert _parse_outputs(gho2)["gate_status"] == "block"
 
 
 def test_action_run_with_policy(tmp_path: Path):

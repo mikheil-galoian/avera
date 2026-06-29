@@ -94,8 +94,11 @@ def verdict_from_predicates(p: VerdictPredicates) -> str:
     # 6. Pre-existing with material worsening but no current threshold fail.
     if p.pre and p.worsen:
         return verdicts.WORSENED_PREEXISTING_FAILURE
-    # 7. Current failure with no baseline to compare → insufficient evidence.
-    if p.miss and p.curfail:
+    # 7. A current failure with no baseline to compare against → insufficient
+    #    evidence. ``miss`` already means a missing-baseline *failure* (a brand-new
+    #    failing test), so it stands on its own without a numeric threshold: there
+    #    is nothing to prove a regression against, but it is not a clean change.
+    if p.miss:
         return verdicts.INSUFFICIENT_EVIDENCE
     # 8. Inconclusive / incomplete evidence → insufficient evidence.
     if p.inconclusive or p.incomplete:

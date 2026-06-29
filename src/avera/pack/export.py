@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -110,7 +109,10 @@ def build_workspace_pack(
         },
         "manifest": {
             "schema_version": SCHEMA_VERSION,
-            "exported_at_utc": _now(),
+            # NOTE: no wall-clock timestamp here. This pack is hashed into the
+            # evidence integrity_root, which must stay content-addressed — a
+            # per-run timestamp would make byte-identical evidence produce a
+            # different root on every run (and across machines).
             "workspace_path": str(workspace_path),
             "source_artifacts": {
                 name: meta["path"]
@@ -173,7 +175,3 @@ def _sha256(path: Path) -> str:
         for chunk in iter(lambda: handle.read(65536), b""):
             digest.update(chunk)
     return digest.hexdigest()
-
-
-def _now() -> str:
-    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")

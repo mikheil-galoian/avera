@@ -82,3 +82,39 @@ def test_unkeyed_default_still_works():
     assert log.verify_chain() == 3
     records = log.read_all()
     assert len(records) == 3 and records[0].seq == 0
+
+
+# --- honest tamper-evidence reporting (audit: keyless chain is forgeable) ----
+
+def test_keyed_flag_reflects_key_presence():
+    import tempfile
+    p = Path(tempfile.mkdtemp()) / "a.jsonl"
+    assert AuditLog(p).keyed is False
+    assert AuditLog(p, key="s3cret").keyed is True
+
+
+def test_tamper_evidence_level_is_honest():
+    import tempfile
+    p = Path(tempfile.mkdtemp()) / "a.jsonl"
+    assert AuditLog(p).tamper_evidence == "change-detection-only"
+    assert AuditLog(p, key="s3cret").tamper_evidence == "keyed-hmac"
+
+
+def test_keyless_verify_warns_about_forgeability(caplog):
+    import logging
+    import tempfile
+    p = Path(tempfile.mkdtemp()) / "a.jsonl"
+    log = _seed(p, n=2)
+    with caplog.at_level(logging.WARNING):
+        log.verify_chain()
+    assert any("AVERA_AUDIT_KEY" in r.message for r in caplog.records)
+
+
+def test_keyed_verify_does_not_warn(caplog):
+    import logging
+    import tempfile
+    p = Path(tempfile.mkdtemp()) / "a.jsonl"
+    log = _seed(p, key="s3cret", n=2)
+    with caplog.at_level(logging.WARNING):
+        log.verify_chain()
+    assert not any("AVERA_AUDIT_KEY" in r.message for r in caplog.records)

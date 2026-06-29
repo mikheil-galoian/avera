@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+from ..compare.baseline_comparator import status_severity
 from . import confidence as confidence_levels
 from . import risk_levels, verdicts
 from .evidence import (
@@ -260,6 +261,15 @@ def _verdict(
 ) -> str:
     introduced_thresholds = introduced_threshold_failures(threshold_evidence)
     current_failures = current_threshold_failures(threshold_evidence)
+    # A test present only in the current run (no baseline) that FAILS is a current
+    # failure with nothing to prove a regression against — honestly insufficient
+    # evidence, never a clean pass. status_severity tier >= 3 is the shared
+    # fail-closed taxonomy (fail/error/unrecognised), so a status-only failure
+    # counts even when it carries no numeric threshold metric.
+    missing_baseline_failures = [
+        item for item in missing_baseline
+        if status_severity(_get(item, "current_status")) >= 3
+    ]
     inconclusive_tests = [
         item for item in tests
         if _get(item, "classification") in {"changed_status", "insufficient_evidence"}
@@ -301,7 +311,7 @@ def _verdict(
         return verdicts.PREEXISTING_FAILURE
     if preexisting and has_material_worsening(worsened_metric_deltas):
         return verdicts.WORSENED_PREEXISTING_FAILURE
-    if missing_baseline and current_failures:
+    if missing_baseline_failures:
         return verdicts.INSUFFICIENT_EVIDENCE
     if inconclusive_tests or incomplete_thresholds:
         return verdicts.INSUFFICIENT_EVIDENCE

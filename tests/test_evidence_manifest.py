@@ -157,3 +157,34 @@ def test_written_manifest_roundtrips(evidence_set, tmp_path: Path):
     # A written manifest still verifies against the same artifacts.
     result = verify_evidence_manifest(loaded)
     assert result.ok is True
+
+
+# ---------------------------------------------------------------------------
+# Audit regression (#14): integrity_root binds the artifact basename, but not
+# the machine-specific absolute directory (keeps cross-machine determinism).
+# ---------------------------------------------------------------------------
+
+def test_integrity_root_binds_basename_not_absolute_dir():
+    from avera.evidence.manifest import (
+        CANONICAL_ROLES,
+        ArtifactRef,
+        _compute_integrity_root,
+    )
+
+    role = CANONICAL_ROLES[0]
+
+    def _ref(path: str) -> ArtifactRef:
+        return ArtifactRef(
+            role=role, path=path, present=True, sha256="abc123",
+            schema_version="v1", schema_supported=True, schema_current="v1",
+        )
+
+    # Repointing the recorded path at a DIFFERENT file name changes the root.
+    assert _compute_integrity_root([_ref("/x/report.json")]) != _compute_integrity_root(
+        [_ref("/x/evil.json")]
+    )
+    # Same basename + content but a different absolute directory → same root
+    # (the root stays machine-independent / deterministic).
+    assert _compute_integrity_root([_ref("/a/report.json")]) == _compute_integrity_root(
+        [_ref("/b/report.json")]
+    )

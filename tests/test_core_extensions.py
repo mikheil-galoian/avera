@@ -174,7 +174,8 @@ class TestCoverageChecker:
         report = CoverageChecker(self._REQS, cmap).check()
         assert report.coverage_pct == 100.0
         assert report.uncovered_count == 0
-        assert report.max_gap_risk == "low"
+        # No gaps at all → "none", not a (misleading) "low" gap risk.
+        assert report.max_gap_risk == "none"
 
     def test_partial_coverage_pct(self):
         from avera.coverage.checker import CoverageChecker
@@ -242,6 +243,24 @@ class TestFeedbackStore:
         assert rec is not None
         assert rec.engine_verdict == "confirmed_regression"
         assert rec.confidence_score == pytest.approx(0.95)
+
+    def test_get_record_is_scoped_to_requested_run(self, tmp_path):
+        # Audit regression: get_record must return the requested run, not the
+        # globally-latest feedback row. With feedback recorded only on r-002,
+        # asking for r-001 must still return r-001 (with no human feedback).
+        fb = self._store(tmp_path)
+        fb.store_verdict(run_id="r-001", project="p1",
+                         verdict="confirmed_regression", risk="high")
+        fb.store_verdict(run_id="r-002", project="p2",
+                         verdict="successful_change", risk="low")
+        fb.record_feedback(run_id="r-002", confirmed=True, reviewer="bob")
+
+        rec = fb.get_record("r-001")
+        assert rec is not None
+        assert rec.run_id == "r-001"
+        assert rec.project == "p1"
+        assert rec.engine_verdict == "confirmed_regression"
+        assert rec.confirmed is None  # r-001 has no human feedback
 
     def test_record_feedback_confirmed(self, tmp_path):
         fb = self._store(tmp_path)
@@ -317,3 +336,37 @@ class TestFeedbackStore:
                          verdict="confirmed_regression", risk="high")
         stats = fb.calibration_stats()
         assert stats.total_verdicts == 1
+
+    def test_connection_is_closed_after_use(self, tmp_path):
+        # Audit regression (#9): every DB operation must close its connection;
+        # the sqlite3 context manager only commits, it does not close.
+        import sqlite3
+        fb = self._store(tmp_path)
+        with fb._connection() as conn:
+            conn.execute("SELECT 1")
+        with pytest.raises(sqlite3.ProgrammingError):
+            conn.execute("SELECT 1")  # closed connection
+
+    def test_calibration_counts_each_run_by_latest_feedback(self, tmp_path):
+        # Audit regression (#10): a run reviewed twice (e.g. overrule then a
+        # change of mind to confirm) must be counted ONCE, by its latest
+        # decision — never in both confirmed and overruled.
+        fb = self._store(tmp_path)
+        fb.store_verdict(run_id="r-001", project="bms",
+                         verdict="confirmed_regression", risk="high")
+        fb.record_feedback(run_id="r-001", confirmed=False,
+                           human_verdict="successful_change")
+        fb.record_feedback(run_id="r-001", confirmed=True)  # changed mind
+        stats = fb.calibration_stats()
+        assert stats.reviewed == 1
+        assert stats.confirmed == 1
+        assert stats.overruled == 0
+        assert stats.confirmed + stats.overruled <= stats.reviewed
+
+    def test_record_feedback_for_unknown_run_raises_typed_error(self, tmp_path):
+        # Audit regression (#22): a foreign-key / integrity violation must surface
+        # as a typed store error, not a raw sqlite3 exception.
+        from avera.feedback.store import FeedbackStoreError
+        fb = self._store(tmp_path)
+        with pytest.raises(FeedbackStoreError):
+            fb.record_feedback(run_id="does-not-exist", confirmed=True)

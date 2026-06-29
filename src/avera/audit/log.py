@@ -1,12 +1,22 @@
-"""Immutable audit log with SHA-256 hash chaining.
+"""Append-only, hash-chained audit log.
 
 Design contract:
-- Every record contains ``prev_hash`` — the SHA-256 digest of the preceding record.
-- The first record's ``prev_hash`` is the SHA-256 of the empty string (genesis sentinel).
+- Every record contains ``prev_hash`` — the digest of the preceding record.
+- The first record's ``prev_hash`` is the digest of the empty string (genesis sentinel).
 - Records are written to an append-only JSONL file; each line is one JSON object.
-- ``verify_chain()`` walks every record and re-derives hashes — any tampering or
-  insertion breaks the chain and raises ``ChainIntegrityError``.
+- ``verify_chain()`` walks every record and re-derives hashes — any inconsistent
+  record or broken link raises ``ChainIntegrityError``.
 - The log is thread-safe via a per-instance ``threading.Lock``.
+
+Tamper-evidence is **keyed**. Without a secret key the chain uses plain
+SHA-256, which only detects accidental edits or partial tampering: anyone who
+can rewrite the file can forge a record and re-stitch every hash, and the chain
+still verifies clean. It is *not* immutable against a privileged attacker. Pass
+a key (argument or ``AVERA_AUDIT_KEY``) to switch the digest to HMAC-SHA256, so
+records cannot be forged or the chain re-stitched without the secret. Use
+``keyed`` / ``tamper_evidence`` to inspect which guarantee is in force, and the
+``expected_count`` / ``expected_last_hash`` anchors of ``verify_chain`` to catch
+truncation or rollback from an external record.
 
 Usage::
 
@@ -29,6 +39,7 @@ from __future__ import annotations
 import hashlib
 import hmac
 import json
+import logging
 import os
 import threading
 from dataclasses import dataclass, field
@@ -40,6 +51,8 @@ try:  # POSIX advisory locking for cross-process safety; degrades gracefully if 
     import fcntl
 except ImportError:  # pragma: no cover - non-POSIX
     fcntl = None  # type: ignore[assignment]
+
+logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
@@ -116,6 +129,22 @@ class AuditLog:
             env_key = os.environ.get("AVERA_AUDIT_KEY")
             key = env_key if env_key else None
         self._key: bytes | None = key.encode() if isinstance(key, str) else key
+        self._warned_keyless = False
+
+    @property
+    def keyed(self) -> bool:
+        """Whether the chain is protected by a secret HMAC key.
+
+        ``False`` means plain SHA-256: tamper-evident only against accidental or
+        partial edits, *not* against a privileged attacker who can re-stitch the
+        whole file. See the module docstring.
+        """
+        return self._key is not None
+
+    @property
+    def tamper_evidence(self) -> str:
+        """Human-readable guarantee level: ``keyed-hmac`` or ``change-detection-only``."""
+        return "keyed-hmac" if self.keyed else "change-detection-only"
 
     def _digest(self, raw: str) -> str:
         """Keyed (HMAC-SHA256) digest when a key is set, else plain SHA-256."""
@@ -232,6 +261,16 @@ class AuditLog:
             ``self_hash``, if a ``self_hash`` is inconsistent, or if the external
             anchor (count / last hash) does not match.
         """
+        if not self.keyed and not self._warned_keyless:
+            self._warned_keyless = True
+            logger.warning(
+                "Audit chain at %s is verified without a key: this detects accidental "
+                "or partial edits only, not a deliberate re-stitch by someone who can "
+                "rewrite the file. Set AVERA_AUDIT_KEY for forgery-resistant "
+                "(HMAC) tamper-evidence.",
+                self._path,
+            )
+
         if not self._path.exists():
             if expected_count:
                 raise ChainIntegrityError(

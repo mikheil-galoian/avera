@@ -164,7 +164,10 @@ def evaluate_gate(
 
     return GateDecision(
         status=status,
-        exit_code=0 if status == "pass" else 1,
+        # pass=0; block=1 (proven regression — hard fail); review=2 (insufficient
+        # proof — still fails the build fail-closed, but distinguishable in CI from
+        # a confirmed block so pipelines can route it to a human differently).
+        exit_code=0 if status == "pass" else (2 if status == "review" else 1),
         reasons=reasons,
         report_summary={
             "schema_version": report.get("schema_version"),

@@ -148,9 +148,12 @@ class TestGateDecisionShape:
         assert isinstance(result.reasons, list)
         assert len(result.reasons) >= 1
 
-    def test_exit_code_1_for_review(self):
+    def test_exit_code_2_for_review(self):
+        # review still fails the build (non-zero, fail-closed) but uses a distinct
+        # exit code (2) so CI can tell "needs review" apart from a confirmed block (1).
         result = evaluate_gate(_report("insufficient_evidence", "unknown", confidence_score=0.35))
-        assert result.exit_code == 1
+        assert result.status == "review"
+        assert result.exit_code == 2
 
     def test_missing_fields_default_gracefully(self):
         result = evaluate_gate({})

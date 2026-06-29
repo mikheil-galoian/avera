@@ -15,6 +15,13 @@ Design contract
 - **Provenance-complete.** Every reference points back to a concrete file path.
 - **Non-authoritative.** The manifest is derived; it never replaces the artifacts
   it binds.
+- **Keyless / change-detection.** ``integrity_root`` is a plain SHA-256 with no
+  secret, so it is fully self-recomputable: it reliably detects accidental or
+  third-party changes, but a privileged actor who can rewrite the manifest itself
+  can recompute a consistent root. Forgery-resistance against such an actor comes
+  from binding the root into the keyed (HMAC) audit log — see
+  ``avera.audit.log`` and set ``AVERA_AUDIT_KEY``. The manifest alone is tamper-
+  *evident*, not tamper-*proof*.
 
 The manifest connects the existing flow:
 
@@ -362,11 +369,14 @@ def _build_ref(
 def _compute_integrity_root(refs: list[ArtifactRef]) -> str:
     """Deterministic root hash committing to the full canonical role surface.
 
-    Excludes timestamps and absolute paths so the root is stable across machines
-    for the same content. Crucially, it iterates over every canonical role and binds
-    ``(role, present, sha256, schema_version)`` — including roles that are absent.
-    This means dropping or hiding a produced artifact changes the root, so any
-    downstream binding (e.g. a sign-off) to the original root detects the omission.
+    Excludes timestamps and *absolute* paths so the root is stable across machines
+    for the same content, but binds each artifact's file *name* (basename) so the
+    recorded provenance path cannot be silently repointed at a different file
+    without changing the root. It iterates over every canonical role and binds
+    ``(role, present, name, sha256, schema_version)`` — including roles that are
+    absent. This means dropping or hiding a produced artifact changes the root, so
+    any downstream binding (e.g. a sign-off) to the original root detects the
+    omission.
     """
     by_role = {ref.role: ref for ref in refs}
     binding = []
@@ -377,6 +387,9 @@ def _compute_integrity_root(refs: list[ArtifactRef]) -> str:
             {
                 "role": role,
                 "present": present,
+                # basename only — keeps the root machine-independent (no absolute
+                # directory) while still committing to which file each role points at.
+                "name": Path(ref.path).name if (ref and present and ref.path) else None,
                 "sha256": ref.sha256 if (ref and present) else None,
                 "schema_version": ref.schema_version if ref else None,
             }

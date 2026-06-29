@@ -24,6 +24,8 @@ Usage::
 
 from __future__ import annotations
 
+import hashlib
+import itertools
 import json
 import sqlite3
 import threading
@@ -99,6 +101,9 @@ CREATE INDEX IF NOT EXISTS idx_runs_stored_at ON runs (stored_at);
 
 _SCHEMA_VERSION = "avera.store.v1"
 
+# Process-unique sequence for naming shared-cache in-memory databases.
+_MEM_DB_SEQ = itertools.count()
+
 
 # ---------------------------------------------------------------------------
 # AnalysisStore
@@ -118,6 +123,26 @@ class AnalysisStore:
     def __init__(self, path: Path | str) -> None:
         self._path = Path(path)
         self._local = threading.local()
+        self._is_memory = str(path) == ":memory:"
+        self._keepalive: sqlite3.Connection | None = None
+        if self._is_memory:
+            # A plain ":memory:" connection is private per connection, so the
+            # per-thread connections below would each get their OWN empty database
+            # and the schema created on the constructing thread would be invisible
+            # to every other thread. Use a named shared-cache in-memory database so
+            # all threads of THIS store share one DB, and hold a keepalive
+            # connection so the shared cache survives for the store's lifetime.
+            # A process-unique, monotonic name — NOT id(self), which is reused after
+            # garbage collection and would make two distinct stores accidentally
+            # share one shared-cache in-memory database.
+            self._memory_uri = (
+                f"file:avera_store_{next(_MEM_DB_SEQ)}?mode=memory&cache=shared"
+            )
+            self._keepalive = sqlite3.connect(
+                self._memory_uri, uri=True, check_same_thread=False
+            )
+        else:
+            self._memory_uri = None
         self._init_schema()
 
     # ------------------------------------------------------------------
@@ -136,6 +161,11 @@ class AnalysisStore:
         if conn is not None:
             conn.close()
             self._local.conn = None
+        # Release the keepalive last so the shared in-memory cache (if any) is
+        # dropped only after this thread's own connection is closed.
+        if self._keepalive is not None:
+            self._keepalive.close()
+            self._keepalive = None
 
     # ------------------------------------------------------------------
     # Core public API
@@ -175,8 +205,6 @@ class AnalysisStore:
         """
 
         stored_at = _utc_now_iso()
-        if run_id is None:
-            run_id = _derive_run_id(stored_at, project)
 
         verdict          = str(report.get("verdict", ""))
         risk             = str(report.get("risk", ""))
@@ -188,6 +216,13 @@ class AnalysisStore:
             report_json = json.dumps(report, sort_keys=True, ensure_ascii=False)
         except (TypeError, ValueError) as exc:
             raise StoreError(f"report is not JSON-serialisable: {exc}") from exc
+
+        if run_id is None:
+            # Bind the report content into the id so two DIFFERENT reports issued
+            # in the same microsecond cannot collide and be silently dropped by the
+            # INSERT OR IGNORE below. Identical content yields the same id (intended
+            # idempotent dedup).
+            run_id = _derive_run_id(stored_at, project, report_json)
 
         conn = self._connection()
         try:
@@ -390,8 +425,10 @@ class AnalysisStore:
         """Return a per-thread SQLite connection, creating it if necessary."""
         conn = getattr(self._local, "conn", None)
         if conn is None:
-            db_path = str(self._path) if str(self._path) != ":memory:" else ":memory:"
-            conn = sqlite3.connect(db_path, check_same_thread=False)
+            if self._is_memory:
+                conn = sqlite3.connect(self._memory_uri, uri=True, check_same_thread=False)
+            else:
+                conn = sqlite3.connect(str(self._path), check_same_thread=False)
             conn.row_factory = sqlite3.Row
             # Concurrency hardening. The default SQLite busy-timeout is 0, so a
             # writer that meets a held lock fails immediately with
@@ -428,17 +465,24 @@ def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
 
-def _derive_run_id(stored_at: str, project: str) -> str:
+def _derive_run_id(stored_at: str, project: str, report_json: str = "") -> str:
     """Derive a stable, human-readable run identifier.
 
-    Uses microsecond-precision timestamp so that rapid consecutive calls
-    within the same second still yield distinct identifiers.
+    Uses microsecond-precision timestamp so that rapid consecutive calls within
+    the same second still yield distinct identifiers, plus a short content digest
+    so two *different* reports issued in the same microsecond do not collide (and
+    get silently dropped by ``INSERT OR IGNORE``). Identical content at the same
+    instant intentionally maps to the same id.
     """
     # stored_at is "YYYY-MM-DDTHH:MM:SS.ffffffZ" — keep full microseconds
     ts_compact = stored_at.rstrip("Z").replace("T", "-").replace(":", "").replace(".", "-")
     slug = "".join(c if c.isalnum() or c == "-" else "-" for c in project)[:32].strip("-")
     parts = [p for p in ["run", ts_compact, slug] if p]
-    return "-".join(parts)
+    base = "-".join(parts)
+    if report_json:
+        digest = hashlib.sha256(report_json.encode("utf-8")).hexdigest()[:8]
+        return f"{base}-{digest}"
+    return base
 
 
 def _row_to_record(row: sqlite3.Row | tuple, *, include_report: bool) -> RunRecord:

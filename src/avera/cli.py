@@ -608,6 +608,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="Fail (non-zero exit) on any confirmed_regression verdict. true/false.",
     )
     action_run.add_argument(
+        "--fail-on-gate",
+        default="true",
+        help=(
+            "Fail (non-zero exit) when the deterministic gate status is block or "
+            "review. Set false for an advisory run that only reports. true/false."
+        ),
+    )
+    action_run.add_argument(
         "--expected-verdict",
         default="",
         help="Optional. Assert AVERA produces this verdict; mismatch fails the run.",
@@ -1221,6 +1229,7 @@ def run_action(
     policy_name: str | None = None,
     fail_on_release_blocking: object = "true",
     fail_on_regression: object = "false",
+    fail_on_gate: object = "true",
     expected_verdict: str = "",
     github_output: Path | None = None,
 ) -> int:
@@ -1271,7 +1280,18 @@ def run_action(
         print(f"{key}: {value}")
 
     # Fail conditions (outputs already emitted).
+    #
+    # The deterministic gate decision drives the result by default: the action can
+    # never advertise gate_status=block/review while exiting 0. Set fail_on_gate=
+    # false for an advisory run that only reports. The fail_on_* flags below remain
+    # explicit overrides that can still force a hard failure.
     exit_code = 0
+    if _truthy(fail_on_gate) and gate_status in {"block", "review"}:
+        exit_code = gate_decision.exit_code
+        print(
+            f"AVERA Action: gate status {gate_status!r} fails the build (fail_on_gate).",
+            file=sys.stderr,
+        )
     if expected_verdict and verdict != expected_verdict:
         print(
             f"AVERA Action: expected verdict {expected_verdict!r} but got {verdict!r}",
@@ -1437,6 +1457,7 @@ def main() -> None:
                 policy_name=args.policy,
                 fail_on_release_blocking=args.fail_on_release_blocking,
                 fail_on_regression=args.fail_on_regression,
+                fail_on_gate=args.fail_on_gate,
                 expected_verdict=args.expected_verdict,
                 github_output=args.github_output,
             )

@@ -43,6 +43,8 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
 
+from avera.adapters._xml_safe import secure_fromstring
+
 
 # ---------------------------------------------------------------------------
 # CANoe XML report adapter
@@ -97,7 +99,7 @@ def adapt_canoe_xml(
         raise FileNotFoundError(f"CANoe XML report not found: {source}")
 
     try:
-        root = ET.fromstring(source.read_text(encoding="utf-8", errors="replace"))
+        root = secure_fromstring(source.read_text(encoding="utf-8", errors="replace"), source)
     except ET.ParseError as exc:
         raise ValueError(f"CANoe XML parse error in {source}: {exc}") from exc
 
@@ -166,6 +168,21 @@ def _collect_canoe_tests(
         _collect_canoe_tests(child, tests, group_prefix)
 
 
+def _child_text(node: ET.Element, *tags: str) -> str | None:
+    """First non-empty text of the named child elements, or None.
+
+    Uses an explicit ``is not None`` check rather than the truthiness of the
+    Element: a leaf element such as ``<Verdict>failed</Verdict>`` has no
+    children and is therefore *falsy*, so an ``or`` chain over ``node.find(...)``
+    silently skips it and loses the value.
+    """
+    for tag in tags:
+        el = node.find(tag)
+        if el is not None and el.text is not None and el.text.strip():
+            return el.text
+    return None
+
+
 def _parse_canoe_testcase(
     node: ET.Element,
     group_prefix: str,
@@ -177,7 +194,7 @@ def _parse_canoe_testcase(
         node.attrib.get("Name")
         or node.attrib.get("name")
         or node.attrib.get("title")
-        or (node.find("Name") or node.find("name") or ET.Element("x")).text
+        or _child_text(node, "Name", "name")
         or "unnamed_testcase"
     ).strip()
     test_id = f"{group_prefix}{name}" if group_prefix else name
@@ -187,7 +204,7 @@ def _parse_canoe_testcase(
         node.attrib.get("Verdict")
         or node.attrib.get("verdict")
         or node.attrib.get("result")
-        or (node.find("Verdict") or node.find("verdict") or ET.Element("x")).text
+        or _child_text(node, "Verdict", "verdict")
         or "inconclusive"
     ).strip().lower()
     status = _CANOE_VERDICT_MAP.get(raw_verdict, "inconclusive")
