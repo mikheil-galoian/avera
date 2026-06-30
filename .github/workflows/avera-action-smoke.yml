@@ -24,8 +24,11 @@ jobs:
         with:
           project_path: fixtures/bms-fast-charge
           output_path: avera-reports
-          # bms-fast-charge is a confirmed regression; don't fail the smoke run on it.
+          # bms-fast-charge is a confirmed regression; this is an advisory smoke
+          # run that only checks the action produces artifacts/outputs, so don't
+          # fail on it: disable both the risk and the gate-driven failure.
           fail_on_release_blocking: 'false'
+          fail_on_gate: 'false'
 
       - name: Assert canonical artifacts and outputs
         shell: bash

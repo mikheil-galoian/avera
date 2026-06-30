@@ -437,7 +437,7 @@ class AnalysisStore:
             # WAL is a persistent, file-level mode and a harmless no-op for
             # ``:memory:`` databases.
             conn.execute("PRAGMA busy_timeout = 5000")
-            if db_path != ":memory:":
+            if not self._is_memory:
                 conn.execute("PRAGMA journal_mode = WAL")
             self._local.conn = conn
         return conn
