@@ -438,7 +438,17 @@ class AnalysisStore:
             # ``:memory:`` databases.
             conn.execute("PRAGMA busy_timeout = 5000")
             if not self._is_memory:
-                conn.execute("PRAGMA journal_mode = WAL")
+                # WAL is a persistent, database-level mode: it only needs to be set
+                # once and survives reconnects. Switching it briefly needs a write
+                # lock, so when several connections to a fresh DB are opened at the
+                # same time (e.g. one store per thread) one may hit "database is
+                # locked" here. That is non-fatal — the connection is fully usable
+                # and busy_timeout serialises the actual writes — so set it
+                # best-effort rather than letting a connect race kill the caller.
+                try:
+                    conn.execute("PRAGMA journal_mode = WAL")
+                except sqlite3.OperationalError:
+                    pass
             self._local.conn = conn
         return conn
 
