@@ -1,0 +1,4 @@
+id,component,requirement,metric,operator,threshold,safety_level,next_checks
+ISL-REQ-201,Optical ISL Transceiver DSP,Pre-FEC bit error rate on the inter-satellite link must not exceed 2.0e-3 to preserve soft-decision FEC recovery margin,pre_fec_ber,<=,0.002,high,ISL-HIL-LINKBUDGET-09
+ISL-REQ-205,Optical ISL Transceiver DSP,Link acquisition (lock) time after pointing must not exceed 500 ms,link_acquisition_ms,<=,500.0,high,ISL-HIL-LINKBUDGET-09
+ISL-REQ-210,Optical ISL Transceiver DSP,Center wavelength drift over the thermal cycle must not exceed 25 pm,wavelength_drift_pm,<=,25.0,medium,ISL-HIL-THERMAL-11

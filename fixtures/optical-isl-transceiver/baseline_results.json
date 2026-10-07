@@ -1,0 +1,10 @@
+{
+  "runId": "baseline-isl-001",
+  "stage": "baseline",
+  "tests": [
+    { "id": "ISL-LINK-BER-01", "component": "Optical ISL Transceiver DSP", "status": "passed",
+      "metrics": { "pre_fec_ber": 0.00082, "link_acquisition_ms": 380 } },
+    { "id": "ISL-THERMAL-DRIFT-02", "component": "Optical ISL Transceiver DSP", "status": "passed",
+      "metrics": { "wavelength_drift_pm": 18.0 } }
+  ]
+}

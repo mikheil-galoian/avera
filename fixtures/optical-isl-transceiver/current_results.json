@@ -1,0 +1,12 @@
+{
+  "runId": "current-isl-001",
+  "stage": "current",
+  "changedFiles": [ "src/isl/dsp/adaptive_equalizer.c" ],
+  "tests": [
+    { "id": "ISL-LINK-BER-01", "component": "Optical ISL Transceiver DSP", "status": "failed",
+      "metrics": { "pre_fec_ber": 0.0035, "link_acquisition_ms": 640 },
+      "evidence": "Pre-FEC BER and link acquisition time both crossed threshold after the equalizer tap-update change; FEC margin no longer sufficient for the 10-year mission link budget." },
+    { "id": "ISL-THERMAL-DRIFT-02", "component": "Optical ISL Transceiver DSP", "status": "passed",
+      "metrics": { "wavelength_drift_pm": 19.2 } }
+  ]
+}

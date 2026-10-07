@@ -1,0 +1,7 @@
+{
+  "src/isl/dsp/adaptive_equalizer.c": {
+    "component": "Optical ISL Transceiver DSP",
+    "requirements": [ "ISL-REQ-201", "ISL-REQ-205" ],
+    "tests": [ "ISL-LINK-BER-01" ]
+  }
+}

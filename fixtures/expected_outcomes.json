@@ -98,5 +98,10 @@
     "verdict": "confirmed_regression",
     "risk": "medium",
     "confidence": "high"
+  },
+  "optical-isl-transceiver": {
+    "verdict": "confirmed_regression",
+    "risk": "high",
+    "confidence": "high"
   }
 }

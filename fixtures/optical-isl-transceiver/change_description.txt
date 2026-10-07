@@ -1,0 +1,11 @@
+A firmware engineer changed the adaptive-equalizer tap-update logic in
+src/isl/dsp/adaptive_equalizer.c on the optical inter-satellite link (ISL) transceiver.
+
+The intended behavior was to reduce equalizer convergence power draw during pointing
+acquisition. The observed current run shows pre-FEC bit error rate rising from 8.2e-4 to
+3.5e-3 (above the ISL-REQ-201 soft-decision FEC margin of 2.0e-3) and link acquisition time
+rising from 380 ms to 640 ms (above the ISL-REQ-205 threshold of 500 ms).
+
+AVERA should map the changed file to the Optical ISL Transceiver DSP component, compare
+baseline and current verification results, and classify the outcome as a high-confidence
+confirmed regression that blocks release under the space (NASA NPR 7150.2) policy.
