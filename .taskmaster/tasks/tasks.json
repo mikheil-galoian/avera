@@ -166,24 +166,24 @@
         "description": "Upgrade 'covered' to 'verified' automatically: run the existing mutation lens (T-13's run_mutation_lens) on changed+covered regions from EP-09, bounded by a budget. Depends on task 9.",
         "details": "Extends run_mutation_lens to accept an explicit (start_line, end_line) range additive to the current function= parameter (the engine already supports line-range mutation internally via generate_mutants). For each changed+covered region, runs the lens under a max-mutants/max-seconds budget; over-budget regions are marked 'not evaluated' explicitly, never silently reported as weak or strong. Combines into one verdict: uncovered lines, weak-evidence lines (covered but mutation score below threshold), aggregate score.",
         "testStrategy": "Unit test for the new line-range entry point (equivalent to the existing function= path on the same input). Budget test: a region that exceeds the budget is marked not-evaluated, distinct from evaluated-and-weak. Full pytest green; mutation lens dogfooded on the new module per existing project convention.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [9],
         "priority": "medium",
         "subtasks": [
           {
             "id": 1,
             "title": "US-10.1: run_mutation_lens accepts an explicit line range",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
             "title": "US-10.2: automatic budgeted mutation over changed+covered regions",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
             "title": "US-10.3: combined verdict (uncovered / weak-evidence / aggregate score)",
-            "status": "pending"
+            "status": "done"
           }
         ]
       },

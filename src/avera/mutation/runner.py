@@ -66,11 +66,13 @@ class MutationLensReport:
     test_command: list[str]
     confidence: MutationConfidence
     outcomes: list[MutantOutcome] = field(default_factory=list)
+    line_range: tuple[int, int] | None = None
 
     def to_dict(self) -> dict:
         return {
             "source_path": self.source_path,
             "function": self.function,
+            "line_range": list(self.line_range) if self.line_range else None,
             "test_command": list(self.test_command),
             "confidence": self.confidence.to_dict(),
             "outcomes": [o.to_dict() for o in self.outcomes],
@@ -105,21 +107,40 @@ def run_mutation_lens(
     test_command: Sequence[str],
     *,
     function: str | None = None,
+    line_range: tuple[int, int] | None = None,
     cwd: str | Path | None = None,
     timeout: float = 120.0,
 ) -> MutationLensReport:
-    """Mutate ``source_path`` (or one function in it) and measure what the tests catch."""
+    """Mutate ``source_path`` and measure what the tests catch.
+
+    Scope is the whole file by default. ``function`` scopes to one named
+    function (as before); ``line_range`` scopes to an explicit ``(start,
+    end)`` 1-indexed inclusive range instead — e.g. the lines a diff touched,
+    for change-targeted mutation (EP-10). Passing both is rejected rather
+    than silently picking one.
+    """
+    if function is not None and line_range is not None:
+        raise MutationLensError("pass function= or line_range=, not both")
+    if line_range is not None and line_range[0] > line_range[1]:
+        raise MutationLensError(f"invalid line_range {line_range}: start must be <= end")
+
     path = Path(source_path)
     original = path.read_bytes()
     text = original.decode("utf-8")
 
-    if function is None:
-        mutants = generate_mutants(text)
-    else:
+    resolved_range: tuple[int, int] | None
+    if function is not None:
         rng = function_line_range(text, function)
         if rng is None:
             raise MutationLensError(f"function {function!r} not found in {path}")
+        resolved_range = rng
         mutants = generate_mutants(text, rng[0], rng[1])
+    elif line_range is not None:
+        resolved_range = line_range
+        mutants = generate_mutants(text, line_range[0], line_range[1])
+    else:
+        resolved_range = None
+        mutants = generate_mutants(text)
 
     with tempfile.TemporaryDirectory(prefix="avera-mutation-pyc-") as pyc_dir:
         env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1", PYTHONPYCACHEPREFIX=pyc_dir)
@@ -167,4 +188,5 @@ def run_mutation_lens(
         test_command=list(test_command),
         confidence=confidence,
         outcomes=outcomes,
+        line_range=resolved_range,
     )

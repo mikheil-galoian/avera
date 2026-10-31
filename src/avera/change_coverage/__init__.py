@@ -14,6 +14,10 @@ different concept entirely; see docs/AVERA_CHANGE_IMPACT_STAGE.md.
 Zero new dependencies: unified diff is plain text, LCOV is line-oriented
 text, Cobertura is XML (stdlib ``xml.etree``) — preserving AVERA's
 zero-dependency property.
+
+``mutation_targeting`` (EP-10) builds on this: it runs the mutation lens
+(``avera.mutation``) automatically on changed+covered regions, upgrading
+"covered" to "verified" without a human naming functions by hand.
 """
 
 from __future__ import annotations
@@ -21,13 +25,25 @@ from __future__ import annotations
 from .cobertura import parse_cobertura
 from .diff import parse_unified_diff
 from .lcov import parse_lcov
+from .mutation_targeting import (
+    ChangeTargetedMutationReport,
+    CombinedEvidenceVerdict,
+    RegionEvaluation,
+    combine_evidence,
+    run_change_targeted_mutation,
+)
 from .report import ChangeCoverageReport, FileCoverageOfChange, compute_change_coverage
 
 __all__ = [
     "ChangeCoverageReport",
+    "ChangeTargetedMutationReport",
+    "CombinedEvidenceVerdict",
     "FileCoverageOfChange",
+    "RegionEvaluation",
+    "combine_evidence",
     "compute_change_coverage",
     "parse_cobertura",
     "parse_lcov",
     "parse_unified_diff",
+    "run_change_targeted_mutation",
 ]
