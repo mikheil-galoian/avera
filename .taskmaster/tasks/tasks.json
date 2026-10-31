@@ -65,9 +65,7 @@
         "details": "Add to .github/workflows: a packaging smoke check (python -m build / pip install .) so pyproject readme/entry-points are verified; a ruff lint gate (line-length 100, target py311 already configured); and a coverage measurement step with a published badge. CI should run pytest + ruff + build + coverage on every PR.",
         "testStrategy": "CI workflow runs and passes pytest, ruff, build, and coverage stages on a PR.",
         "status": "pending",
-        "dependencies": [
-          1
-        ],
+        "dependencies": [1],
         "priority": "medium",
         "subtasks": []
       },
@@ -126,9 +124,7 @@
         "details": "Spec: add numeric conformance vectors (value, Python canonical form, digest of the frozen example with that score) and state the current producer property: confidence_score has 2 decimals, never integral. Test: enumerate every branch of _confidence_factors x all verdicts x all labels; assert 0 < score < 1 and 2-decimal (so it formats identically in Python and JS). Fails if a cap becomes 1.0 or enough negative factors are added to reach 0.0.",
         "testStrategy": "New guard test passes now; temporarily setting a cap to 1.0 or adding negative factors makes it fail. Vectors in spec are computed by the reference implementation and checked by a test. Full pytest green.",
         "status": "done",
-        "dependencies": [
-          7
-        ],
+        "dependencies": [7],
         "priority": "medium",
         "subtasks": []
       },
@@ -138,29 +134,29 @@
         "description": "Turn (diff, coverage report) into one deterministic number: what fraction of the changed lines in a change is covered by any test. Zero new dependencies (stdlib text/XML parsing only). Design doc: docs/AVERA_CHANGE_IMPACT_STAGE.md.",
         "details": "Parses unified diff -> per-file changed line ranges (added/modified only; deleted lines carry nothing to cover). Parses LCOV (lcov.info) and Cobertura XML into per-file executed-line sets, covering the common output of pytest-cov, Jest/Istanbul, JaCoCo, coverage.py, grcov, Go. Computes coverage_of_change per file and aggregate, with the uncovered-line list as first-class output. Fails closed: a diffed file absent from the coverage report counts as fully uncovered, never skipped.",
         "testStrategy": "Unit tests per parser (diff, LCOV, Cobertura) against hand-built fixtures and at least one real tool's real output each. Determinism test (same inputs -> same output). Fail-closed test: file in diff, absent from coverage report, is reported uncovered. Full pytest green.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [],
         "priority": "high",
         "subtasks": [
           {
             "id": 1,
             "title": "US-09.1: unified diff -> per-file changed line ranges",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
             "title": "US-09.2: LCOV parser -> per-file executed-line sets",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
             "title": "US-09.3: Cobertura XML parser -> per-file executed-line sets",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
             "title": "US-09.4: coverage_of_change computation, fail-closed on missing files",
-            "status": "pending"
+            "status": "done"
           }
         ]
       },
@@ -171,9 +167,7 @@
         "details": "Extends run_mutation_lens to accept an explicit (start_line, end_line) range additive to the current function= parameter (the engine already supports line-range mutation internally via generate_mutants). For each changed+covered region, runs the lens under a max-mutants/max-seconds budget; over-budget regions are marked 'not evaluated' explicitly, never silently reported as weak or strong. Combines into one verdict: uncovered lines, weak-evidence lines (covered but mutation score below threshold), aggregate score.",
         "testStrategy": "Unit test for the new line-range entry point (equivalent to the existing function= path on the same input). Budget test: a region that exceeds the budget is marked not-evaluated, distinct from evaluated-and-weak. Full pytest green; mutation lens dogfooded on the new module per existing project convention.",
         "status": "pending",
-        "dependencies": [
-          9
-        ],
+        "dependencies": [9],
         "priority": "medium",
         "subtasks": [
           {
